@@ -17,11 +17,13 @@ import LessonViewPage from './components/pages/LessonViewPage';
 import SmartSearchModal from './components/modals/SmartSearchModal';
 import GlossaryTermModal from './components/modals/GlossaryTermModal';
 import QuizModal from './components/modals/QuizModal';
+import ConsultationModal from './components/modals/ConsultationModal';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [showSmartSearch, setShowSmartSearch] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
+  const [consultationModal, setConsultationModal] = useState({ show: false, type: 'consultation' });
   const [viewingGlossaryTerm, setViewingGlossaryTerm] = useState(null);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
   const [selectedTrackId, setSelectedTrackId] = useState(null);
@@ -237,7 +239,13 @@ function App() {
       case 'community':
         return <CommunityPage {...commonProps} />;
       case 'certification':
-        return <CertificationPage {...commonProps} />;
+        return (
+          <CertificationPage
+            {...commonProps}
+            onRequestConsultation={() => setConsultationModal({ show: true, type: 'consultation' })}
+            onScheduleCall={() => setConsultationModal({ show: true, type: 'schedule' })}
+          />
+        );
       case 'resources':
         return <ResourcesPage {...commonProps} />;
       case 'profile':
@@ -352,6 +360,13 @@ function App() {
         <QuizModal
           onClose={() => setShowQuiz(false)}
           onNavigate={handleNavigate}
+        />
+      )}
+
+      {consultationModal.show && (
+        <ConsultationModal
+          onClose={() => setConsultationModal({ show: false, type: 'consultation' })}
+          modalType={consultationModal.type}
         />
       )}
     </div>

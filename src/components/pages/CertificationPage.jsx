@@ -8,7 +8,7 @@ const iconMap = {
   Award: Award,
 };
 
-export default function CertificationPage({ onNavigate }) {
+export default function CertificationPage({ onNavigate, onRequestConsultation, onScheduleCall }) {
   const featuredCaseStudies = caseStudies.filter(c => c.featured).slice(0, 3);
 
   return (
@@ -25,7 +25,7 @@ export default function CertificationPage({ onNavigate }) {
               backed by advanced metabolomics analysis
             </p>
             <button
-              onClick={() => onNavigate('community')}
+              onClick={onRequestConsultation}
               className="px-6 py-3 bg-teal-500 hover:bg-teal-600 rounded-lg font-medium transition-colors"
             >
               Request a Consultation
@@ -155,7 +155,7 @@ export default function CertificationPage({ onNavigate }) {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
-              onClick={() => onNavigate('community')}
+              onClick={onScheduleCall}
               className="px-6 py-3 bg-teal-500 hover:bg-teal-600 rounded-lg font-medium transition-colors"
             >
               Schedule a Call
