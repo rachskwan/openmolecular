@@ -127,7 +127,11 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {featuredArticles.map(article => (
-            <div key={article.id} className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+            <button
+              key={article.id}
+              onClick={() => onNavigate('article', article.id)}
+              className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+            >
               <div className="h-40 bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
                 <FileText className="w-12 h-12 text-slate-400" />
               </div>
@@ -146,8 +150,11 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
                     <Star className="w-4 h-4" /> {article.saves}
                   </span>
                 </div>
+                <div className="mt-3 flex items-center gap-1 text-teal-600 text-sm font-medium">
+                  Read article <ChevronRight className="w-4 h-4" />
+                </div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </section>
