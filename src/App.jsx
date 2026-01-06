@@ -8,6 +8,7 @@ import CertificationPage from './components/pages/CertificationPage';
 import ResourcesPage from './components/pages/ResourcesPage';
 import ProfilePage from './components/pages/ProfilePage';
 import ArticleDetailPage from './components/pages/ArticleDetailPage';
+import TrackDetailPage from './components/pages/TrackDetailPage';
 import SmartSearchModal from './components/modals/SmartSearchModal';
 import GlossaryTermModal from './components/modals/GlossaryTermModal';
 
@@ -16,6 +17,7 @@ function App() {
   const [showSmartSearch, setShowSmartSearch] = useState(false);
   const [viewingGlossaryTerm, setViewingGlossaryTerm] = useState(null);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
+  const [selectedTrackId, setSelectedTrackId] = useState(null);
   const [savedItems, setSavedItems] = useState({
     articles: [],
     molecules: [],
@@ -57,9 +59,15 @@ function App() {
   const handleNavigate = (page, itemId = null) => {
     if (page === 'article' && itemId) {
       setSelectedArticleId(itemId);
+      setSelectedTrackId(null);
       setCurrentPage('article');
+    } else if (page === 'track' && itemId) {
+      setSelectedTrackId(itemId);
+      setSelectedArticleId(null);
+      setCurrentPage('track');
     } else {
       setSelectedArticleId(null);
+      setSelectedTrackId(null);
       setCurrentPage(page);
     }
     // Scroll to top on navigation
@@ -96,6 +104,14 @@ function App() {
             toggleSaveItem={toggleSaveItem}
             isItemSaved={isItemSaved}
             onGlossaryClick={setViewingGlossaryTerm}
+          />
+        );
+      case 'track':
+        return (
+          <TrackDetailPage
+            trackId={selectedTrackId}
+            onBack={() => handleNavigate('explore')}
+            onNavigate={handleNavigate}
           />
         );
       default:

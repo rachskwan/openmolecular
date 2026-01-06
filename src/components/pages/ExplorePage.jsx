@@ -107,7 +107,11 @@ export default function ExplorePage({ onNavigate, toggleSaveItem, isItemSaved })
       {activeTab === 'Tracks' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filterContent(tracks).map(track => (
-            <div key={track.id} className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+            <button
+              key={track.id}
+              onClick={() => onNavigate('track', track.id)}
+              className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+            >
               <div className="flex items-start justify-between mb-4">
                 <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center">
                   <BookOpen className="w-6 h-6 text-white" />
@@ -130,14 +134,17 @@ export default function ExplorePage({ onNavigate, toggleSaveItem, isItemSaved })
                   <Clock className="w-4 h-4" /> {track.hours} hours
                 </span>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 mb-3">
                 {track.skills.map((skill, idx) => (
                   <span key={idx} className="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs">
                     {skill}
                   </span>
                 ))}
               </div>
-            </div>
+              <div className="flex items-center gap-1 text-teal-600 text-sm font-medium">
+                View track <ChevronRight className="w-4 h-4" />
+              </div>
+            </button>
           ))}
         </div>
       )}
