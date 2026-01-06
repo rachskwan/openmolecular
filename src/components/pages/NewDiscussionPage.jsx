@@ -4,7 +4,7 @@ import { communityCategories } from '../../data/community';
 
 const categories = communityCategories.filter(cat => cat !== 'All');
 
-export default function NewDiscussionPage({ onBack, onNavigate }) {
+export default function NewDiscussionPage({ onBack, onNavigate, onSubmitThread }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('');
@@ -41,10 +41,15 @@ export default function NewDiscussionPage({ onBack, onNavigate }) {
     setIsSubmitting(true);
 
     // Simulate submission delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // In a real app, this would send to a backend
-    console.log('New discussion:', { title, content, category });
+    // Submit the thread
+    onSubmitThread({
+      title,
+      content,
+      preview: content.slice(0, 150) + (content.length > 150 ? '...' : ''),
+      category,
+    });
 
     setIsSubmitting(false);
     setSubmitted(true);

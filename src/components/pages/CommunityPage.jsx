@@ -2,12 +2,15 @@ import { useState } from 'react';
 import { MessageCircle, ThumbsUp, TrendingUp, Star, ChevronRight } from 'lucide-react';
 import { communityThreads, communityCategories } from '../../data/community';
 
-export default function CommunityPage({ onNavigate, onUserClick }) {
+export default function CommunityPage({ onNavigate, onUserClick, userThreads = [] }) {
   const [activeCategory, setActiveCategory] = useState('All');
 
+  // Combine user-created threads with static threads (user threads first)
+  const allThreads = [...userThreads, ...communityThreads];
+
   const filteredThreads = activeCategory === 'All'
-    ? communityThreads
-    : communityThreads.filter(t => t.category === activeCategory);
+    ? allThreads
+    : allThreads.filter(t => t.category === activeCategory);
 
   const featuredThreads = communityThreads.filter(t => t.featured);
 

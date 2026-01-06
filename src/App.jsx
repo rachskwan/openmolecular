@@ -53,10 +53,38 @@ function App() {
     };
   });
 
+  // User-created discussion threads - persisted to localStorage
+  const [userThreads, setUserThreads] = useState(() => {
+    const saved = localStorage.getItem('userThreads');
+    return saved ? JSON.parse(saved) : [];
+  });
+
   // Persist learning progress to localStorage
   useEffect(() => {
     localStorage.setItem('learningProgress', JSON.stringify(learningProgress));
   }, [learningProgress]);
+
+  // Persist user threads to localStorage
+  useEffect(() => {
+    localStorage.setItem('userThreads', JSON.stringify(userThreads));
+  }, [userThreads]);
+
+  // Add a new discussion thread
+  const addNewThread = (thread) => {
+    const newThread = {
+      ...thread,
+      id: Date.now(), // Unique ID based on timestamp
+      date: 'Just now',
+      replies: 0,
+      likes: 0,
+      avatar: 'You',
+      author: 'You',
+      featured: false,
+      threadReplies: [],
+    };
+    setUserThreads(prev => [newThread, ...prev]);
+    return newThread.id;
+  };
 
   // Mark a section as completed
   const markSectionComplete = (trackId, lessonId, sectionIndex) => {
@@ -257,7 +285,7 @@ function App() {
       case 'explore':
         return <ExplorePage {...commonProps} initialTab={exploreTab} />;
       case 'community':
-        return <CommunityPage {...commonProps} />;
+        return <CommunityPage {...commonProps} userThreads={userThreads} />;
       case 'certification':
         return (
           <CertificationPage
@@ -323,6 +351,7 @@ function App() {
           <NewDiscussionPage
             onBack={() => handleNavigate('community')}
             onNavigate={handleNavigate}
+            onSubmitThread={addNewThread}
           />
         );
       case 'interactive':
