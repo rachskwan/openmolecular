@@ -18,12 +18,14 @@ import SmartSearchModal from './components/modals/SmartSearchModal';
 import GlossaryTermModal from './components/modals/GlossaryTermModal';
 import QuizModal from './components/modals/QuizModal';
 import ConsultationModal from './components/modals/ConsultationModal';
+import UserProfileModal from './components/modals/UserProfileModal';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [showSmartSearch, setShowSmartSearch] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
   const [consultationModal, setConsultationModal] = useState({ show: false, type: 'consultation' });
+  const [viewingUserProfile, setViewingUserProfile] = useState(null);
   const [viewingGlossaryTerm, setViewingGlossaryTerm] = useState(null);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
   const [selectedTrackId, setSelectedTrackId] = useState(null);
@@ -243,6 +245,7 @@ function App() {
       onGlossaryClick: setViewingGlossaryTerm,
       onQuizClick: () => setShowQuiz(true),
       onSearchClick: () => setShowSmartSearch(true),
+      onUserClick: setViewingUserProfile,
       toggleSaveItem,
       isItemSaved,
     };
@@ -275,6 +278,7 @@ function App() {
             toggleSaveItem={toggleSaveItem}
             isItemSaved={isItemSaved}
             onGlossaryClick={setViewingGlossaryTerm}
+            onUserClick={setViewingUserProfile}
           />
         );
       case 'track':
@@ -310,6 +314,7 @@ function App() {
             threadId={selectedThreadId}
             onBack={() => handleNavigate('community')}
             onNavigate={handleNavigate}
+            onUserClick={setViewingUserProfile}
           />
         );
       case 'interactive':
@@ -383,6 +388,14 @@ function App() {
         <ConsultationModal
           onClose={() => setConsultationModal({ show: false, type: 'consultation' })}
           modalType={consultationModal.type}
+        />
+      )}
+
+      {viewingUserProfile && (
+        <UserProfileModal
+          username={viewingUserProfile}
+          onClose={() => setViewingUserProfile(null)}
+          onNavigate={handleNavigate}
         />
       )}
     </div>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { MessageCircle, ThumbsUp, TrendingUp, Star, ChevronRight } from 'lucide-react';
 import { communityThreads, communityCategories } from '../../data/community';
 
-export default function CommunityPage({ onNavigate }) {
+export default function CommunityPage({ onNavigate, onUserClick }) {
   const [activeCategory, setActiveCategory] = useState('All');
 
   const filteredThreads = activeCategory === 'All'
@@ -42,18 +42,31 @@ export default function CommunityPage({ onNavigate }) {
           {/* Thread List */}
           <div className="space-y-4">
             {filteredThreads.map(thread => (
-              <button
+              <div
                 key={thread.id}
-                onClick={() => onNavigate('thread', thread.id)}
                 className="w-full bg-white rounded-xl p-5 shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white font-medium text-sm flex-shrink-0">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onUserClick?.(thread.author);
+                    }}
+                    className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white font-medium text-sm flex-shrink-0 hover:ring-2 hover:ring-teal-300 hover:ring-offset-2 transition-all"
+                  >
                     {thread.avatar}
-                  </div>
+                  </button>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-medium text-slate-900">{thread.author}</span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onUserClick?.(thread.author);
+                        }}
+                        className="font-medium text-slate-900 hover:text-teal-600 transition-colors"
+                      >
+                        {thread.author}
+                      </button>
                       <span className="text-sm text-slate-500">{thread.date}</span>
                       {thread.featured && (
                         <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded text-xs font-medium">
@@ -61,8 +74,13 @@ export default function CommunityPage({ onNavigate }) {
                         </span>
                       )}
                     </div>
-                    <h3 className="font-semibold text-slate-900 mb-2">{thread.title}</h3>
-                    <p className="text-sm text-slate-600 line-clamp-2 mb-3">{thread.preview}</p>
+                    <button
+                      onClick={() => onNavigate('thread', thread.id)}
+                      className="block w-full text-left"
+                    >
+                      <h3 className="font-semibold text-slate-900 mb-2 hover:text-teal-600 transition-colors">{thread.title}</h3>
+                      <p className="text-sm text-slate-600 line-clamp-2 mb-3">{thread.preview}</p>
+                    </button>
                     <div className="flex items-center gap-4 text-sm text-slate-500">
                       <span className="px-2 py-1 bg-slate-100 rounded text-xs">{thread.category}</span>
                       <span className="flex items-center gap-1">
@@ -74,7 +92,7 @@ export default function CommunityPage({ onNavigate }) {
                     </div>
                   </div>
                 </div>
-              </button>
+              </div>
             ))}
           </div>
         </div>

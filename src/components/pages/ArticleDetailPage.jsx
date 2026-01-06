@@ -1,7 +1,7 @@
 import { ArrowLeft, Clock, User, Calendar, Bookmark, BookmarkCheck, Lock, Share2, ChevronRight } from 'lucide-react';
 import { articles } from '../../data/articles';
 
-export default function ArticleDetailPage({ articleId, onBack, onNavigate, toggleSaveItem, isItemSaved, onGlossaryClick }) {
+export default function ArticleDetailPage({ articleId, onBack, onNavigate, toggleSaveItem, isItemSaved, onGlossaryClick, onUserClick }) {
   const article = articles.find(a => a.id === articleId);
 
   if (!article) {
@@ -128,10 +128,13 @@ export default function ArticleDetailPage({ articleId, onBack, onNavigate, toggl
 
           {/* Meta info */}
           <div className="flex flex-wrap items-center gap-4 text-slate-600">
-            <div className="flex items-center gap-2">
+            <button
+              onClick={() => onUserClick?.(article.author)}
+              className="flex items-center gap-2 hover:text-teal-600 transition-colors"
+            >
               <User className="w-4 h-4" />
-              <span>{article.author}</span>
-            </div>
+              <span className="font-medium">{article.author}</span>
+            </button>
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
               <span>{article.date}</span>
@@ -204,11 +207,19 @@ export default function ArticleDetailPage({ articleId, onBack, onNavigate, toggl
         {article.authorBio && (
           <div className="bg-slate-50 border border-slate-200 rounded-xl p-6">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white font-semibold text-lg flex-shrink-0">
+              <button
+                onClick={() => onUserClick?.(article.author)}
+                className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white font-semibold text-lg flex-shrink-0 hover:ring-2 hover:ring-teal-300 hover:ring-offset-2 transition-all"
+              >
                 {article.author.split(' ').map(n => n[0]).join('')}
-              </div>
+              </button>
               <div>
-                <h4 className="font-semibold text-slate-900 mb-1">{article.author}</h4>
+                <button
+                  onClick={() => onUserClick?.(article.author)}
+                  className="font-semibold text-slate-900 mb-1 hover:text-teal-600 transition-colors text-left"
+                >
+                  {article.author}
+                </button>
                 <p className="text-slate-600 text-sm">{article.authorBio}</p>
               </div>
             </div>

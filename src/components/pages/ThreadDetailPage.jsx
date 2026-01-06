@@ -1,7 +1,7 @@
 import { ArrowLeft, MessageCircle, ThumbsUp, Clock, Share2, Bookmark, ChevronRight } from 'lucide-react';
 import { communityThreads } from '../../data/community';
 
-export default function ThreadDetailPage({ threadId, onBack, onNavigate }) {
+export default function ThreadDetailPage({ threadId, onBack, onNavigate, onUserClick }) {
   const thread = communityThreads.find(t => t.id === threadId);
 
   if (!thread) {
@@ -79,12 +79,20 @@ export default function ThreadDetailPage({ threadId, onBack, onNavigate }) {
           {/* Thread Header */}
           <div className="p-6 border-b border-slate-100">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white font-semibold flex-shrink-0">
+              <button
+                onClick={() => onUserClick?.(thread.author)}
+                className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white font-semibold flex-shrink-0 hover:ring-2 hover:ring-teal-300 hover:ring-offset-2 transition-all"
+              >
                 {thread.avatar}
-              </div>
+              </button>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-semibold text-slate-900">{thread.author}</span>
+                  <button
+                    onClick={() => onUserClick?.(thread.author)}
+                    className="font-semibold text-slate-900 hover:text-teal-600 transition-colors"
+                  >
+                    {thread.author}
+                  </button>
                   <span className="text-sm text-slate-500">{thread.date}</span>
                   {thread.featured && (
                     <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded text-xs font-medium">
@@ -147,16 +155,24 @@ export default function ThreadDetailPage({ threadId, onBack, onNavigate }) {
                 }`}
               >
                 <div className="flex items-start gap-4">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-medium text-sm flex-shrink-0 ${
-                    reply.isAuthor
-                      ? 'bg-gradient-to-br from-teal-500 to-emerald-600'
-                      : 'bg-gradient-to-br from-slate-400 to-slate-500'
-                  }`}>
+                  <button
+                    onClick={() => onUserClick?.(reply.author)}
+                    className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-medium text-sm flex-shrink-0 hover:ring-2 hover:ring-offset-2 transition-all ${
+                      reply.isAuthor
+                        ? 'bg-gradient-to-br from-teal-500 to-emerald-600 hover:ring-teal-300'
+                        : 'bg-gradient-to-br from-slate-400 to-slate-500 hover:ring-slate-300'
+                    }`}
+                  >
                     {reply.avatar}
-                  </div>
+                  </button>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="font-medium text-slate-900">{reply.author}</span>
+                      <button
+                        onClick={() => onUserClick?.(reply.author)}
+                        className="font-medium text-slate-900 hover:text-teal-600 transition-colors"
+                      >
+                        {reply.author}
+                      </button>
                       {reply.isAuthor && (
                         <span className="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-xs font-medium">
                           OP
