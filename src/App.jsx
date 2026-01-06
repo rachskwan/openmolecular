@@ -13,10 +13,12 @@ import CaseStudyDetailPage from './components/pages/CaseStudyDetailPage';
 import ComparisonDetailPage from './components/pages/ComparisonDetailPage';
 import SmartSearchModal from './components/modals/SmartSearchModal';
 import GlossaryTermModal from './components/modals/GlossaryTermModal';
+import QuizModal from './components/modals/QuizModal';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [showSmartSearch, setShowSmartSearch] = useState(false);
+  const [showQuiz, setShowQuiz] = useState(false);
   const [viewingGlossaryTerm, setViewingGlossaryTerm] = useState(null);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
   const [selectedTrackId, setSelectedTrackId] = useState(null);
@@ -100,6 +102,7 @@ function App() {
     const commonProps = {
       onNavigate: handleNavigate,
       onGlossaryClick: setViewingGlossaryTerm,
+      onQuizClick: () => setShowQuiz(true),
       toggleSaveItem,
       isItemSaved,
     };
@@ -188,6 +191,13 @@ function App() {
           onTermClick={setViewingGlossaryTerm}
           toggleSaveItem={toggleSaveItem}
           isItemSaved={isItemSaved}
+        />
+      )}
+
+      {showQuiz && (
+        <QuizModal
+          onClose={() => setShowQuiz(false)}
+          onNavigate={handleNavigate}
         />
       )}
     </div>
