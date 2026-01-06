@@ -197,7 +197,11 @@ export default function ExplorePage({ onNavigate, toggleSaveItem, isItemSaved })
       {activeTab === 'Case Studies' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filterContent(caseStudies).map(study => (
-            <div key={study.id} className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+            <button
+              key={study.id}
+              onClick={() => onNavigate('casestudy', study.id)}
+              className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+            >
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center flex-shrink-0">
                   <Beaker className="w-6 h-6 text-white" />
@@ -226,13 +230,13 @@ export default function ExplorePage({ onNavigate, toggleSaveItem, isItemSaved })
                   </div>
                   <div className="flex items-center justify-between text-sm text-slate-500">
                     <span>{study.duration}</span>
-                    <button className="text-teal-600 font-medium hover:text-teal-700 flex items-center gap-1">
+                    <span className="text-purple-600 font-medium flex items-center gap-1">
                       Read Case Study <ChevronRight className="w-4 h-4" />
-                    </button>
+                    </span>
                   </div>
                 </div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
       )}

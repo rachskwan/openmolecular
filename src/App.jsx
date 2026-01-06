@@ -9,6 +9,7 @@ import ResourcesPage from './components/pages/ResourcesPage';
 import ProfilePage from './components/pages/ProfilePage';
 import ArticleDetailPage from './components/pages/ArticleDetailPage';
 import TrackDetailPage from './components/pages/TrackDetailPage';
+import CaseStudyDetailPage from './components/pages/CaseStudyDetailPage';
 import SmartSearchModal from './components/modals/SmartSearchModal';
 import GlossaryTermModal from './components/modals/GlossaryTermModal';
 
@@ -18,6 +19,7 @@ function App() {
   const [viewingGlossaryTerm, setViewingGlossaryTerm] = useState(null);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
   const [selectedTrackId, setSelectedTrackId] = useState(null);
+  const [selectedCaseStudyId, setSelectedCaseStudyId] = useState(null);
   const [savedItems, setSavedItems] = useState({
     articles: [],
     molecules: [],
@@ -60,14 +62,22 @@ function App() {
     if (page === 'article' && itemId) {
       setSelectedArticleId(itemId);
       setSelectedTrackId(null);
+      setSelectedCaseStudyId(null);
       setCurrentPage('article');
     } else if (page === 'track' && itemId) {
       setSelectedTrackId(itemId);
       setSelectedArticleId(null);
+      setSelectedCaseStudyId(null);
       setCurrentPage('track');
+    } else if (page === 'casestudy' && itemId) {
+      setSelectedCaseStudyId(itemId);
+      setSelectedArticleId(null);
+      setSelectedTrackId(null);
+      setCurrentPage('casestudy');
     } else {
       setSelectedArticleId(null);
       setSelectedTrackId(null);
+      setSelectedCaseStudyId(null);
       setCurrentPage(page);
     }
     // Scroll to top on navigation
@@ -110,6 +120,14 @@ function App() {
         return (
           <TrackDetailPage
             trackId={selectedTrackId}
+            onBack={() => handleNavigate('explore')}
+            onNavigate={handleNavigate}
+          />
+        );
+      case 'casestudy':
+        return (
+          <CaseStudyDetailPage
+            caseStudyId={selectedCaseStudyId}
             onBack={() => handleNavigate('explore')}
             onNavigate={handleNavigate}
           />
