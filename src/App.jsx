@@ -59,6 +59,21 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
+  // User likes - persisted to localStorage
+  const [userLikes, setUserLikes] = useState(() => {
+    const saved = localStorage.getItem('userLikes');
+    return saved ? JSON.parse(saved) : { threads: [], replies: [] };
+  });
+
+  // User replies - persisted to localStorage
+  const [userReplies, setUserReplies] = useState(() => {
+    const saved = localStorage.getItem('userReplies');
+    return saved ? JSON.parse(saved) : {}; // { threadId: [replies] }
+  });
+
+  // Toast notification state
+  const [toast, setToast] = useState(null);
+
   // Persist learning progress to localStorage
   useEffect(() => {
     localStorage.setItem('learningProgress', JSON.stringify(learningProgress));
@@ -68,6 +83,24 @@ function App() {
   useEffect(() => {
     localStorage.setItem('userThreads', JSON.stringify(userThreads));
   }, [userThreads]);
+
+  // Persist user likes to localStorage
+  useEffect(() => {
+    localStorage.setItem('userLikes', JSON.stringify(userLikes));
+  }, [userLikes]);
+
+  // Persist user replies to localStorage
+  useEffect(() => {
+    localStorage.setItem('userReplies', JSON.stringify(userReplies));
+  }, [userReplies]);
+
+  // Auto-hide toast after 3 seconds
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
 
   // Add a new discussion thread
   const addNewThread = (thread) => {
@@ -84,6 +117,83 @@ function App() {
     };
     setUserThreads(prev => [newThread, ...prev]);
     return newThread.id;
+  };
+
+  // Toggle like on a thread
+  const toggleThreadLike = (threadId) => {
+    setUserLikes(prev => {
+      const isLiked = prev.threads.includes(threadId);
+      return {
+        ...prev,
+        threads: isLiked
+          ? prev.threads.filter(id => id !== threadId)
+          : [...prev.threads, threadId]
+      };
+    });
+  };
+
+  // Toggle like on a reply
+  const toggleReplyLike = (replyId) => {
+    setUserLikes(prev => {
+      const isLiked = prev.replies.includes(replyId);
+      return {
+        ...prev,
+        replies: isLiked
+          ? prev.replies.filter(id => id !== replyId)
+          : [...prev.replies, replyId]
+      };
+    });
+  };
+
+  // Check if thread is liked
+  const isThreadLiked = (threadId) => userLikes.threads.includes(threadId);
+
+  // Check if reply is liked
+  const isReplyLiked = (replyId) => userLikes.replies.includes(replyId);
+
+  // Add a reply to a thread
+  const addReply = (threadId, content) => {
+    const newReply = {
+      id: Date.now(),
+      author: 'You',
+      avatar: 'You',
+      content,
+      date: 'Just now',
+      likes: 0,
+      isAuthor: false,
+    };
+    setUserReplies(prev => ({
+      ...prev,
+      [threadId]: [...(prev[threadId] || []), newReply]
+    }));
+  };
+
+  // Get replies for a thread (user-created ones)
+  const getRepliesForThread = (threadId) => userReplies[threadId] || [];
+
+  // Share functionality
+  const handleShare = async (title, url) => {
+    const shareData = {
+      title: title || 'OpenMolecular',
+      url: url || window.location.href,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareData.url);
+        setToast('Link copied to clipboard!');
+      }
+    } catch (err) {
+      // User cancelled or error - try clipboard fallback
+      try {
+        await navigator.clipboard.writeText(shareData.url);
+        setToast('Link copied to clipboard!');
+      } catch {
+        setToast('Unable to share');
+      }
+    }
   };
 
   // Mark a section as completed
@@ -285,7 +395,14 @@ function App() {
       case 'explore':
         return <ExplorePage {...commonProps} initialTab={exploreTab} />;
       case 'community':
-        return <CommunityPage {...commonProps} userThreads={userThreads} />;
+        return (
+          <CommunityPage
+            {...commonProps}
+            userThreads={userThreads}
+            toggleThreadLike={toggleThreadLike}
+            isThreadLiked={isThreadLiked}
+          />
+        );
       case 'certification':
         return (
           <CertificationPage
@@ -344,6 +461,14 @@ function App() {
             onBack={() => handleNavigate('community')}
             onNavigate={handleNavigate}
             onUserClick={setViewingUserProfile}
+            userThreads={userThreads}
+            toggleThreadLike={toggleThreadLike}
+            toggleReplyLike={toggleReplyLike}
+            isThreadLiked={isThreadLiked}
+            isReplyLiked={isReplyLiked}
+            addReply={addReply}
+            getRepliesForThread={getRepliesForThread}
+            onShare={handleShare}
           />
         );
       case 'new-discussion':
@@ -434,6 +559,13 @@ function App() {
           onClose={() => setViewingUserProfile(null)}
           onNavigate={handleNavigate}
         />
+      )}
+
+      {/* Toast Notification */}
+      {toast && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-3 bg-slate-900 text-white rounded-lg shadow-lg animate-fade-in">
+          {toast}
+        </div>
       )}
     </div>
   );

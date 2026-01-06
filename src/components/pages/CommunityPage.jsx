@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { MessageCircle, ThumbsUp, TrendingUp, Star, ChevronRight } from 'lucide-react';
 import { communityThreads, communityCategories } from '../../data/community';
 
-export default function CommunityPage({ onNavigate, onUserClick, userThreads = [] }) {
+export default function CommunityPage({ onNavigate, onUserClick, userThreads = [], toggleThreadLike, isThreadLiked }) {
   const [activeCategory, setActiveCategory] = useState('All');
 
   // Combine user-created threads with static threads (user threads first)
@@ -89,9 +89,18 @@ export default function CommunityPage({ onNavigate, onUserClick, userThreads = [
                       <span className="flex items-center gap-1">
                         <MessageCircle className="w-4 h-4" /> {thread.replies} replies
                       </span>
-                      <span className="flex items-center gap-1">
-                        <ThumbsUp className="w-4 h-4" /> {thread.likes}
-                      </span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleThreadLike?.(thread.id);
+                        }}
+                        className={`flex items-center gap-1 transition-colors ${
+                          isThreadLiked?.(thread.id) ? 'text-teal-600' : 'hover:text-teal-600'
+                        }`}
+                      >
+                        <ThumbsUp className={`w-4 h-4 ${isThreadLiked?.(thread.id) ? 'fill-current' : ''}`} />
+                        {thread.likes + (isThreadLiked?.(thread.id) ? 1 : 0)}
+                      </button>
                     </div>
                   </div>
                 </div>

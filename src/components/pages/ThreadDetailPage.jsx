@@ -1,8 +1,27 @@
-import { ArrowLeft, MessageCircle, ThumbsUp, Clock, Share2, Bookmark, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowLeft, MessageCircle, ThumbsUp, Share2, Bookmark, BookmarkCheck } from 'lucide-react';
 import { communityThreads } from '../../data/community';
 
-export default function ThreadDetailPage({ threadId, onBack, onNavigate, onUserClick }) {
-  const thread = communityThreads.find(t => t.id === threadId);
+export default function ThreadDetailPage({
+  threadId,
+  onBack,
+  onNavigate,
+  onUserClick,
+  userThreads = [],
+  toggleThreadLike,
+  toggleReplyLike,
+  isThreadLiked,
+  isReplyLiked,
+  addReply,
+  getRepliesForThread,
+  onShare,
+}) {
+  const [replyContent, setReplyContent] = useState('');
+  const [isSaved, setIsSaved] = useState(false);
+
+  // Find thread in both static and user threads
+  const allThreads = [...userThreads, ...communityThreads];
+  const thread = allThreads.find(t => t.id === threadId);
 
   if (!thread) {
     return (
@@ -118,21 +137,40 @@ export default function ThreadDetailPage({ threadId, onBack, onNavigate, onUserC
           {/* Thread Actions */}
           <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
             <div className="flex items-center gap-6">
-              <button className="flex items-center gap-2 text-slate-600 hover:text-teal-600 transition-colors">
-                <ThumbsUp className="w-5 h-5" />
-                <span className="text-sm font-medium">{thread.likes}</span>
+              <button
+                onClick={() => toggleThreadLike?.(thread.id)}
+                className={`flex items-center gap-2 transition-colors ${
+                  isThreadLiked?.(thread.id)
+                    ? 'text-teal-600'
+                    : 'text-slate-600 hover:text-teal-600'
+                }`}
+              >
+                <ThumbsUp className={`w-5 h-5 ${isThreadLiked?.(thread.id) ? 'fill-current' : ''}`} />
+                <span className="text-sm font-medium">
+                  {thread.likes + (isThreadLiked?.(thread.id) ? 1 : 0)}
+                </span>
               </button>
               <button className="flex items-center gap-2 text-slate-600 hover:text-teal-600 transition-colors">
                 <MessageCircle className="w-5 h-5" />
-                <span className="text-sm font-medium">{thread.replies} replies</span>
+                <span className="text-sm font-medium">
+                  {(thread.threadReplies?.length || 0) + (getRepliesForThread?.(thread.id)?.length || 0)} replies
+                </span>
               </button>
             </div>
             <div className="flex items-center gap-4">
-              <button className="flex items-center gap-2 text-slate-600 hover:text-teal-600 transition-colors">
-                <Bookmark className="w-5 h-5" />
-                <span className="text-sm">Save</span>
+              <button
+                onClick={() => setIsSaved(!isSaved)}
+                className={`flex items-center gap-2 transition-colors ${
+                  isSaved ? 'text-teal-600' : 'text-slate-600 hover:text-teal-600'
+                }`}
+              >
+                {isSaved ? <BookmarkCheck className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
+                <span className="text-sm">{isSaved ? 'Saved' : 'Save'}</span>
               </button>
-              <button className="flex items-center gap-2 text-slate-600 hover:text-teal-600 transition-colors">
+              <button
+                onClick={() => onShare?.(thread.title)}
+                className="flex items-center gap-2 text-slate-600 hover:text-teal-600 transition-colors"
+              >
                 <Share2 className="w-5 h-5" />
                 <span className="text-sm">Share</span>
               </button>
@@ -142,59 +180,77 @@ export default function ThreadDetailPage({ threadId, onBack, onNavigate, onUserC
 
         {/* Replies Section */}
         <div className="mb-6">
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">
-            {thread.threadReplies?.length || 0} Replies
-          </h2>
+          {(() => {
+            const staticReplies = thread.threadReplies || [];
+            const userCreatedReplies = getRepliesForThread?.(thread.id) || [];
+            const allReplies = [...staticReplies, ...userCreatedReplies];
 
-          <div className="space-y-4">
-            {thread.threadReplies?.map((reply) => (
-              <div
-                key={reply.id}
-                className={`bg-white rounded-xl p-5 shadow-sm border ${
-                  reply.isAuthor ? 'border-teal-200 bg-teal-50/30' : 'border-slate-200'
-                }`}
-              >
-                <div className="flex items-start gap-4">
-                  <button
-                    onClick={() => onUserClick?.(reply.author)}
-                    className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-medium text-sm flex-shrink-0 hover:ring-2 hover:ring-offset-2 transition-all ${
-                      reply.isAuthor
-                        ? 'bg-gradient-to-br from-teal-500 to-emerald-600 hover:ring-teal-300'
-                        : 'bg-gradient-to-br from-slate-400 to-slate-500 hover:ring-slate-300'
-                    }`}
-                  >
-                    {reply.avatar}
-                  </button>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <button
-                        onClick={() => onUserClick?.(reply.author)}
-                        className="font-medium text-slate-900 hover:text-teal-600 transition-colors"
-                      >
-                        {reply.author}
-                      </button>
-                      {reply.isAuthor && (
-                        <span className="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-xs font-medium">
-                          OP
-                        </span>
-                      )}
-                      <span className="text-sm text-slate-500">{reply.date}</span>
+            return (
+              <>
+                <h2 className="text-lg font-semibold text-slate-900 mb-4">
+                  {allReplies.length} {allReplies.length === 1 ? 'Reply' : 'Replies'}
+                </h2>
+
+                <div className="space-y-4">
+                  {allReplies.map((reply) => (
+                    <div
+                      key={reply.id}
+                      className={`bg-white rounded-xl p-5 shadow-sm border ${
+                        reply.isAuthor ? 'border-teal-200 bg-teal-50/30' :
+                        reply.author === 'You' ? 'border-emerald-200 bg-emerald-50/30' : 'border-slate-200'
+                      }`}
+                    >
+                      <div className="flex items-start gap-4">
+                        <button
+                          onClick={() => reply.author !== 'You' && onUserClick?.(reply.author)}
+                          className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-medium text-sm flex-shrink-0 hover:ring-2 hover:ring-offset-2 transition-all ${
+                            reply.isAuthor || reply.author === 'You'
+                              ? 'bg-gradient-to-br from-teal-500 to-emerald-600 hover:ring-teal-300'
+                              : 'bg-gradient-to-br from-slate-400 to-slate-500 hover:ring-slate-300'
+                          }`}
+                        >
+                          {reply.avatar}
+                        </button>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <button
+                              onClick={() => reply.author !== 'You' && onUserClick?.(reply.author)}
+                              className="font-medium text-slate-900 hover:text-teal-600 transition-colors"
+                            >
+                              {reply.author}
+                            </button>
+                            {reply.isAuthor && (
+                              <span className="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-xs font-medium">
+                                OP
+                              </span>
+                            )}
+                            {reply.author === 'You' && !reply.isAuthor && (
+                              <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded text-xs font-medium">
+                                You
+                              </span>
+                            )}
+                            <span className="text-sm text-slate-500">{reply.date}</span>
+                          </div>
+                          <p className="text-slate-700 leading-relaxed">{reply.content}</p>
+                          <div className="mt-3 flex items-center gap-4">
+                            <button
+                              onClick={() => toggleReplyLike?.(reply.id)}
+                              className={`flex items-center gap-1 text-sm transition-colors ${
+                                isReplyLiked?.(reply.id) ? 'text-teal-600' : 'text-slate-500 hover:text-teal-600'
+                              }`}
+                            >
+                              <ThumbsUp className={`w-4 h-4 ${isReplyLiked?.(reply.id) ? 'fill-current' : ''}`} />
+                              <span>{reply.likes + (isReplyLiked?.(reply.id) ? 1 : 0)}</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-slate-700 leading-relaxed">{reply.content}</p>
-                    <div className="mt-3 flex items-center gap-4">
-                      <button className="flex items-center gap-1 text-slate-500 hover:text-teal-600 transition-colors text-sm">
-                        <ThumbsUp className="w-4 h-4" />
-                        <span>{reply.likes}</span>
-                      </button>
-                      <button className="text-slate-500 hover:text-teal-600 transition-colors text-sm">
-                        Reply
-                      </button>
-                    </div>
-                  </div>
+                  ))}
                 </div>
-              </div>
-            ))}
-          </div>
+              </>
+            );
+          })()}
         </div>
 
         {/* Reply Input */}
@@ -202,11 +258,25 @@ export default function ThreadDetailPage({ threadId, onBack, onNavigate, onUserC
           <h3 className="font-medium text-slate-900 mb-3">Add a Reply</h3>
           <textarea
             placeholder="Share your thoughts..."
+            value={replyContent}
+            onChange={(e) => setReplyContent(e.target.value)}
             className="w-full p-4 border border-slate-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
             rows={4}
           />
-          <div className="mt-3 flex justify-end">
-            <button className="px-6 py-2 bg-teal-500 text-white rounded-lg font-medium hover:bg-teal-600 transition-colors">
+          <div className="mt-3 flex justify-between items-center">
+            <span className="text-sm text-slate-500">
+              {replyContent.length > 0 && `${replyContent.length} characters`}
+            </span>
+            <button
+              onClick={() => {
+                if (replyContent.trim()) {
+                  addReply?.(thread.id, replyContent.trim());
+                  setReplyContent('');
+                }
+              }}
+              disabled={!replyContent.trim()}
+              className="px-6 py-2 bg-teal-500 text-white rounded-lg font-medium hover:bg-teal-600 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors"
+            >
               Post Reply
             </button>
           </div>
