@@ -118,21 +118,33 @@ export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
                 >
                   {page.label}
                   {page.subtabs && page.subtabs.length > 0 && (
-                    <ChevronDown className={`w-3.5 h-3.5 transition-transform ${hoveredPage === page.id ? 'rotate-180' : ''}`} />
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${hoveredPage === page.id ? 'rotate-180' : ''}`} />
                   )}
                 </button>
 
                 {/* Dropdown Menu */}
-                {page.subtabs && page.subtabs.length > 0 && hoveredPage === page.id && (
-                  <div className="absolute top-full left-0 pt-2 min-w-[200px]">
+                {page.subtabs && page.subtabs.length > 0 && (
+                  <div
+                    className={`absolute top-full left-0 pt-2 min-w-[200px] transition-all duration-200 ease-out ${
+                      hoveredPage === page.id
+                        ? 'opacity-100 translate-y-0 visible'
+                        : 'opacity-0 -translate-y-2 invisible'
+                    }`}
+                  >
                     <div className="bg-white rounded-xl shadow-lg border border-slate-200 py-2 overflow-hidden">
-                      {page.subtabs.map((subtab) => {
+                      {page.subtabs.map((subtab, idx) => {
                         const SubIcon = subtab.icon;
                         return (
                           <button
                             key={subtab.id}
                             onClick={() => handleSubtabClick(page.id, subtab)}
                             className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-teal-50 hover:text-teal-700 transition-colors text-left"
+                            style={{
+                              transitionDelay: hoveredPage === page.id ? `${idx * 30}ms` : '0ms',
+                              opacity: hoveredPage === page.id ? 1 : 0,
+                              transform: hoveredPage === page.id ? 'translateX(0)' : 'translateX(-8px)',
+                              transition: 'opacity 150ms ease-out, transform 150ms ease-out'
+                            }}
                           >
                             <SubIcon className="w-4 h-4 flex-shrink-0" />
                             <span>{subtab.label}</span>
