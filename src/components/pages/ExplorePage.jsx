@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Clock, BookOpen, Star, Lock, ChevronRight, FileText, Beaker, BarChart3 } from 'lucide-react';
+import { Clock, BookOpen, Star, Lock, ChevronRight, FileText, Beaker, BarChart3, Gamepad2, Users } from 'lucide-react';
 import { tracks } from '../../data/modules';
 import { articles } from '../../data/articles';
 import { caseStudies } from '../../data/caseStudies';
 import { productComparisons } from '../../data/comparisons';
+import { interactives } from '../../data/interactives';
 
-const tabs = ['Tracks', 'Articles', 'Case Studies', 'Comparisons'];
+const tabs = ['Tracks', 'Articles', 'Case Studies', 'Comparisons', 'Interactives'];
 
 const categories = [
   { id: 'all', label: 'All' },
@@ -284,6 +285,49 @@ export default function ExplorePage({ onNavigate, toggleSaveItem, isItemSaved })
                   <div className="mt-3 flex items-center gap-1 text-blue-600 text-sm font-medium">
                     Read comparison <ChevronRight className="w-4 h-4" />
                   </div>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {activeTab === 'Interactives' && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filterContent(interactives).map(interactive => (
+            <button
+              key={interactive.id}
+              onClick={() => onNavigate('interactive', interactive.id)}
+              className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+            >
+              <div className={`h-32 bg-gradient-to-br ${interactive.color} flex items-center justify-center`}>
+                <span className="text-5xl">{interactive.icon}</span>
+              </div>
+              <div className="p-5">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
+                    {interactive.type}
+                  </span>
+                  <span className={`px-2 py-1 rounded text-xs font-medium ${
+                    interactive.level === 'Beginner' ? 'bg-green-100 text-green-700' :
+                    interactive.level === 'Intermediate' ? 'bg-amber-100 text-amber-700' :
+                    'bg-red-100 text-red-700'
+                  }`}>
+                    {interactive.level}
+                  </span>
+                </div>
+                <h3 className="font-semibold text-slate-900 mb-2">{interactive.title}</h3>
+                <p className="text-sm text-slate-600 mb-4 line-clamp-2">{interactive.description}</p>
+                <div className="flex items-center justify-between text-sm text-slate-500">
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-4 h-4" /> {interactive.duration}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Users className="w-4 h-4" /> {interactive.plays.toLocaleString()} plays
+                  </span>
+                </div>
+                <div className="mt-3 flex items-center gap-1 text-blue-600 text-sm font-medium">
+                  <Gamepad2 className="w-4 h-4" /> Play now <ChevronRight className="w-4 h-4" />
                 </div>
               </div>
             </button>

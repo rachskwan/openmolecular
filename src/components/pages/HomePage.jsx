@@ -1,4 +1,4 @@
-import { Search, Play, FileText, Zap, TrendingUp, Star, ChevronRight, Beaker, Apple, Award } from 'lucide-react';
+import { Search, Play, FileText, Zap, TrendingUp, Star, ChevronRight, Beaker, Apple, Award, Gamepad2 } from 'lucide-react';
 import { articles } from '../../data/articles';
 import { glossaryData } from '../../data/glossary';
 
@@ -59,7 +59,7 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
       {/* Daily Highlights */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <h2 className="text-2xl font-bold text-slate-900 mb-6">Daily Highlights</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Research of the Day */}
           <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
             <div className="flex items-center gap-2 text-purple-600 mb-3">
@@ -114,6 +114,27 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
               Join Discussion <ChevronRight className="w-4 h-4" />
             </button>
           </div>
+
+          {/* Daily Challenge */}
+          <button
+            onClick={() => onNavigate('interactive', 1)}
+            className="bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl p-6 text-white hover:shadow-lg transition-shadow text-left"
+          >
+            <div className="flex items-center gap-2 text-blue-100 mb-3">
+              <Gamepad2 className="w-5 h-5" />
+              <span className="text-sm font-medium">Daily Challenge</span>
+            </div>
+            <div className="text-3xl mb-2">🧠</div>
+            <h3 className="font-semibold mb-2">
+              Omega-3 Quiz Challenge
+            </h3>
+            <p className="text-sm text-blue-100 mb-4">
+              Test your knowledge and earn points! 2,847 players today.
+            </p>
+            <span className="text-sm font-medium flex items-center gap-1">
+              Play Now <ChevronRight className="w-4 h-4" />
+            </span>
+          </button>
         </div>
       </section>
 

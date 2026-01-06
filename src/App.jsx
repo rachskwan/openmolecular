@@ -12,6 +12,7 @@ import TrackDetailPage from './components/pages/TrackDetailPage';
 import CaseStudyDetailPage from './components/pages/CaseStudyDetailPage';
 import ComparisonDetailPage from './components/pages/ComparisonDetailPage';
 import ThreadDetailPage from './components/pages/ThreadDetailPage';
+import InteractiveDetailPage from './components/pages/InteractiveDetailPage';
 import SmartSearchModal from './components/modals/SmartSearchModal';
 import GlossaryTermModal from './components/modals/GlossaryTermModal';
 import QuizModal from './components/modals/QuizModal';
@@ -26,6 +27,7 @@ function App() {
   const [selectedCaseStudyId, setSelectedCaseStudyId] = useState(null);
   const [selectedComparisonId, setSelectedComparisonId] = useState(null);
   const [selectedThreadId, setSelectedThreadId] = useState(null);
+  const [selectedInteractiveId, setSelectedInteractiveId] = useState(null);
   const [savedItems, setSavedItems] = useState({
     articles: [],
     molecules: [],
@@ -71,6 +73,7 @@ function App() {
       setSelectedCaseStudyId(null);
       setSelectedComparisonId(null);
       setSelectedThreadId(null);
+      setSelectedInteractiveId(null);
       setCurrentPage('article');
     } else if (page === 'track' && itemId) {
       setSelectedTrackId(itemId);
@@ -78,6 +81,7 @@ function App() {
       setSelectedCaseStudyId(null);
       setSelectedComparisonId(null);
       setSelectedThreadId(null);
+      setSelectedInteractiveId(null);
       setCurrentPage('track');
     } else if (page === 'casestudy' && itemId) {
       setSelectedCaseStudyId(itemId);
@@ -85,6 +89,7 @@ function App() {
       setSelectedTrackId(null);
       setSelectedComparisonId(null);
       setSelectedThreadId(null);
+      setSelectedInteractiveId(null);
       setCurrentPage('casestudy');
     } else if (page === 'comparison' && itemId) {
       setSelectedComparisonId(itemId);
@@ -92,6 +97,7 @@ function App() {
       setSelectedTrackId(null);
       setSelectedCaseStudyId(null);
       setSelectedThreadId(null);
+      setSelectedInteractiveId(null);
       setCurrentPage('comparison');
     } else if (page === 'thread' && itemId) {
       setSelectedThreadId(itemId);
@@ -99,13 +105,23 @@ function App() {
       setSelectedTrackId(null);
       setSelectedCaseStudyId(null);
       setSelectedComparisonId(null);
+      setSelectedInteractiveId(null);
       setCurrentPage('thread');
+    } else if (page === 'interactive' && itemId) {
+      setSelectedInteractiveId(itemId);
+      setSelectedArticleId(null);
+      setSelectedTrackId(null);
+      setSelectedCaseStudyId(null);
+      setSelectedComparisonId(null);
+      setSelectedThreadId(null);
+      setCurrentPage('interactive');
     } else {
       setSelectedArticleId(null);
       setSelectedTrackId(null);
       setSelectedCaseStudyId(null);
       setSelectedComparisonId(null);
       setSelectedThreadId(null);
+      setSelectedInteractiveId(null);
       setCurrentPage(page);
     }
     // Scroll to top on navigation
@@ -176,6 +192,14 @@ function App() {
           <ThreadDetailPage
             threadId={selectedThreadId}
             onBack={() => handleNavigate('community')}
+            onNavigate={handleNavigate}
+          />
+        );
+      case 'interactive':
+        return (
+          <InteractiveDetailPage
+            interactiveId={selectedInteractiveId}
+            onBack={() => handleNavigate('explore')}
             onNavigate={handleNavigate}
           />
         );
