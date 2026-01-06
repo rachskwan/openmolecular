@@ -7,6 +7,7 @@ import CommunityPage from './components/pages/CommunityPage';
 import CertificationPage from './components/pages/CertificationPage';
 import ResourcesPage from './components/pages/ResourcesPage';
 import ProfilePage from './components/pages/ProfilePage';
+import ArticleDetailPage from './components/pages/ArticleDetailPage';
 import SmartSearchModal from './components/modals/SmartSearchModal';
 import GlossaryTermModal from './components/modals/GlossaryTermModal';
 
@@ -14,6 +15,7 @@ function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [showSmartSearch, setShowSmartSearch] = useState(false);
   const [viewingGlossaryTerm, setViewingGlossaryTerm] = useState(null);
+  const [selectedArticleId, setSelectedArticleId] = useState(null);
   const [savedItems, setSavedItems] = useState({
     articles: [],
     molecules: [],
@@ -51,9 +53,22 @@ function App() {
     ) || false;
   };
 
+  // Enhanced navigation handler
+  const handleNavigate = (page, itemId = null) => {
+    if (page === 'article' && itemId) {
+      setSelectedArticleId(itemId);
+      setCurrentPage('article');
+    } else {
+      setSelectedArticleId(null);
+      setCurrentPage(page);
+    }
+    // Scroll to top on navigation
+    window.scrollTo(0, 0);
+  };
+
   const renderPage = () => {
     const commonProps = {
-      onNavigate: setCurrentPage,
+      onNavigate: handleNavigate,
       onGlossaryClick: setViewingGlossaryTerm,
       toggleSaveItem,
       isItemSaved,
@@ -72,6 +87,17 @@ function App() {
         return <ResourcesPage {...commonProps} />;
       case 'profile':
         return <ProfilePage {...commonProps} savedItems={savedItems} />;
+      case 'article':
+        return (
+          <ArticleDetailPage
+            articleId={selectedArticleId}
+            onBack={() => handleNavigate('explore')}
+            onNavigate={handleNavigate}
+            toggleSaveItem={toggleSaveItem}
+            isItemSaved={isItemSaved}
+            onGlossaryClick={setViewingGlossaryTerm}
+          />
+        );
       default:
         return <HomePage {...commonProps} />;
     }
@@ -81,7 +107,7 @@ function App() {
     <div className="min-h-screen bg-slate-50">
       <Navbar
         currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
+        setCurrentPage={handleNavigate}
         onSearchClick={() => setShowSmartSearch(true)}
       />
 
@@ -89,13 +115,13 @@ function App() {
         {renderPage()}
       </main>
 
-      <Footer onNavigate={setCurrentPage} />
+      <Footer onNavigate={handleNavigate} />
 
       {/* Modals */}
       {showSmartSearch && (
         <SmartSearchModal
           onClose={() => setShowSmartSearch(false)}
-          onNavigate={setCurrentPage}
+          onNavigate={handleNavigate}
           onGlossaryClick={setViewingGlossaryTerm}
         />
       )}

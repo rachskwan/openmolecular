@@ -145,7 +145,11 @@ export default function ExplorePage({ onNavigate, toggleSaveItem, isItemSaved })
       {activeTab === 'Articles' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filterContent(articles).map(article => (
-            <div key={article.id} className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+            <button
+              key={article.id}
+              onClick={() => onNavigate('article', article.id)}
+              className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+            >
               <div className="h-32 bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center relative">
                 <FileText className="w-10 h-10 text-slate-400" />
                 {article.premium && (
@@ -174,8 +178,11 @@ export default function ExplorePage({ onNavigate, toggleSaveItem, isItemSaved })
                     <Star className="w-4 h-4" /> {article.saves}
                   </span>
                 </div>
+                <div className="mt-3 flex items-center gap-1 text-teal-600 text-sm font-medium">
+                  Read article <ChevronRight className="w-4 h-4" />
+                </div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
       )}
