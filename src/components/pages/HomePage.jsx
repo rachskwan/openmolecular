@@ -72,7 +72,10 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
             <p className="text-sm text-slate-600 mb-4">
               Researchers found that higher Omega-3 Index correlates with better memory performance in adults over 60.
             </p>
-            <button className="text-sm text-teal-600 font-medium hover:text-teal-700 flex items-center gap-1">
+            <button
+              onClick={() => onNavigate('article', 1)}
+              className="text-sm text-teal-600 font-medium hover:text-teal-700 flex items-center gap-1"
+            >
               Read Summary <ChevronRight className="w-4 h-4" />
             </button>
           </div>
