@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ArrowLeft, Clock, BookOpen, Users, Star, Play, FileText, HelpCircle, Award, CheckCircle, ChevronDown, ChevronUp, Lock } from 'lucide-react';
 import { trackDetails } from '../../data/modules';
 
-export default function TrackDetailPage({ trackId, onBack, onNavigate }) {
+export default function TrackDetailPage({ trackId, onBack, onNavigate, isLessonComplete, getTrackProgress }) {
   const [expandedLesson, setExpandedLesson] = useState(null);
   const track = trackDetails[trackId];
 
@@ -21,6 +21,9 @@ export default function TrackDetailPage({ trackId, onBack, onNavigate }) {
   }
 
   const totalLessons = track.lessons.length;
+  const trackProgress = getTrackProgress?.(trackId, totalLessons) || 0;
+  const completedLessonsCount = track.lessons.filter(l => isLessonComplete?.(trackId, l.id)).length;
+
   const getContentIcon = (type) => {
     switch (type) {
       case 'video': return <Play className="w-4 h-4" />;
@@ -106,6 +109,28 @@ export default function TrackDetailPage({ trackId, onBack, onNavigate }) {
               <span>{track.rating} rating</span>
             </div>
           </div>
+
+          {/* Progress Bar (shown if user has started) */}
+          {trackProgress > 0 && (
+            <div className="mt-6 bg-white/10 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium">Your Progress</span>
+                <span className="text-sm">{completedLessonsCount} of {totalLessons} lessons completed</span>
+              </div>
+              <div className="h-3 bg-white/20 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-white rounded-full transition-all duration-500"
+                  style={{ width: `${trackProgress}%` }}
+                />
+              </div>
+              {trackProgress === 100 && (
+                <div className="flex items-center gap-2 mt-2 text-emerald-300">
+                  <Award className="w-5 h-5" />
+                  <span className="text-sm font-medium">Course Completed!</span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -127,11 +152,24 @@ export default function TrackDetailPage({ trackId, onBack, onNavigate }) {
                     onClick={() => setExpandedLesson(expandedLesson === lesson.id ? null : lesson.id)}
                     className="w-full p-4 flex items-start gap-4 text-left hover:bg-slate-50 transition-colors"
                   >
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center font-semibold text-sm">
-                      {idx + 1}
-                    </div>
+                    {isLessonComplete?.(trackId, lesson.id) ? (
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center">
+                        <CheckCircle className="w-5 h-5" />
+                      </div>
+                    ) : (
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center font-semibold text-sm">
+                        {idx + 1}
+                      </div>
+                    )}
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-slate-900 mb-1">{lesson.title}</h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold text-slate-900 mb-1">{lesson.title}</h3>
+                        {isLessonComplete?.(trackId, lesson.id) && (
+                          <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-medium rounded-full">
+                            Completed
+                          </span>
+                        )}
+                      </div>
                       <p className="text-sm text-slate-600 line-clamp-1">{lesson.description}</p>
                       <div className="flex items-center gap-4 mt-2 text-sm text-slate-500">
                         <span className="flex items-center gap-1">
@@ -192,10 +230,23 @@ export default function TrackDetailPage({ trackId, onBack, onNavigate }) {
                       {/* Start Lesson Button */}
                       <button
                         onClick={() => onNavigate('lesson', trackId, lesson.id)}
-                        className="w-full mt-4 py-2 px-4 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+                        className={`w-full mt-4 py-2 px-4 font-medium rounded-lg transition-colors flex items-center justify-center gap-2 ${
+                          isLessonComplete?.(trackId, lesson.id)
+                            ? 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                            : 'bg-teal-600 hover:bg-teal-700 text-white'
+                        }`}
                       >
-                        <Play className="w-4 h-4" />
-                        Start This Lesson
+                        {isLessonComplete?.(trackId, lesson.id) ? (
+                          <>
+                            <BookOpen className="w-4 h-4" />
+                            Review Lesson
+                          </>
+                        ) : (
+                          <>
+                            <Play className="w-4 h-4" />
+                            Start This Lesson
+                          </>
+                        )}
                       </button>
                     </div>
                   )}
@@ -208,11 +259,30 @@ export default function TrackDetailPage({ trackId, onBack, onNavigate }) {
           <div className="lg:col-span-1">
             {/* Enroll Card */}
             <div className="bg-white border border-slate-200 rounded-xl p-6 mb-6 sticky top-20">
+              {/* Progress in Sidebar */}
+              {trackProgress > 0 && (
+                <div className="mb-4">
+                  <div className="flex items-center justify-between text-sm mb-2">
+                    <span className="text-slate-600">Progress</span>
+                    <span className="font-medium text-teal-600">{trackProgress}%</span>
+                  </div>
+                  <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-teal-500 rounded-full transition-all duration-500"
+                      style={{ width: `${trackProgress}%` }}
+                    />
+                  </div>
+                </div>
+              )}
               <button
-                onClick={() => onNavigate('lesson', trackId, track.lessons[0].id)}
+                onClick={() => {
+                  // Find the first incomplete lesson, or start from beginning
+                  const nextLesson = track.lessons.find(l => !isLessonComplete?.(trackId, l.id)) || track.lessons[0];
+                  onNavigate('lesson', trackId, nextLesson.id);
+                }}
                 className="w-full py-3 px-4 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg transition-colors mb-4"
               >
-                Start Learning
+                {trackProgress === 100 ? 'Review Course' : trackProgress > 0 ? 'Continue Learning' : 'Start Learning'}
               </button>
               <p className="text-center text-sm text-slate-500 mb-6">Free access to all lessons</p>
 

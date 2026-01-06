@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import HomePage from './components/pages/HomePage';
@@ -38,6 +38,78 @@ function App() {
     caseStudies: [],
     advice: [],
   });
+
+  // Learning progress state - persisted to localStorage
+  const [learningProgress, setLearningProgress] = useState(() => {
+    const saved = localStorage.getItem('learningProgress');
+    return saved ? JSON.parse(saved) : {
+      // Structure: { trackId: { lessonId: { completed: boolean, sectionsCompleted: [0, 1, 2], completedAt: date } } }
+    };
+  });
+
+  // Persist learning progress to localStorage
+  useEffect(() => {
+    localStorage.setItem('learningProgress', JSON.stringify(learningProgress));
+  }, [learningProgress]);
+
+  // Mark a section as completed
+  const markSectionComplete = (trackId, lessonId, sectionIndex) => {
+    setLearningProgress(prev => {
+      const trackProgress = prev[trackId] || {};
+      const lessonProgress = trackProgress[lessonId] || { completed: false, sectionsCompleted: [] };
+      const sectionsCompleted = lessonProgress.sectionsCompleted.includes(sectionIndex)
+        ? lessonProgress.sectionsCompleted
+        : [...lessonProgress.sectionsCompleted, sectionIndex];
+
+      return {
+        ...prev,
+        [trackId]: {
+          ...trackProgress,
+          [lessonId]: {
+            ...lessonProgress,
+            sectionsCompleted
+          }
+        }
+      };
+    });
+  };
+
+  // Mark a lesson as completed
+  const markLessonComplete = (trackId, lessonId) => {
+    setLearningProgress(prev => {
+      const trackProgress = prev[trackId] || {};
+      const lessonProgress = trackProgress[lessonId] || { sectionsCompleted: [] };
+
+      return {
+        ...prev,
+        [trackId]: {
+          ...trackProgress,
+          [lessonId]: {
+            ...lessonProgress,
+            completed: true,
+            completedAt: new Date().toISOString()
+          }
+        }
+      };
+    });
+  };
+
+  // Check if a lesson is completed
+  const isLessonComplete = (trackId, lessonId) => {
+    return learningProgress[trackId]?.[lessonId]?.completed || false;
+  };
+
+  // Get completed sections for a lesson
+  const getCompletedSections = (trackId, lessonId) => {
+    return learningProgress[trackId]?.[lessonId]?.sectionsCompleted || [];
+  };
+
+  // Calculate track progress percentage
+  const getTrackProgress = (trackId, totalLessons) => {
+    const trackProgress = learningProgress[trackId] || {};
+    const completedLessons = Object.values(trackProgress).filter(l => l.completed).length;
+    return totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+  };
 
   // Save/Unsave handlers
   const toggleSaveItem = (item, itemType, isTermBased = false) => {
@@ -187,6 +259,8 @@ function App() {
             trackId={selectedTrackId}
             onBack={() => handleNavigate('explore')}
             onNavigate={handleNavigate}
+            isLessonComplete={isLessonComplete}
+            getTrackProgress={getTrackProgress}
           />
         );
       case 'casestudy':
@@ -229,6 +303,10 @@ function App() {
             lessonId={selectedLessonId}
             onBack={() => handleNavigate('track', selectedTrackId)}
             onNavigate={handleNavigate}
+            markSectionComplete={markSectionComplete}
+            markLessonComplete={markLessonComplete}
+            getCompletedSections={getCompletedSections}
+            isLessonComplete={isLessonComplete}
           />
         );
       default:

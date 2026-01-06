@@ -1,16 +1,36 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, Play, FileText, HelpCircle, Star, BookOpen, Award, CheckCircle, Clock, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { trackDetails, lessonContent } from '../../data/modules';
 
-export default function LessonViewPage({ trackId, lessonId, onBack, onNavigate }) {
+export default function LessonViewPage({
+  trackId,
+  lessonId,
+  onBack,
+  onNavigate,
+  markSectionComplete: saveSectionProgress,
+  markLessonComplete: saveLessonComplete,
+  getCompletedSections,
+  isLessonComplete: checkLessonComplete
+}) {
   const track = trackDetails[trackId];
   const lesson = track?.lessons?.find(l => l.id === lessonId);
   const content = lessonContent?.[trackId]?.[lessonId];
 
+  // Initialize completed sections from persisted data
+  const savedSections = getCompletedSections?.(trackId, lessonId) || [];
   const [currentSection, setCurrentSection] = useState(0);
-  const [completedSections, setCompletedSections] = useState([]);
+  const [completedSections, setCompletedSections] = useState(savedSections);
   const [quizAnswers, setQuizAnswers] = useState({});
   const [showQuizResults, setShowQuizResults] = useState(false);
+
+  // Sync local state with saved progress when lesson changes
+  useEffect(() => {
+    const saved = getCompletedSections?.(trackId, lessonId) || [];
+    setCompletedSections(saved);
+    setCurrentSection(0);
+    setQuizAnswers({});
+    setShowQuizResults(false);
+  }, [trackId, lessonId, getCompletedSections]);
 
   if (!track || !lesson) {
     return (
@@ -34,7 +54,15 @@ export default function LessonViewPage({ trackId, lessonId, onBack, onNavigate }
 
   const markSectionComplete = () => {
     if (!completedSections.includes(currentSection)) {
-      setCompletedSections([...completedSections, currentSection]);
+      const newCompleted = [...completedSections, currentSection];
+      setCompletedSections(newCompleted);
+      // Persist to parent/localStorage
+      saveSectionProgress?.(trackId, lessonId, currentSection);
+
+      // Check if all sections are now complete
+      if (newCompleted.length === sections.length) {
+        saveLessonComplete?.(trackId, lessonId);
+      }
     }
   };
 
@@ -44,6 +72,11 @@ export default function LessonViewPage({ trackId, lessonId, onBack, onNavigate }
       setCurrentSection(currentSection + 1);
       window.scrollTo(0, 0);
     }
+  };
+
+  const handleLessonComplete = () => {
+    markSectionComplete();
+    saveLessonComplete?.(trackId, lessonId);
   };
 
   const goToPrevSection = () => {
@@ -590,7 +623,7 @@ export default function LessonViewPage({ trackId, lessonId, onBack, onNavigate }
               ) : (
                 <button
                   onClick={() => {
-                    markSectionComplete();
+                    handleLessonComplete();
                     if (nextLesson) {
                       onNavigate('lesson', trackId, nextLesson.id);
                     } else {
