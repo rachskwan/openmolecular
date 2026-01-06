@@ -108,7 +108,7 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
               Community member shares their journey with 234 replies and counting.
             </p>
             <button
-              onClick={() => onNavigate('community')}
+              onClick={() => onNavigate('thread', 1)}
               className="text-sm text-teal-600 font-medium hover:text-teal-700 flex items-center gap-1"
             >
               Join Discussion <ChevronRight className="w-4 h-4" />

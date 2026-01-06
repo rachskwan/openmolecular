@@ -42,9 +42,10 @@ export default function CommunityPage({ onNavigate }) {
           {/* Thread List */}
           <div className="space-y-4">
             {filteredThreads.map(thread => (
-              <div
+              <button
                 key={thread.id}
-                className="bg-white rounded-xl p-5 shadow-sm border border-slate-200 hover:shadow-md transition-shadow cursor-pointer"
+                onClick={() => onNavigate('thread', thread.id)}
+                className="w-full bg-white rounded-xl p-5 shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
               >
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white font-medium text-sm flex-shrink-0">
@@ -73,7 +74,7 @@ export default function CommunityPage({ onNavigate }) {
                     </div>
                   </div>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -107,7 +108,11 @@ export default function CommunityPage({ onNavigate }) {
             </div>
             <div className="space-y-3">
               {featuredThreads.slice(0, 3).map(thread => (
-                <div key={thread.id} className="p-3 bg-white rounded-lg">
+                <button
+                  key={thread.id}
+                  onClick={() => onNavigate('thread', thread.id)}
+                  className="w-full p-3 bg-white rounded-lg text-left hover:shadow-sm transition-shadow"
+                >
                   <h4 className="text-sm font-medium text-slate-900 line-clamp-2 mb-1">
                     {thread.title}
                   </h4>
@@ -116,7 +121,7 @@ export default function CommunityPage({ onNavigate }) {
                     <span>•</span>
                     <span>{thread.replies} replies</span>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           </div>

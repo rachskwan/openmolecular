@@ -11,6 +11,7 @@ import ArticleDetailPage from './components/pages/ArticleDetailPage';
 import TrackDetailPage from './components/pages/TrackDetailPage';
 import CaseStudyDetailPage from './components/pages/CaseStudyDetailPage';
 import ComparisonDetailPage from './components/pages/ComparisonDetailPage';
+import ThreadDetailPage from './components/pages/ThreadDetailPage';
 import SmartSearchModal from './components/modals/SmartSearchModal';
 import GlossaryTermModal from './components/modals/GlossaryTermModal';
 import QuizModal from './components/modals/QuizModal';
@@ -24,6 +25,7 @@ function App() {
   const [selectedTrackId, setSelectedTrackId] = useState(null);
   const [selectedCaseStudyId, setSelectedCaseStudyId] = useState(null);
   const [selectedComparisonId, setSelectedComparisonId] = useState(null);
+  const [selectedThreadId, setSelectedThreadId] = useState(null);
   const [savedItems, setSavedItems] = useState({
     articles: [],
     molecules: [],
@@ -68,30 +70,42 @@ function App() {
       setSelectedTrackId(null);
       setSelectedCaseStudyId(null);
       setSelectedComparisonId(null);
+      setSelectedThreadId(null);
       setCurrentPage('article');
     } else if (page === 'track' && itemId) {
       setSelectedTrackId(itemId);
       setSelectedArticleId(null);
       setSelectedCaseStudyId(null);
       setSelectedComparisonId(null);
+      setSelectedThreadId(null);
       setCurrentPage('track');
     } else if (page === 'casestudy' && itemId) {
       setSelectedCaseStudyId(itemId);
       setSelectedArticleId(null);
       setSelectedTrackId(null);
       setSelectedComparisonId(null);
+      setSelectedThreadId(null);
       setCurrentPage('casestudy');
     } else if (page === 'comparison' && itemId) {
       setSelectedComparisonId(itemId);
       setSelectedArticleId(null);
       setSelectedTrackId(null);
       setSelectedCaseStudyId(null);
+      setSelectedThreadId(null);
       setCurrentPage('comparison');
+    } else if (page === 'thread' && itemId) {
+      setSelectedThreadId(itemId);
+      setSelectedArticleId(null);
+      setSelectedTrackId(null);
+      setSelectedCaseStudyId(null);
+      setSelectedComparisonId(null);
+      setCurrentPage('thread');
     } else {
       setSelectedArticleId(null);
       setSelectedTrackId(null);
       setSelectedCaseStudyId(null);
       setSelectedComparisonId(null);
+      setSelectedThreadId(null);
       setCurrentPage(page);
     }
     // Scroll to top on navigation
@@ -155,6 +169,14 @@ function App() {
             onBack={() => handleNavigate('explore')}
             onNavigate={handleNavigate}
             onGlossaryClick={setViewingGlossaryTerm}
+          />
+        );
+      case 'thread':
+        return (
+          <ThreadDetailPage
+            threadId={selectedThreadId}
+            onBack={() => handleNavigate('community')}
+            onNavigate={handleNavigate}
           />
         );
       default:
