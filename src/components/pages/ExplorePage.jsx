@@ -244,7 +244,11 @@ export default function ExplorePage({ onNavigate, toggleSaveItem, isItemSaved })
       {activeTab === 'Comparisons' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filterContent(productComparisons).map(comparison => (
-            <div key={comparison.id} className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+            <button
+              key={comparison.id}
+              onClick={() => onNavigate('comparison', comparison.id)}
+              className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+            >
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center flex-shrink-0">
                   <BarChart3 className="w-6 h-6 text-white" />
@@ -277,9 +281,12 @@ export default function ExplorePage({ onNavigate, toggleSaveItem, isItemSaved })
                       <Star className="w-4 h-4" /> {comparison.saves}
                     </span>
                   </div>
+                  <div className="mt-3 flex items-center gap-1 text-blue-600 text-sm font-medium">
+                    Read comparison <ChevronRight className="w-4 h-4" />
+                  </div>
                 </div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
       )}

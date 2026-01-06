@@ -10,6 +10,7 @@ import ProfilePage from './components/pages/ProfilePage';
 import ArticleDetailPage from './components/pages/ArticleDetailPage';
 import TrackDetailPage from './components/pages/TrackDetailPage';
 import CaseStudyDetailPage from './components/pages/CaseStudyDetailPage';
+import ComparisonDetailPage from './components/pages/ComparisonDetailPage';
 import SmartSearchModal from './components/modals/SmartSearchModal';
 import GlossaryTermModal from './components/modals/GlossaryTermModal';
 
@@ -20,6 +21,7 @@ function App() {
   const [selectedArticleId, setSelectedArticleId] = useState(null);
   const [selectedTrackId, setSelectedTrackId] = useState(null);
   const [selectedCaseStudyId, setSelectedCaseStudyId] = useState(null);
+  const [selectedComparisonId, setSelectedComparisonId] = useState(null);
   const [savedItems, setSavedItems] = useState({
     articles: [],
     molecules: [],
@@ -63,21 +65,31 @@ function App() {
       setSelectedArticleId(itemId);
       setSelectedTrackId(null);
       setSelectedCaseStudyId(null);
+      setSelectedComparisonId(null);
       setCurrentPage('article');
     } else if (page === 'track' && itemId) {
       setSelectedTrackId(itemId);
       setSelectedArticleId(null);
       setSelectedCaseStudyId(null);
+      setSelectedComparisonId(null);
       setCurrentPage('track');
     } else if (page === 'casestudy' && itemId) {
       setSelectedCaseStudyId(itemId);
       setSelectedArticleId(null);
       setSelectedTrackId(null);
+      setSelectedComparisonId(null);
       setCurrentPage('casestudy');
+    } else if (page === 'comparison' && itemId) {
+      setSelectedComparisonId(itemId);
+      setSelectedArticleId(null);
+      setSelectedTrackId(null);
+      setSelectedCaseStudyId(null);
+      setCurrentPage('comparison');
     } else {
       setSelectedArticleId(null);
       setSelectedTrackId(null);
       setSelectedCaseStudyId(null);
+      setSelectedComparisonId(null);
       setCurrentPage(page);
     }
     // Scroll to top on navigation
@@ -130,6 +142,15 @@ function App() {
             caseStudyId={selectedCaseStudyId}
             onBack={() => handleNavigate('explore')}
             onNavigate={handleNavigate}
+          />
+        );
+      case 'comparison':
+        return (
+          <ComparisonDetailPage
+            comparisonId={selectedComparisonId}
+            onBack={() => handleNavigate('explore')}
+            onNavigate={handleNavigate}
+            onGlossaryClick={setViewingGlossaryTerm}
           />
         );
       default:
