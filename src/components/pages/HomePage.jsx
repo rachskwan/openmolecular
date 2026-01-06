@@ -2,7 +2,7 @@ import { Search, Play, FileText, Zap, TrendingUp, Star, ChevronRight, Beaker, Ap
 import { articles } from '../../data/articles';
 import { glossaryData } from '../../data/glossary';
 
-export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick }) {
+export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onSearchClick }) {
   const featuredArticles = articles.filter(a => a.featured).slice(0, 3);
   const moleculeOfDay = glossaryData['NAD+'];
 
@@ -38,7 +38,7 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick }) {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
-                onClick={() => onGlossaryClick('Omega-3')}
+                onClick={onSearchClick}
                 className="flex items-center justify-center gap-2 px-6 py-3 bg-teal-500 hover:bg-teal-600 rounded-lg font-medium transition-colors"
               >
                 <Search className="w-5 h-5" />

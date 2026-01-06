@@ -103,6 +103,7 @@ function App() {
       onNavigate: handleNavigate,
       onGlossaryClick: setViewingGlossaryTerm,
       onQuizClick: () => setShowQuiz(true),
+      onSearchClick: () => setShowSmartSearch(true),
       toggleSaveItem,
       isItemSaved,
     };
