@@ -17,7 +17,7 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick })
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
       {/* Profile Header */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 mb-8">
+      <div id="settings" className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 mb-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
           <div className="w-20 h-20 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center">
             <User className="w-10 h-10 text-white" />
@@ -51,7 +51,7 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick })
       </div>
 
       {/* Saved Content */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200">
+      <div id="saved" className="bg-white rounded-xl shadow-sm border border-slate-200">
         <div className="border-b border-slate-200">
           <div className="flex gap-1 p-2 overflow-x-auto">
             {tabs.map(tab => {
@@ -131,7 +131,7 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick })
       </div>
 
       {/* Learning Progress */}
-      <div className="mt-8 bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl p-6 text-white">
+      <div id="progress" className="mt-8 bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl p-6 text-white">
         <h2 className="text-xl font-bold mb-4">Continue Learning</h2>
         <p className="text-slate-300 mb-6">
           Pick up where you left off or start a new learning track

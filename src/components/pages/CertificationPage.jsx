@@ -35,7 +35,7 @@ export default function CertificationPage({ onNavigate, onRequestConsultation, o
       </section>
 
       {/* Certification Programs */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+      <section id="programs" className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
         <h2 className="text-2xl font-bold text-slate-900 mb-8 text-center">Our Programs</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {certificationPrograms.map(program => {
@@ -84,7 +84,7 @@ export default function CertificationPage({ onNavigate, onRequestConsultation, o
       </section>
 
       {/* Process Steps */}
-      <section className="bg-slate-50 py-16">
+      <section id="process" className="bg-slate-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <h2 className="text-2xl font-bold text-slate-900 mb-8 text-center">How It Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -109,7 +109,7 @@ export default function CertificationPage({ onNavigate, onRequestConsultation, o
       </section>
 
       {/* Case Studies */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+      <section id="success" className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold text-slate-900">Success Stories</h2>
           <button

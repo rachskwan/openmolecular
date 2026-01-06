@@ -47,7 +47,7 @@ export default function ResourcesPage({ onNavigate, onGlossaryClick }) {
           </button>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+        <div id="partners" className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
           <Beaker className="w-10 h-10 text-purple-600 mb-4" />
           <h3 className="text-xl font-semibold text-slate-900 mb-2">Testing Partners</h3>
           <p className="text-slate-600 mb-4">

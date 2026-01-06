@@ -32,6 +32,7 @@ function App() {
   const [selectedThreadId, setSelectedThreadId] = useState(null);
   const [selectedInteractiveId, setSelectedInteractiveId] = useState(null);
   const [selectedLessonId, setSelectedLessonId] = useState(null);
+  const [exploreTab, setExploreTab] = useState(null);
   const [savedItems, setSavedItems] = useState({
     articles: [],
     molecules: [],
@@ -143,6 +144,21 @@ function App() {
 
   // Enhanced navigation handler
   const handleNavigate = (page, itemId = null, secondaryId = null) => {
+    // Handle explore with tab parameter
+    if (page === 'explore' && itemId && !secondaryId) {
+      // itemId is the tab name for explore
+      setExploreTab(itemId);
+      setSelectedArticleId(null);
+      setSelectedTrackId(null);
+      setSelectedLessonId(null);
+      setSelectedCaseStudyId(null);
+      setSelectedComparisonId(null);
+      setSelectedThreadId(null);
+      setSelectedInteractiveId(null);
+      setCurrentPage('explore');
+      window.scrollTo(0, 0);
+      return;
+    }
     if (page === 'lesson' && itemId && secondaryId) {
       // Lesson navigation: itemId = trackId, secondaryId = lessonId
       setSelectedTrackId(itemId);
@@ -235,7 +251,7 @@ function App() {
       case 'home':
         return <HomePage {...commonProps} />;
       case 'explore':
-        return <ExplorePage {...commonProps} />;
+        return <ExplorePage {...commonProps} initialTab={exploreTab} />;
       case 'community':
         return <CommunityPage {...commonProps} />;
       case 'certification':

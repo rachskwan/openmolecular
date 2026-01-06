@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Clock, BookOpen, Star, Lock, ChevronRight, FileText, Beaker, BarChart3, Gamepad2, Users } from 'lucide-react';
 import { tracks } from '../../data/modules';
 import { articles } from '../../data/articles';
@@ -19,10 +19,17 @@ const categories = [
 
 const levels = ['All', 'Beginner', 'Intermediate', 'Advanced'];
 
-export default function ExplorePage({ onNavigate, toggleSaveItem, isItemSaved }) {
-  const [activeTab, setActiveTab] = useState('Tracks');
+export default function ExplorePage({ onNavigate, toggleSaveItem, isItemSaved, initialTab }) {
+  const [activeTab, setActiveTab] = useState(initialTab || 'Tracks');
   const [activeCategory, setActiveCategory] = useState('all');
   const [activeLevel, setActiveLevel] = useState('All');
+
+  // Sync tab when initialTab prop changes
+  useEffect(() => {
+    if (initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab]);
 
   const filterContent = (items, categoryField = 'category') => {
     let filtered = items;
@@ -106,7 +113,7 @@ export default function ExplorePage({ onNavigate, toggleSaveItem, isItemSaved })
 
       {/* Content Grid */}
       {activeTab === 'Tracks' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="tracks" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filterContent(tracks).map(track => (
             <button
               key={track.id}

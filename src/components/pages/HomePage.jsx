@@ -9,7 +9,7 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900 text-white overflow-hidden">
+      <section id="hero" className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900 text-white overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -57,7 +57,7 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
       </section>
 
       {/* Daily Highlights */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+      <section id="highlights" className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <h2 className="text-2xl font-bold text-slate-900 mb-6">Daily Highlights</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Research of the Day */}
@@ -139,7 +139,7 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
       </section>
 
       {/* Featured Content */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+      <section id="spotlights" className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-slate-900">Spotlight Content</h2>
           <button

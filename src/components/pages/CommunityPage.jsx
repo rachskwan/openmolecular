@@ -20,8 +20,8 @@ export default function CommunityPage({ onNavigate }) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Content */}
-        <div className="lg:col-span-2">
+        {/* Main Content - Discussions */}
+        <div id="discussions" className="lg:col-span-2">
           {/* Category Filter */}
           <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
             {communityCategories.map(cat => (
@@ -138,6 +138,50 @@ export default function CommunityPage({ onNavigate }) {
             >
               Start a Discussion
             </button>
+          </div>
+        </div>
+      </div>
+
+      {/* FAQs Section */}
+      <div id="faqs" className="mt-12 bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+        <h2 className="text-xl font-bold text-slate-900 mb-6">Frequently Asked Questions</h2>
+        <div className="space-y-4">
+          {[
+            { q: 'What is metabolomics?', a: 'Metabolomics is the study of small molecules (metabolites) in cells, tissues, and organisms. It helps us understand how our body processes nutrients and responds to environmental factors.' },
+            { q: 'How do biomarkers work?', a: 'Biomarkers are measurable indicators of biological states or conditions. They can help track health status, disease progression, or response to treatments.' },
+            { q: 'What tests can I get done?', a: 'Various metabolomic tests are available including fatty acid profiles, organic acid tests, amino acid panels, and comprehensive metabolic panels. Check our Certification page for testing partners.' },
+            { q: 'How do I interpret my results?', a: 'Our learning tracks and articles provide guidance on understanding test results. We recommend working with a healthcare provider for personalized interpretation.' },
+          ].map((faq, idx) => (
+            <details key={idx} className="group">
+              <summary className="flex items-center justify-between p-4 bg-slate-50 rounded-lg cursor-pointer hover:bg-slate-100 transition-colors">
+                <span className="font-medium text-slate-900">{faq.q}</span>
+                <ChevronRight className="w-5 h-5 text-slate-400 group-open:rotate-90 transition-transform" />
+              </summary>
+              <p className="p-4 text-slate-600">{faq.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+
+      {/* Guidelines Section */}
+      <div id="guidelines" className="mt-8 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200">
+        <h2 className="text-xl font-bold text-slate-900 mb-4">Community Guidelines</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-white rounded-lg p-4">
+            <h3 className="font-semibold text-slate-900 mb-2">Be Respectful</h3>
+            <p className="text-sm text-slate-600">Treat all community members with respect. Disagreements should focus on ideas, not individuals.</p>
+          </div>
+          <div className="bg-white rounded-lg p-4">
+            <h3 className="font-semibold text-slate-900 mb-2">Share Knowledge</h3>
+            <p className="text-sm text-slate-600">Help others learn by sharing your experiences and insights. Cite sources when sharing research.</p>
+          </div>
+          <div className="bg-white rounded-lg p-4">
+            <h3 className="font-semibold text-slate-900 mb-2">No Medical Advice</h3>
+            <p className="text-sm text-slate-600">Share information, not prescriptions. Always recommend consulting healthcare providers for personal health decisions.</p>
+          </div>
+          <div className="bg-white rounded-lg p-4">
+            <h3 className="font-semibold text-slate-900 mb-2">Stay On Topic</h3>
+            <p className="text-sm text-slate-600">Keep discussions relevant to metabolomics, health science, and wellness. Off-topic posts may be removed.</p>
           </div>
         </div>
       </div>
