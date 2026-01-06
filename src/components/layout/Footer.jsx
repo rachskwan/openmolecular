@@ -128,7 +128,10 @@ export default function Footer({ onNavigate }) {
                 placeholder="Enter your email"
                 className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 w-64"
               />
-              <button className="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm font-medium hover:bg-teal-700 transition-colors">
+              <button
+                onClick={() => onNavigate('community')}
+                className="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm font-medium hover:bg-teal-700 transition-colors"
+              >
                 Subscribe
               </button>
             </div>
@@ -141,13 +144,22 @@ export default function Footer({ onNavigate }) {
             © 2024 OpenMolecular. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <button className="text-slate-500 hover:text-slate-300 text-sm transition-colors">
+            <button
+              onClick={() => onNavigate('resources')}
+              className="text-slate-500 hover:text-slate-300 text-sm transition-colors"
+            >
               Privacy Policy
             </button>
-            <button className="text-slate-500 hover:text-slate-300 text-sm transition-colors">
+            <button
+              onClick={() => onNavigate('resources')}
+              className="text-slate-500 hover:text-slate-300 text-sm transition-colors"
+            >
               Terms of Service
             </button>
-            <button className="text-slate-500 hover:text-slate-300 text-sm transition-colors">
+            <button
+              onClick={() => onNavigate('resources')}
+              className="text-slate-500 hover:text-slate-300 text-sm transition-colors"
+            >
               Cookie Settings
             </button>
           </div>

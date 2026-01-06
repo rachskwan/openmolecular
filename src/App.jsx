@@ -212,6 +212,7 @@ function App() {
           term={viewingGlossaryTerm}
           onClose={() => setViewingGlossaryTerm(null)}
           onTermClick={setViewingGlossaryTerm}
+          onNavigate={handleNavigate}
           toggleSaveItem={toggleSaveItem}
           isItemSaved={isItemSaved}
         />

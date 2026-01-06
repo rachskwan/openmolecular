@@ -24,7 +24,10 @@ export default function CertificationPage({ onNavigate }) {
               Validate your products and platforms with industry-recognized certifications
               backed by advanced metabolomics analysis
             </p>
-            <button className="px-6 py-3 bg-teal-500 hover:bg-teal-600 rounded-lg font-medium transition-colors">
+            <button
+              onClick={() => onNavigate('community')}
+              className="px-6 py-3 bg-teal-500 hover:bg-teal-600 rounded-lg font-medium transition-colors"
+            >
               Request a Consultation
             </button>
           </div>
@@ -118,7 +121,11 @@ export default function CertificationPage({ onNavigate }) {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {featuredCaseStudies.map(study => (
-            <div key={study.id} className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+            <button
+              key={study.id}
+              onClick={() => onNavigate('casestudy', study.id)}
+              className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+            >
               <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs font-medium">
                 {study.certification}
               </span>
@@ -134,7 +141,7 @@ export default function CertificationPage({ onNavigate }) {
                   </div>
                 ))}
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </section>
@@ -147,10 +154,16 @@ export default function CertificationPage({ onNavigate }) {
             Contact our team to discuss your certification needs and get a customized quote
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-6 py-3 bg-teal-500 hover:bg-teal-600 rounded-lg font-medium transition-colors">
+            <button
+              onClick={() => onNavigate('community')}
+              className="px-6 py-3 bg-teal-500 hover:bg-teal-600 rounded-lg font-medium transition-colors"
+            >
               Schedule a Call
             </button>
-            <button className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg font-medium transition-colors">
+            <button
+              onClick={() => onNavigate('resources')}
+              className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg font-medium transition-colors"
+            >
               Download Brochure
             </button>
           </div>

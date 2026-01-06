@@ -1,7 +1,7 @@
 import { X, Bookmark, ChevronRight, ExternalLink } from 'lucide-react';
 import { glossaryData } from '../../data/glossary';
 
-export default function GlossaryTermModal({ term, onClose, onTermClick, toggleSaveItem, isItemSaved }) {
+export default function GlossaryTermModal({ term, onClose, onTermClick, onNavigate, toggleSaveItem, isItemSaved }) {
   const termData = glossaryData[term];
 
   if (!termData) {
@@ -121,7 +121,13 @@ export default function GlossaryTermModal({ term, onClose, onTermClick, toggleSa
               <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
               {isSaved ? 'Saved' : 'Save to Library'}
             </button>
-            <button className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 transition-colors">
+            <button
+              onClick={() => {
+                onClose();
+                onNavigate('explore');
+              }}
+              className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 transition-colors"
+            >
               <ExternalLink className="w-4 h-4" />
               Learn More
             </button>

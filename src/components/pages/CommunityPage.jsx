@@ -132,7 +132,10 @@ export default function CommunityPage({ onNavigate }) {
             <p className="text-sm text-slate-300 mb-4">
               Start a new discussion and get help from the community
             </p>
-            <button className="w-full px-4 py-2 bg-teal-500 hover:bg-teal-600 rounded-lg text-sm font-medium transition-colors">
+            <button
+              onClick={() => onNavigate('thread', 8)}
+              className="w-full px-4 py-2 bg-teal-500 hover:bg-teal-600 rounded-lg text-sm font-medium transition-colors"
+            >
               Start a Discussion
             </button>
           </div>

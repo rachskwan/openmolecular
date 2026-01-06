@@ -40,7 +40,10 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick })
               </div>
             </div>
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg text-sm text-slate-600 hover:bg-slate-50 transition-colors">
+          <button
+            onClick={() => onNavigate('explore')}
+            className="flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg text-sm text-slate-600 hover:bg-slate-50 transition-colors"
+          >
             <Settings className="w-4 h-4" />
             Settings
           </button>

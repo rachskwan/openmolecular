@@ -39,7 +39,10 @@ export default function ResourcesPage({ onNavigate, onGlossaryClick }) {
           <p className="text-teal-100 mb-4">
             {glossaryTerms.length}+ scientific terms explained in plain language
           </p>
-          <button className="flex items-center gap-2 text-sm font-medium hover:underline">
+          <button
+            onClick={() => document.getElementById('glossary-section')?.scrollIntoView({ behavior: 'smooth' })}
+            className="flex items-center gap-2 text-sm font-medium hover:underline"
+          >
             Browse Below <ChevronRight className="w-4 h-4" />
           </button>
         </div>
@@ -50,7 +53,10 @@ export default function ResourcesPage({ onNavigate, onGlossaryClick }) {
           <p className="text-slate-600 mb-4">
             Find certified labs and testing services in your area
           </p>
-          <button className="flex items-center gap-2 text-sm font-medium text-teal-600 hover:text-teal-700">
+          <button
+            onClick={() => onNavigate('certification')}
+            className="flex items-center gap-2 text-sm font-medium text-teal-600 hover:text-teal-700"
+          >
             Find Partners <ExternalLink className="w-4 h-4" />
           </button>
         </div>
@@ -61,14 +67,17 @@ export default function ResourcesPage({ onNavigate, onGlossaryClick }) {
           <p className="text-slate-600 mb-4">
             Common questions about metabolomics and biomarkers
           </p>
-          <button className="flex items-center gap-2 text-sm font-medium text-teal-600 hover:text-teal-700">
+          <button
+            onClick={() => onNavigate('community')}
+            className="flex items-center gap-2 text-sm font-medium text-teal-600 hover:text-teal-700"
+          >
             View FAQs <ChevronRight className="w-4 h-4" />
           </button>
         </div>
       </div>
 
       {/* Glossary Section */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+      <div id="glossary-section" className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-slate-900">Scientific Glossary</h2>
           <span className="text-sm text-slate-500">{filteredTerms.length} terms</span>

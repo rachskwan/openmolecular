@@ -199,7 +199,10 @@ export default function TrackDetailPage({ trackId, onBack, onNavigate }) {
           <div className="lg:col-span-1">
             {/* Enroll Card */}
             <div className="bg-white border border-slate-200 rounded-xl p-6 mb-6 sticky top-20">
-              <button className="w-full py-3 px-4 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg transition-colors mb-4">
+              <button
+                onClick={() => setExpandedLesson(0)}
+                className="w-full py-3 px-4 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg transition-colors mb-4"
+              >
                 Start Learning
               </button>
               <p className="text-center text-sm text-slate-500 mb-6">Free access to all lessons</p>
