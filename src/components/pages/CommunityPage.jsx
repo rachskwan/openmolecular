@@ -1,0 +1,138 @@
+import { useState } from 'react';
+import { MessageCircle, ThumbsUp, TrendingUp, Star, ChevronRight } from 'lucide-react';
+import { communityThreads, communityCategories } from '../../data/community';
+
+export default function CommunityPage({ onNavigate }) {
+  const [activeCategory, setActiveCategory] = useState('All');
+
+  const filteredThreads = activeCategory === 'All'
+    ? communityThreads
+    : communityThreads.filter(t => t.category === activeCategory);
+
+  const featuredThreads = communityThreads.filter(t => t.featured);
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-slate-900 mb-2">Community</h1>
+        <p className="text-slate-600">Connect with fellow learners, ask questions, and share your journey</p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main Content */}
+        <div className="lg:col-span-2">
+          {/* Category Filter */}
+          <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+            {communityCategories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+                  activeCategory === cat
+                    ? 'bg-teal-100 text-teal-700'
+                    : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Thread List */}
+          <div className="space-y-4">
+            {filteredThreads.map(thread => (
+              <div
+                key={thread.id}
+                className="bg-white rounded-xl p-5 shadow-sm border border-slate-200 hover:shadow-md transition-shadow cursor-pointer"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white font-medium text-sm flex-shrink-0">
+                    {thread.avatar}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-medium text-slate-900">{thread.author}</span>
+                      <span className="text-sm text-slate-500">{thread.date}</span>
+                      {thread.featured && (
+                        <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded text-xs font-medium">
+                          Featured
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="font-semibold text-slate-900 mb-2">{thread.title}</h3>
+                    <p className="text-sm text-slate-600 line-clamp-2 mb-3">{thread.preview}</p>
+                    <div className="flex items-center gap-4 text-sm text-slate-500">
+                      <span className="px-2 py-1 bg-slate-100 rounded text-xs">{thread.category}</span>
+                      <span className="flex items-center gap-1">
+                        <MessageCircle className="w-4 h-4" /> {thread.replies} replies
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <ThumbsUp className="w-4 h-4" /> {thread.likes}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Sidebar */}
+        <div className="space-y-6">
+          {/* Trending Topics */}
+          <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+            <div className="flex items-center gap-2 mb-4">
+              <TrendingUp className="w-5 h-5 text-orange-500" />
+              <h3 className="font-semibold text-slate-900">Trending Topics</h3>
+            </div>
+            <div className="space-y-3">
+              {['Omega-3 optimization', 'NAD+ supplements', 'Gut microbiome testing', 'Circadian health', 'Inflammation biomarkers'].map((topic, idx) => (
+                <button
+                  key={idx}
+                  className="flex items-center justify-between w-full p-2 rounded-lg hover:bg-slate-50 transition-colors group"
+                >
+                  <span className="text-sm text-slate-700 group-hover:text-teal-600">{topic}</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-teal-600" />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Featured Discussions */}
+          <div className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl p-5 border border-teal-200">
+            <div className="flex items-center gap-2 mb-4">
+              <Star className="w-5 h-5 text-teal-600" />
+              <h3 className="font-semibold text-slate-900">Featured This Week</h3>
+            </div>
+            <div className="space-y-3">
+              {featuredThreads.slice(0, 3).map(thread => (
+                <div key={thread.id} className="p-3 bg-white rounded-lg">
+                  <h4 className="text-sm font-medium text-slate-900 line-clamp-2 mb-1">
+                    {thread.title}
+                  </h4>
+                  <div className="flex items-center gap-2 text-xs text-slate-500">
+                    <span>{thread.author}</span>
+                    <span>•</span>
+                    <span>{thread.replies} replies</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Start Discussion CTA */}
+          <div className="bg-slate-900 rounded-xl p-5 text-white">
+            <h3 className="font-semibold mb-2">Have a question?</h3>
+            <p className="text-sm text-slate-300 mb-4">
+              Start a new discussion and get help from the community
+            </p>
+            <button className="w-full px-4 py-2 bg-teal-500 hover:bg-teal-600 rounded-lg text-sm font-medium transition-colors">
+              Start a Discussion
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
