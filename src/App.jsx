@@ -13,6 +13,7 @@ import CaseStudyDetailPage from './components/pages/CaseStudyDetailPage';
 import ComparisonDetailPage from './components/pages/ComparisonDetailPage';
 import ThreadDetailPage from './components/pages/ThreadDetailPage';
 import InteractiveDetailPage from './components/pages/InteractiveDetailPage';
+import LessonViewPage from './components/pages/LessonViewPage';
 import SmartSearchModal from './components/modals/SmartSearchModal';
 import GlossaryTermModal from './components/modals/GlossaryTermModal';
 import QuizModal from './components/modals/QuizModal';
@@ -28,6 +29,7 @@ function App() {
   const [selectedComparisonId, setSelectedComparisonId] = useState(null);
   const [selectedThreadId, setSelectedThreadId] = useState(null);
   const [selectedInteractiveId, setSelectedInteractiveId] = useState(null);
+  const [selectedLessonId, setSelectedLessonId] = useState(null);
   const [savedItems, setSavedItems] = useState({
     articles: [],
     molecules: [],
@@ -66,10 +68,21 @@ function App() {
   };
 
   // Enhanced navigation handler
-  const handleNavigate = (page, itemId = null) => {
-    if (page === 'article' && itemId) {
+  const handleNavigate = (page, itemId = null, secondaryId = null) => {
+    if (page === 'lesson' && itemId && secondaryId) {
+      // Lesson navigation: itemId = trackId, secondaryId = lessonId
+      setSelectedTrackId(itemId);
+      setSelectedLessonId(secondaryId);
+      setSelectedArticleId(null);
+      setSelectedCaseStudyId(null);
+      setSelectedComparisonId(null);
+      setSelectedThreadId(null);
+      setSelectedInteractiveId(null);
+      setCurrentPage('lesson');
+    } else if (page === 'article' && itemId) {
       setSelectedArticleId(itemId);
       setSelectedTrackId(null);
+      setSelectedLessonId(null);
       setSelectedCaseStudyId(null);
       setSelectedComparisonId(null);
       setSelectedThreadId(null);
@@ -78,6 +91,7 @@ function App() {
     } else if (page === 'track' && itemId) {
       setSelectedTrackId(itemId);
       setSelectedArticleId(null);
+      setSelectedLessonId(null);
       setSelectedCaseStudyId(null);
       setSelectedComparisonId(null);
       setSelectedThreadId(null);
@@ -87,6 +101,7 @@ function App() {
       setSelectedCaseStudyId(itemId);
       setSelectedArticleId(null);
       setSelectedTrackId(null);
+      setSelectedLessonId(null);
       setSelectedComparisonId(null);
       setSelectedThreadId(null);
       setSelectedInteractiveId(null);
@@ -95,6 +110,7 @@ function App() {
       setSelectedComparisonId(itemId);
       setSelectedArticleId(null);
       setSelectedTrackId(null);
+      setSelectedLessonId(null);
       setSelectedCaseStudyId(null);
       setSelectedThreadId(null);
       setSelectedInteractiveId(null);
@@ -103,6 +119,7 @@ function App() {
       setSelectedThreadId(itemId);
       setSelectedArticleId(null);
       setSelectedTrackId(null);
+      setSelectedLessonId(null);
       setSelectedCaseStudyId(null);
       setSelectedComparisonId(null);
       setSelectedInteractiveId(null);
@@ -111,6 +128,7 @@ function App() {
       setSelectedInteractiveId(itemId);
       setSelectedArticleId(null);
       setSelectedTrackId(null);
+      setSelectedLessonId(null);
       setSelectedCaseStudyId(null);
       setSelectedComparisonId(null);
       setSelectedThreadId(null);
@@ -118,6 +136,7 @@ function App() {
     } else {
       setSelectedArticleId(null);
       setSelectedTrackId(null);
+      setSelectedLessonId(null);
       setSelectedCaseStudyId(null);
       setSelectedComparisonId(null);
       setSelectedThreadId(null);
@@ -200,6 +219,15 @@ function App() {
           <InteractiveDetailPage
             interactiveId={selectedInteractiveId}
             onBack={() => handleNavigate('explore')}
+            onNavigate={handleNavigate}
+          />
+        );
+      case 'lesson':
+        return (
+          <LessonViewPage
+            trackId={selectedTrackId}
+            lessonId={selectedLessonId}
+            onBack={() => handleNavigate('track', selectedTrackId)}
             onNavigate={handleNavigate}
           />
         );
