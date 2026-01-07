@@ -281,6 +281,30 @@ export const interactives = [
           options: ['Only digestion', 'Only muscle growth', 'Energy metabolism and DNA repair', 'Only bone formation'],
           correct: 2,
           explanation: 'NAD+ is essential for energy metabolism, DNA repair, and activating sirtuins - proteins linked to longevity.'
+        },
+        {
+          question: 'What are sirtuins?',
+          options: ['A type of bacteria', 'Proteins that regulate cellular health and longevity', 'Sugar molecules', 'Immune cells'],
+          correct: 1,
+          explanation: 'Sirtuins are a family of proteins that require NAD+ to function and are involved in regulating cellular health, metabolism, and aging.'
+        },
+        {
+          question: 'Which activity naturally boosts NAD+ levels?',
+          options: ['Sleeping more', 'Exercise and fasting', 'Eating more sugar', 'Drinking alcohol'],
+          correct: 1,
+          explanation: 'Exercise and fasting have been shown to naturally increase NAD+ levels by activating pathways that synthesize it.'
+        },
+        {
+          question: 'What is NR (Nicotinamide Riboside)?',
+          options: ['A type of sugar', 'Another NAD+ precursor supplement', 'A protein', 'A mineral'],
+          correct: 1,
+          explanation: 'NR is another precursor to NAD+ that can be taken as a supplement, similar to NMN.'
+        },
+        {
+          question: 'In which cellular organelle is NAD+ most important for energy production?',
+          options: ['Nucleus', 'Mitochondria', 'Ribosomes', 'Cell membrane'],
+          correct: 1,
+          explanation: 'NAD+ is crucial in the mitochondria where it plays a key role in the electron transport chain for ATP production.'
         }
       ]
     }
@@ -524,6 +548,18 @@ export const interactives = [
           options: ['Speeds up', 'Slows down', 'Stays the same', 'Stops completely'],
           correct: 1,
           explanation: 'During stress, blood flow is diverted away from digestion to muscles and vital organs.'
+        },
+        {
+          question: 'Which part of the brain is most associated with the stress response?',
+          options: ['Cerebellum', 'Amygdala', 'Occipital lobe', 'Motor cortex'],
+          correct: 1,
+          explanation: 'The amygdala processes emotions and triggers the stress response when it perceives a threat.'
+        },
+        {
+          question: 'What is the "rest and digest" system called?',
+          options: ['Sympathetic nervous system', 'Parasympathetic nervous system', 'Central nervous system', 'Somatic nervous system'],
+          correct: 1,
+          explanation: 'The parasympathetic nervous system promotes relaxation, digestion, and recovery after stress.'
         }
       ]
     }
@@ -635,6 +671,30 @@ export const interactives = [
           options: ['Increases hunger', 'Signals fullness', 'Promotes sleep', 'Builds muscle'],
           correct: 1,
           explanation: 'Leptin is produced by fat cells and signals to your brain that you have enough energy stored.'
+        },
+        {
+          question: 'Which hormone is released during exercise and creates a "feel good" sensation?',
+          options: ['Cortisol', 'Insulin', 'Endorphins', 'Glucagon'],
+          correct: 2,
+          explanation: 'Endorphins are natural painkillers that create feelings of pleasure and well-being during and after exercise.'
+        },
+        {
+          question: 'What does ghrelin do?',
+          options: ['Suppresses appetite', 'Stimulates hunger', 'Regulates body temperature', 'Controls heart rate'],
+          correct: 1,
+          explanation: 'Ghrelin is known as the "hunger hormone" and is released by the stomach to signal that it\'s time to eat.'
+        },
+        {
+          question: 'Which gland is often called the "master gland" of the endocrine system?',
+          options: ['Thyroid', 'Adrenal', 'Pituitary', 'Pineal'],
+          correct: 2,
+          explanation: 'The pituitary gland controls many other glands and produces hormones that regulate growth, metabolism, and reproduction.'
+        },
+        {
+          question: 'What happens to cortisol levels in the morning?',
+          options: ['They drop to their lowest', 'They peak to help you wake up', 'They stay constant', 'They fluctuate randomly'],
+          correct: 1,
+          explanation: 'Cortisol follows a natural rhythm, peaking in the morning to help you wake up and gradually decreasing throughout the day.'
         }
       ]
     }
@@ -678,6 +738,18 @@ export const interactives = [
           options: ['Fact', 'Myth'],
           correct: 1,
           explanation: 'While activated charcoal is used in emergency medicine for poisoning, regular supplements don\'t provide detox benefits.'
+        },
+        {
+          question: 'Drinking lots of water helps your kidneys filter waste.',
+          options: ['Fact', 'Myth'],
+          correct: 0,
+          explanation: 'Adequate hydration does help your kidneys function properly and flush out waste products through urine.'
+        },
+        {
+          question: 'Foot pads can draw toxins out through your feet while you sleep.',
+          options: ['Fact', 'Myth'],
+          correct: 1,
+          explanation: 'There is no scientific evidence that foot pads remove toxins. The dark color they turn is from moisture and oxidation, not toxins.'
         }
       ]
     }
