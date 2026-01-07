@@ -1,8 +1,60 @@
 import { useState } from 'react';
-import { Search, Play, FileText, Zap, TrendingUp, Star, ChevronRight, Beaker, Apple, Award, Gamepad2, X, BookOpen, MessageCircle } from 'lucide-react';
+import { Search, Play, FileText, Zap, TrendingUp, Star, ChevronRight, Beaker, Apple, Award, Gamepad2, X, BookOpen, MessageCircle, FlaskConical, Heart, Utensils, Brain, ShoppingBag } from 'lucide-react';
 import { articles } from '../../data/articles';
 import { glossaryData } from '../../data/glossary';
 import { communityThreads } from '../../data/community';
+
+// Broad category definitions for section display
+const categories = [
+  {
+    id: 'science-tech',
+    name: 'Science & Tech',
+    description: 'Metabolomics, biomarkers, and analytical methods',
+    icon: FlaskConical,
+    color: 'purple',
+    keywords: ['metabolomics', 'biomarker', 'lc-ms', 'gc-ms', 'nmr', 'analytical', 'testing', 'technology', 'platform', 'mass spectrometry', 'chromatography', 'spectroscopy', 'method']
+  },
+  {
+    id: 'health-wellness',
+    name: 'Health & Wellness',
+    description: 'Longevity, inflammation, and cardiovascular health',
+    icon: Heart,
+    color: 'rose',
+    keywords: ['health', 'wellness', 'longevity', 'aging', 'inflammation', 'cardiovascular', 'heart', 'chronic', 'disease', 'prevention', 'therapeutic', 'clinical']
+  },
+  {
+    id: 'food-nutrition',
+    name: 'Food & Nutrition',
+    description: 'Nutrients, diet, and food science',
+    icon: Utensils,
+    color: 'emerald',
+    keywords: ['food', 'nutrition', 'diet', 'nutrient', 'vitamin', 'omega', 'fatty acid', 'fiber', 'protein', 'carbohydrate', 'mineral', 'supplement', 'antioxidant', 'gut', 'microbiome']
+  },
+  {
+    id: 'brain-behavior',
+    name: 'Brain & Behavior',
+    description: 'Cognitive function, mental health, and neuroscience',
+    icon: Brain,
+    color: 'indigo',
+    keywords: ['brain', 'cognitive', 'mental', 'memory', 'neurotransmitter', 'dopamine', 'serotonin', 'mood', 'sleep', 'stress', 'anxiety', 'neurological', 'psychology']
+  },
+  {
+    id: 'consumer-products',
+    name: 'Consumer Products',
+    description: 'Supplements, cosmetics, and product testing',
+    icon: ShoppingBag,
+    color: 'amber',
+    keywords: ['supplement', 'cosmetic', 'product', 'consumer', 'label', 'quality', 'purity', 'potency', 'authenticity', 'certification', 'testing', 'brand']
+  }
+];
+
+const categoryColorClasses = {
+  purple: { bg: 'bg-purple-50', border: 'border-purple-200', icon: 'bg-purple-100 text-purple-600', text: 'text-purple-600', hover: 'hover:bg-purple-100' },
+  rose: { bg: 'bg-rose-50', border: 'border-rose-200', icon: 'bg-rose-100 text-rose-600', text: 'text-rose-600', hover: 'hover:bg-rose-100' },
+  emerald: { bg: 'bg-emerald-50', border: 'border-emerald-200', icon: 'bg-emerald-100 text-emerald-600', text: 'text-emerald-600', hover: 'hover:bg-emerald-100' },
+  indigo: { bg: 'bg-indigo-50', border: 'border-indigo-200', icon: 'bg-indigo-100 text-indigo-600', text: 'text-indigo-600', hover: 'hover:bg-indigo-100' },
+  amber: { bg: 'bg-amber-50', border: 'border-amber-200', icon: 'bg-amber-100 text-amber-600', text: 'text-amber-600', hover: 'hover:bg-amber-100' },
+};
 
 // Topic definitions with keywords for filtering
 const topics = [
@@ -37,9 +89,33 @@ const colorClasses = {
 
 export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onSearchClick }) {
   const [selectedTopic, setSelectedTopic] = useState(null);
+  const [expandedCategory, setExpandedCategory] = useState(null);
 
   const featuredArticles = articles.filter(a => a.featured).slice(0, 3);
   const moleculeOfDay = glossaryData['NAD+'];
+
+  // Get content for a category
+  const getCategoryContent = (category) => {
+    const matchesKeywords = (text) => {
+      if (!text) return false;
+      const lowerText = text.toLowerCase();
+      return category.keywords.some(keyword => lowerText.includes(keyword));
+    };
+
+    const categoryArticles = articles.filter(a =>
+      matchesKeywords(a.title) || matchesKeywords(a.category) || matchesKeywords(a.description)
+    ).slice(0, 4);
+
+    const categoryGlossary = Object.values(glossaryData).filter(term =>
+      matchesKeywords(term.term) || matchesKeywords(term.fullName) || matchesKeywords(term.definition) || matchesKeywords(term.category)
+    ).slice(0, 4);
+
+    const categoryDiscussions = communityThreads.filter(t =>
+      matchesKeywords(t.title) || matchesKeywords(t.preview) || matchesKeywords(t.content)
+    ).slice(0, 2);
+
+    return { articles: categoryArticles, glossaryTerms: categoryGlossary, discussions: categoryDiscussions };
+  };
 
   // Get filtered content based on selected topic
   const getFilteredContent = (topicName) => {
@@ -252,6 +328,140 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
               </div>
             </button>
           ))}
+        </div>
+      </section>
+
+      {/* Browse by Category */}
+      <section className="bg-slate-50 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">Browse by Category</h2>
+          <p className="text-slate-600 mb-8">Explore content organized by major themes</p>
+
+          <div className="space-y-6">
+            {categories.map(category => {
+              const Icon = category.icon;
+              const colors = categoryColorClasses[category.color];
+              const isExpanded = expandedCategory === category.id;
+              const content = isExpanded ? getCategoryContent(category) : null;
+
+              return (
+                <div key={category.id} className={`rounded-xl border ${colors.border} overflow-hidden transition-all`}>
+                  {/* Category Header */}
+                  <button
+                    onClick={() => setExpandedCategory(isExpanded ? null : category.id)}
+                    className={`w-full ${colors.bg} p-6 flex items-center gap-4 ${colors.hover} transition-colors`}
+                  >
+                    <div className={`w-12 h-12 rounded-xl ${colors.icon} flex items-center justify-center`}>
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <div className="flex-1 text-left">
+                      <h3 className="font-semibold text-slate-900 text-lg">{category.name}</h3>
+                      <p className="text-sm text-slate-600">{category.description}</p>
+                    </div>
+                    <ChevronRight className={`w-5 h-5 text-slate-400 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                  </button>
+
+                  {/* Expanded Content */}
+                  {isExpanded && content && (
+                    <div className="bg-white p-6 border-t border-slate-100">
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* Articles Column */}
+                        <div>
+                          <div className="flex items-center gap-2 mb-4">
+                            <FileText className="w-4 h-4 text-slate-500" />
+                            <h4 className="font-medium text-slate-900 text-sm">Articles</h4>
+                          </div>
+                          {content.articles.length > 0 ? (
+                            <div className="space-y-3">
+                              {content.articles.map(article => (
+                                <button
+                                  key={article.id}
+                                  onClick={() => onNavigate('article', article.id)}
+                                  className="w-full p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors text-left"
+                                >
+                                  <span className={`text-xs font-medium ${colors.text}`}>{article.category}</span>
+                                  <h5 className="font-medium text-slate-900 text-sm mt-1 line-clamp-2">{article.title}</h5>
+                                </button>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-sm text-slate-400 italic">No articles yet</p>
+                          )}
+                        </div>
+
+                        {/* Glossary Column */}
+                        <div>
+                          <div className="flex items-center gap-2 mb-4">
+                            <BookOpen className="w-4 h-4 text-slate-500" />
+                            <h4 className="font-medium text-slate-900 text-sm">Key Terms</h4>
+                          </div>
+                          {content.glossaryTerms.length > 0 ? (
+                            <div className="space-y-2">
+                              {content.glossaryTerms.map(term => (
+                                <button
+                                  key={term.term}
+                                  onClick={() => onGlossaryClick(term.term)}
+                                  className="w-full p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors text-left flex items-center gap-3"
+                                >
+                                  <span className="text-xl">{term.icon}</span>
+                                  <div>
+                                    <span className="font-medium text-slate-900 text-sm">{term.term}</span>
+                                    {term.fullName && term.fullName !== term.term && (
+                                      <span className="text-xs text-slate-500 block">{term.fullName}</span>
+                                    )}
+                                  </div>
+                                </button>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-sm text-slate-400 italic">No terms yet</p>
+                          )}
+                        </div>
+
+                        {/* Discussions Column */}
+                        <div>
+                          <div className="flex items-center gap-2 mb-4">
+                            <MessageCircle className="w-4 h-4 text-slate-500" />
+                            <h4 className="font-medium text-slate-900 text-sm">Discussions</h4>
+                          </div>
+                          {content.discussions.length > 0 ? (
+                            <div className="space-y-3">
+                              {content.discussions.map(thread => (
+                                <button
+                                  key={thread.id}
+                                  onClick={() => onNavigate('thread', thread.id)}
+                                  className="w-full p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors text-left"
+                                >
+                                  <h5 className="font-medium text-slate-900 text-sm line-clamp-2">{thread.title}</h5>
+                                  <div className="flex items-center gap-2 mt-2 text-xs text-slate-500">
+                                    <span>{thread.author}</span>
+                                    <span>•</span>
+                                    <span>{thread.replies} replies</span>
+                                  </div>
+                                </button>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-sm text-slate-400 italic">No discussions yet</p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Explore More Link */}
+                      <div className="mt-6 pt-4 border-t border-slate-100 text-center">
+                        <button
+                          onClick={() => onNavigate('explore')}
+                          className={`text-sm font-medium ${colors.text} hover:underline`}
+                        >
+                          Explore more {category.name.toLowerCase()} content →
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
