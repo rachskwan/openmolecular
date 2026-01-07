@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { User, Bookmark, FileText, Beaker, BarChart3, Lightbulb, Settings, Award, Clock, ChevronRight, PlayCircle, Download, Share2, CheckCircle, Users, UserMinus, Pencil, X, Save, Camera, Trash2, Bell, MessageSquare, Heart, Trophy } from 'lucide-react';
+import { User, Bookmark, FileText, Beaker, BarChart3, Lightbulb, Award, Clock, ChevronRight, PlayCircle, Download, Share2, CheckCircle, Users, Pencil, X, Save, Camera, Trash2, Bell, MessageSquare, Heart, Trophy } from 'lucide-react';
 import { trackDetails } from '../../data/modules';
 import { getUserByUsername } from '../../data/users';
 
@@ -232,23 +232,58 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
                     <Award className="w-4 h-4 text-teal-600" />
                     <span><strong>{tracksCompleted}</strong> tracks completed</span>
                   </div>
+                  <div className="flex items-center gap-2 text-sm text-slate-600">
+                    <Users className="w-4 h-4 text-purple-500" />
+                    <span><strong>{following.length}</strong> following</span>
+                  </div>
                 </div>
               </>
             )}
           </div>
-          {!isEditingProfile && (
-            <button
-              onClick={() => {
-                const el = document.getElementById('settings-section');
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }}
-              className="flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg text-sm text-slate-600 hover:bg-slate-50 transition-colors"
-            >
-              <Settings className="w-4 h-4" />
-              Settings
-            </button>
-          )}
         </div>
+
+        {/* People You Follow */}
+        {following.length > 0 && !isEditingProfile && (
+          <div className="mt-4 pt-4 border-t border-slate-200">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-sm font-medium text-slate-700">People You Follow</p>
+              <button
+                onClick={() => onNavigate('community')}
+                className="text-xs text-teal-600 hover:text-teal-700"
+              >
+                Find more
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {following.slice(0, 6).map(username => {
+                const user = getUserByUsername(username);
+                return (
+                  <button
+                    key={username}
+                    onClick={() => onUserClick?.(username)}
+                    className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded-full hover:bg-slate-100 transition-colors"
+                  >
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white text-xs font-medium">
+                      {user.avatar}
+                    </div>
+                    <span className="text-sm text-slate-700">{user.fullName.split(' ')[0]}</span>
+                  </button>
+                );
+              })}
+              {following.length > 6 && (
+                <button
+                  onClick={() => {
+                    const el = document.getElementById('following-section');
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}
+                  className="px-3 py-1.5 text-sm text-slate-500 hover:text-slate-700"
+                >
+                  +{following.length - 6} more
+                </button>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Saved Content */}
@@ -538,79 +573,6 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
         )}
       </div>
 
-      {/* Following Section */}
-      <div id="following-section" className="mt-8 bg-white rounded-xl p-6 shadow-sm border border-slate-200">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-            <Users className="w-5 h-5 text-purple-500" />
-            People You Follow
-          </h2>
-          {following.length > 0 && (
-            <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
-              {following.length} Following
-            </span>
-          )}
-        </div>
-
-        {following.length === 0 ? (
-          <div className="text-center py-12 bg-slate-50 rounded-xl">
-            <Users className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-slate-900 mb-2">Not following anyone yet</h3>
-            <p className="text-slate-600 mb-4 max-w-md mx-auto">
-              Follow community members to see their posts and stay connected with their contributions.
-            </p>
-            <button
-              onClick={() => onNavigate('community')}
-              className="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm font-medium hover:bg-teal-700 transition-colors"
-            >
-              Explore Community
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {following.map(username => {
-              const user = getUserByUsername(username);
-              return (
-                <div
-                  key={username}
-                  className="flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:shadow-md transition-shadow"
-                >
-                  <button
-                    onClick={() => onUserClick?.(username)}
-                    className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white font-medium hover:ring-2 hover:ring-teal-300 hover:ring-offset-2 transition-all"
-                  >
-                    {user.avatar}
-                  </button>
-                  <div className="flex-1 min-w-0">
-                    <button
-                      onClick={() => onUserClick?.(username)}
-                      className="font-medium text-slate-900 hover:text-teal-600 transition-colors truncate block"
-                    >
-                      {user.fullName}
-                    </button>
-                    <p className="text-sm text-slate-500 truncate">@{user.username}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs text-slate-400">{user.stats.followers} followers</span>
-                      {user.badges[0] && (
-                        <span className="px-1.5 py-0.5 bg-purple-100 text-purple-700 rounded text-xs truncate max-w-[100px]">
-                          {user.badges[0]}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => onUserClick?.(username)}
-                    className="p-2 text-slate-400 hover:text-teal-600 hover:bg-slate-100 rounded-lg transition-colors"
-                  >
-                    <ChevronRight className="w-5 h-5" />
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
-
       {/* Notifications Section */}
       <div id="notifications-section" className="mt-8 bg-white rounded-xl p-6 shadow-sm border border-slate-200">
         <div className="flex items-center justify-between mb-6">
@@ -699,22 +661,6 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
         </div>
       </div>
 
-      {/* Quick Settings Link */}
-      <div className="mt-8 bg-white rounded-xl p-6 shadow-sm border border-slate-200">
-        <button
-          onClick={() => onNavigate('settings')}
-          className="w-full flex items-center gap-4 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors text-left"
-        >
-          <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center">
-            <Settings className="w-6 h-6 text-slate-600" />
-          </div>
-          <div className="flex-1">
-            <p className="font-semibold text-slate-900">Settings</p>
-            <p className="text-sm text-slate-500">Manage notifications, display preferences, and account</p>
-          </div>
-          <ChevronRight className="w-5 h-5 text-slate-400" />
-        </button>
-      </div>
     </div>
   );
 }
