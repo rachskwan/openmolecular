@@ -15,6 +15,7 @@ import ThreadDetailPage from './components/pages/ThreadDetailPage';
 import InteractiveDetailPage from './components/pages/InteractiveDetailPage';
 import LessonViewPage from './components/pages/LessonViewPage';
 import NewDiscussionPage from './components/pages/NewDiscussionPage';
+import SettingsPage from './components/pages/SettingsPage';
 import SmartSearchModal from './components/modals/SmartSearchModal';
 import GlossaryTermModal from './components/modals/GlossaryTermModal';
 import QuizModal from './components/modals/QuizModal';
@@ -601,6 +602,13 @@ function App() {
             onBack={() => handleNavigate('community')}
             onNavigate={handleNavigate}
             onSubmitThread={addNewThread}
+          />
+        );
+      case 'settings':
+        return (
+          <SettingsPage
+            onBack={() => handleNavigate('profile')}
+            onNavigate={handleNavigate}
           />
         );
       case 'interactive':

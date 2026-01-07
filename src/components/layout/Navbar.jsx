@@ -1,4 +1,4 @@
-import { Home, Compass, Users, Award, BookOpen, User, Search, Bell, Menu, X, ChevronDown, Sparkles, TrendingUp, GraduationCap, FileText, FlaskConical, GitCompare, Gamepad2, MessageSquare, HelpCircle, Shield, Building2, CheckCircle, Trophy, Globe, Beaker, Heart, Bookmark, BarChart3, Settings } from 'lucide-react';
+import { Home, Compass, Users, Award, BookOpen, User, Search, Bell, Menu, X, ChevronDown, Sparkles, TrendingUp, GraduationCap, FileText, FlaskConical, GitCompare, Gamepad2, MessageSquare, HelpCircle, Shield, Building2, CheckCircle, Trophy, Globe, Beaker, Heart, Bookmark, BarChart3, Settings, LogOut } from 'lucide-react';
 import { useState } from 'react';
 
 const pages = [
@@ -62,7 +62,8 @@ const profileSubtabs = [
   { id: 'saved', label: 'Saved Items', icon: Bookmark, section: 'saved' },
   { id: 'progress', label: 'My Progress', icon: BarChart3, section: 'progress' },
   { id: 'certificates', label: 'Certificates', icon: Award, section: 'certificates' },
-  { id: 'settings', label: 'Settings', icon: Settings, section: 'settings-section' },
+  { id: 'settings', label: 'Settings', icon: Settings, page: 'settings' },
+  { id: 'logout', label: 'Log Out', icon: LogOut, action: 'logout' },
 ];
 
 const defaultNotifications = [
@@ -163,6 +164,23 @@ export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
 
   const handleProfileSubtabClick = (subtab) => {
     setShowProfileMenu(false);
+
+    // Handle logout action
+    if (subtab.action === 'logout') {
+      if (confirm('Are you sure you want to log out? Your saved data will remain on this device.')) {
+        localStorage.removeItem('userProfile');
+        window.location.reload();
+      }
+      return;
+    }
+
+    // Handle page navigation (like settings)
+    if (subtab.page) {
+      setCurrentPage(subtab.page);
+      return;
+    }
+
+    // Handle section scroll
     setCurrentPage('profile');
     setTimeout(() => {
       const element = document.getElementById(subtab.section);
@@ -389,7 +407,7 @@ export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
                       </button>
                     </div>
                     <div className="py-2">
-                      {profileSubtabs.map((subtab) => {
+                      {profileSubtabs.filter(s => s.id !== 'logout').map((subtab) => {
                         const SubIcon = subtab.icon;
                         return (
                           <button
@@ -402,6 +420,15 @@ export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
                           </button>
                         );
                       })}
+                    </div>
+                    <div className="border-t border-slate-200 py-2">
+                      <button
+                        onClick={() => handleProfileSubtabClick({ action: 'logout' })}
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors text-left"
+                      >
+                        <LogOut className="w-4 h-4 flex-shrink-0" />
+                        <span>Log Out</span>
+                      </button>
                     </div>
                   </div>
                 </>
@@ -439,7 +466,7 @@ export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
                   Profile
                 </button>
                 <div className="ml-8 mt-1 mb-2 space-y-1">
-                  {profileSubtabs.map(subtab => {
+                  {profileSubtabs.filter(s => s.id !== 'logout').map(subtab => {
                     const SubIcon = subtab.icon;
                     return (
                       <button
@@ -455,6 +482,16 @@ export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
                       </button>
                     );
                   })}
+                  <button
+                    onClick={() => {
+                      handleProfileSubtabClick({ action: 'logout' });
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors text-left"
+                  >
+                    <LogOut className="w-3.5 h-3.5 flex-shrink-0" />
+                    Log Out
+                  </button>
                 </div>
               </div>
 

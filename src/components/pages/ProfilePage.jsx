@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { User, Bookmark, FileText, Beaker, BarChart3, Lightbulb, Settings, Award, Clock, ChevronRight, PlayCircle, Download, Share2, CheckCircle, Users, UserMinus, Pencil, X, Save, Camera, Trash2, Bell, MessageSquare, Heart, Trophy, LogOut, UserPlus, AlertTriangle } from 'lucide-react';
+import { User, Bookmark, FileText, Beaker, BarChart3, Lightbulb, Settings, Award, Clock, ChevronRight, PlayCircle, Download, Share2, CheckCircle, Users, UserMinus, Pencil, X, Save, Camera, Trash2, Bell, MessageSquare, Heart, Trophy } from 'lucide-react';
 import { trackDetails } from '../../data/modules';
 import { getUserByUsername } from '../../data/users';
 
@@ -699,154 +699,21 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
         </div>
       </div>
 
-      {/* Settings Section */}
-      <div id="settings-section" className="mt-8 bg-white rounded-xl p-6 shadow-sm border border-slate-200">
-        <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-          <Settings className="w-5 h-5" />
-          Settings
-        </h2>
-        <div className="space-y-6">
-          {/* Notification Preferences */}
-          <div className="pb-6 border-b border-slate-200">
-            <h3 className="font-medium text-slate-900 mb-4">Notification Preferences</h3>
-            <div className="space-y-3">
-              <label className="flex items-center justify-between">
-                <span className="text-sm text-slate-600">Email notifications for new content</span>
-                <input type="checkbox" defaultChecked className="w-4 h-4 text-teal-600 rounded border-slate-300 focus:ring-teal-500" />
-              </label>
-              <label className="flex items-center justify-between">
-                <span className="text-sm text-slate-600">Community reply notifications</span>
-                <input type="checkbox" defaultChecked className="w-4 h-4 text-teal-600 rounded border-slate-300 focus:ring-teal-500" />
-              </label>
-              <label className="flex items-center justify-between">
-                <span className="text-sm text-slate-600">Learning progress reminders</span>
-                <input type="checkbox" defaultChecked className="w-4 h-4 text-teal-600 rounded border-slate-300 focus:ring-teal-500" />
-              </label>
-            </div>
+      {/* Quick Settings Link */}
+      <div className="mt-8 bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+        <button
+          onClick={() => onNavigate('settings')}
+          className="w-full flex items-center gap-4 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors text-left"
+        >
+          <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center">
+            <Settings className="w-6 h-6 text-slate-600" />
           </div>
-
-          {/* Display Preferences */}
-          <div className="pb-6 border-b border-slate-200">
-            <h3 className="font-medium text-slate-900 mb-4">Display Preferences</h3>
-            <div className="space-y-3">
-              <label className="flex items-center justify-between">
-                <span className="text-sm text-slate-600">Show glossary terms inline</span>
-                <input type="checkbox" defaultChecked className="w-4 h-4 text-teal-600 rounded border-slate-300 focus:ring-teal-500" />
-              </label>
-              <label className="flex items-center justify-between">
-                <span className="text-sm text-slate-600">Auto-play videos</span>
-                <input type="checkbox" className="w-4 h-4 text-teal-600 rounded border-slate-300 focus:ring-teal-500" />
-              </label>
-            </div>
+          <div className="flex-1">
+            <p className="font-semibold text-slate-900">Settings</p>
+            <p className="text-sm text-slate-500">Manage notifications, display preferences, and account</p>
           </div>
-
-          {/* Data Management */}
-          <div className="pb-6 border-b border-slate-200">
-            <h3 className="font-medium text-slate-900 mb-4">Data Management</h3>
-            <div className="flex flex-wrap gap-3">
-              <button
-                onClick={() => {
-                  if (confirm('Are you sure you want to reset your learning progress? This cannot be undone.')) {
-                    localStorage.removeItem('learningProgress');
-                    window.location.reload();
-                  }
-                }}
-                className="px-4 py-2 text-sm text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
-              >
-                Reset Learning Progress
-              </button>
-              <button
-                onClick={() => {
-                  if (confirm('Are you sure you want to clear all saved items? This cannot be undone.')) {
-                    localStorage.removeItem('savedItems');
-                    window.location.reload();
-                  }
-                }}
-                className="px-4 py-2 text-sm text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
-              >
-                Clear Saved Items
-              </button>
-            </div>
-          </div>
-
-          {/* Account */}
-          <div>
-            <h3 className="font-medium text-slate-900 mb-4">Account</h3>
-            <div className="space-y-3">
-              <button
-                onClick={() => {
-                  if (confirm('Are you sure you want to switch accounts? You will be logged out and can sign in with a different account.')) {
-                    // Clear all user-related data
-                    localStorage.removeItem('userProfile');
-                    localStorage.removeItem('learningProgress');
-                    localStorage.removeItem('savedItems');
-                    localStorage.removeItem('following');
-                    localStorage.removeItem('userLikes');
-                    localStorage.removeItem('userReplies');
-                    localStorage.removeItem('userThreads');
-                    localStorage.removeItem('contentDiscussions');
-                    window.location.reload();
-                  }
-                }}
-                className="w-full flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors text-left"
-              >
-                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                  <UserPlus className="w-5 h-5 text-blue-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-slate-900">Switch Account</p>
-                  <p className="text-sm text-slate-500">Sign out and use a different account</p>
-                </div>
-                <ChevronRight className="w-5 h-5 text-slate-400" />
-              </button>
-
-              <button
-                onClick={() => {
-                  if (confirm('Are you sure you want to log out? Your saved data will remain on this device.')) {
-                    // For logout, just clear the session state but keep saved data
-                    // In a real app with auth, this would clear the auth token
-                    localStorage.removeItem('userProfile');
-                    window.location.reload();
-                  }
-                }}
-                className="w-full flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors text-left"
-              >
-                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
-                  <LogOut className="w-5 h-5 text-slate-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-slate-900">Log Out</p>
-                  <p className="text-sm text-slate-500">Sign out of your current session</p>
-                </div>
-                <ChevronRight className="w-5 h-5 text-slate-400" />
-              </button>
-
-              <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-                <div className="flex items-start gap-3">
-                  <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="font-medium text-red-900">Delete Account</p>
-                    <p className="text-sm text-red-700 mt-1">Permanently delete your account and all associated data. This action cannot be undone.</p>
-                    <button
-                      onClick={() => {
-                        if (confirm('Are you sure you want to delete your account? This will permanently remove all your data and cannot be undone.')) {
-                          if (confirm('This is your last chance. All your progress, saved items, and posts will be permanently deleted. Continue?')) {
-                            // Clear all localStorage data
-                            localStorage.clear();
-                            window.location.reload();
-                          }
-                        }
-                      }}
-                      className="mt-3 px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
-                    >
-                      Delete My Account
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          <ChevronRight className="w-5 h-5 text-slate-400" />
+        </button>
       </div>
     </div>
   );
