@@ -1,4 +1,4 @@
-import { Beaker, Apple, Award, CheckCircle, ArrowRight, FileText, Users, Clock } from 'lucide-react';
+import { Beaker, Apple, Award, CheckCircle, ArrowRight, FileText, Users, Clock, ChevronRight, HelpCircle } from 'lucide-react';
 import { certificationPrograms, certificationSteps } from '../../data/certifications';
 import { caseStudies } from '../../data/caseStudies';
 
@@ -143,6 +143,91 @@ export default function CertificationPage({ onNavigate, onRequestConsultation, o
               </div>
             </button>
           ))}
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section id="faq" className="bg-slate-50 py-16">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-8">
+            <HelpCircle className="w-10 h-10 text-teal-600 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-slate-900">Frequently Asked Questions</h2>
+            <p className="text-slate-600 mt-2">Everything you need to know about our certification programs</p>
+          </div>
+          <div className="space-y-4">
+            <details className="group bg-white rounded-xl shadow-sm border border-slate-200">
+              <summary className="flex items-center justify-between p-5 cursor-pointer list-none">
+                <span className="font-medium text-slate-900">How long does the certification process take?</span>
+                <ChevronRight className="w-5 h-5 text-slate-400 transition-transform group-open:rotate-90" />
+              </summary>
+              <div className="px-5 pb-5 text-slate-600">
+                The timeline varies by program. Product Purity Certification typically takes 4-6 weeks,
+                Food Quality Assurance takes 6-8 weeks, and Excellence Awards require 8-12 weeks.
+                Timelines depend on sample complexity and testing requirements.
+              </div>
+            </details>
+
+            <details className="group bg-white rounded-xl shadow-sm border border-slate-200">
+              <summary className="flex items-center justify-between p-5 cursor-pointer list-none">
+                <span className="font-medium text-slate-900">What types of products can be certified?</span>
+                <ChevronRight className="w-5 h-5 text-slate-400 transition-transform group-open:rotate-90" />
+              </summary>
+              <div className="px-5 pb-5 text-slate-600">
+                We certify a wide range of products including dietary supplements, functional foods,
+                beverages, nutraceuticals, and wellness products. Our metabolomics-based analysis
+                can assess purity, potency, and bioavailability across most consumable product categories.
+              </div>
+            </details>
+
+            <details className="group bg-white rounded-xl shadow-sm border border-slate-200">
+              <summary className="flex items-center justify-between p-5 cursor-pointer list-none">
+                <span className="font-medium text-slate-900">How much does certification cost?</span>
+                <ChevronRight className="w-5 h-5 text-slate-400 transition-transform group-open:rotate-90" />
+              </summary>
+              <div className="px-5 pb-5 text-slate-600">
+                Pricing is customized based on product type, testing requirements, and certification
+                level. We offer flexible pricing models including per-product testing and annual
+                certification packages. Contact our team for a personalized quote.
+              </div>
+            </details>
+
+            <details className="group bg-white rounded-xl shadow-sm border border-slate-200">
+              <summary className="flex items-center justify-between p-5 cursor-pointer list-none">
+                <span className="font-medium text-slate-900">How long is the certification valid?</span>
+                <ChevronRight className="w-5 h-5 text-slate-400 transition-transform group-open:rotate-90" />
+              </summary>
+              <div className="px-5 pb-5 text-slate-600">
+                Certifications are valid for 12 months from the date of issue. Annual recertification
+                is required to maintain your certification status. We offer streamlined renewal
+                processes for existing certified partners.
+              </div>
+            </details>
+
+            <details className="group bg-white rounded-xl shadow-sm border border-slate-200">
+              <summary className="flex items-center justify-between p-5 cursor-pointer list-none">
+                <span className="font-medium text-slate-900">Can I use the certification badge in marketing?</span>
+                <ChevronRight className="w-5 h-5 text-slate-400 transition-transform group-open:rotate-90" />
+              </summary>
+              <div className="px-5 pb-5 text-slate-600">
+                Yes! Certified products receive official OpenMolecular certification badges and
+                marketing materials. You can use these on product packaging, websites, and
+                promotional materials. We also provide co-marketing opportunities and inclusion
+                in our certified product directory.
+              </div>
+            </details>
+
+            <details className="group bg-white rounded-xl shadow-sm border border-slate-200">
+              <summary className="flex items-center justify-between p-5 cursor-pointer list-none">
+                <span className="font-medium text-slate-900">What happens if my product fails certification?</span>
+                <ChevronRight className="w-5 h-5 text-slate-400 transition-transform group-open:rotate-90" />
+              </summary>
+              <div className="px-5 pb-5 text-slate-600">
+                If your product doesn't meet certification standards, we provide a detailed report
+                outlining the areas that need improvement. You can work with our team to address
+                these issues and resubmit for testing at a reduced fee within 90 days.
+              </div>
+            </details>
+          </div>
         </div>
       </section>
 
