@@ -1,8 +1,10 @@
-import { ArrowLeft, Clock, Building2, Award, Calendar, User, Quote, CheckCircle, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Clock, Building2, Award, Calendar, User, Quote, CheckCircle, ChevronRight, MessageCircle, Send, ExternalLink } from 'lucide-react';
+import { useState } from 'react';
 import { caseStudies } from '../../data/caseStudies';
 
-export default function CaseStudyDetailPage({ caseStudyId, onBack, onNavigate }) {
+export default function CaseStudyDetailPage({ caseStudyId, onBack, onNavigate, getContentComments, addContentComment, getContentThreadId }) {
   const caseStudy = caseStudies.find(cs => cs.id === caseStudyId);
+  const [newComment, setNewComment] = useState('');
 
   if (!caseStudy) {
     return (
@@ -207,6 +209,95 @@ export default function CaseStudyDetailPage({ caseStudyId, onBack, onNavigate })
           >
             Explore Certification Programs
           </button>
+        </section>
+
+        {/* Comments Section */}
+        <section className="mt-12 pt-8 border-t border-slate-200">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <MessageCircle className="w-5 h-5 text-purple-600" />
+              <h3 className="text-lg font-semibold text-slate-900">Discussion</h3>
+              {getContentComments?.('casestudy', caseStudy.id).length > 0 && (
+                <span className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
+                  {getContentComments('casestudy', caseStudy.id).length}
+                </span>
+              )}
+            </div>
+            {getContentThreadId?.('casestudy', caseStudy.id) && (
+              <button
+                onClick={() => onNavigate('thread', getContentThreadId('casestudy', caseStudy.id))}
+                className="flex items-center gap-1 text-sm text-purple-600 hover:text-purple-700 font-medium"
+              >
+                View full discussion <ExternalLink className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
+          {/* Comment Input */}
+          <div className="mb-6">
+            <div className="flex gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white font-medium text-sm flex-shrink-0">
+                You
+              </div>
+              <div className="flex-1">
+                <textarea
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="Share your thoughts on this case study..."
+                  className="w-full p-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                  rows={3}
+                />
+                <div className="flex justify-end mt-2">
+                  <button
+                    onClick={() => {
+                      if (newComment.trim()) {
+                        addContentComment?.('casestudy', caseStudy.id, caseStudy.title, newComment);
+                        setNewComment('');
+                      }
+                    }}
+                    disabled={!newComment.trim()}
+                    className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Send className="w-4 h-4" />
+                    Post Comment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Comments List */}
+          {getContentComments?.('casestudy', caseStudy.id).length > 0 ? (
+            <div className="space-y-4">
+              {getContentComments('casestudy', caseStudy.id).slice(0, 5).map((comment, idx) => (
+                <div key={comment.id || idx} className="flex gap-3 p-4 bg-slate-50 rounded-lg">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-400 to-slate-500 flex items-center justify-center text-white font-medium text-sm flex-shrink-0">
+                    {comment.avatar || comment.author?.slice(0, 2) || 'U'}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-medium text-slate-900">{comment.author || 'Anonymous'}</span>
+                      <span className="text-sm text-slate-500">{comment.date || 'Just now'}</span>
+                    </div>
+                    <p className="text-slate-700 text-sm">{comment.content}</p>
+                  </div>
+                </div>
+              ))}
+              {getContentComments('casestudy', caseStudy.id).length > 5 && (
+                <button
+                  onClick={() => onNavigate('thread', getContentThreadId('casestudy', caseStudy.id))}
+                  className="w-full py-3 text-center text-purple-600 hover:text-purple-700 font-medium text-sm border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+                >
+                  View all {getContentComments('casestudy', caseStudy.id).length} comments in Community
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="text-center py-8 bg-slate-50 rounded-lg">
+              <MessageCircle className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+              <p className="text-slate-500 text-sm">No comments yet. Be the first to share your thoughts!</p>
+            </div>
+          )}
         </section>
       </div>
 

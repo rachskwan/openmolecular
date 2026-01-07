@@ -1,8 +1,10 @@
-import { ArrowLeft, Clock, User, Calendar, Bookmark, BookmarkCheck, Lock, Share2, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Clock, User, Calendar, Bookmark, BookmarkCheck, Lock, Share2, ChevronRight, MessageCircle, Send, ExternalLink } from 'lucide-react';
+import { useState } from 'react';
 import { articles } from '../../data/articles';
 
-export default function ArticleDetailPage({ articleId, onBack, onNavigate, toggleSaveItem, isItemSaved, onGlossaryClick, onUserClick }) {
+export default function ArticleDetailPage({ articleId, onBack, onNavigate, toggleSaveItem, isItemSaved, onGlossaryClick, onUserClick, getContentComments, addContentComment, getContentThreadId }) {
   const article = articles.find(a => a.id === articleId);
+  const [newComment, setNewComment] = useState('');
 
   if (!article) {
     return (
@@ -225,6 +227,95 @@ export default function ArticleDetailPage({ articleId, onBack, onNavigate, toggl
             </div>
           </div>
         )}
+
+        {/* Comments Section */}
+        <div className="mt-10 pt-8 border-t border-slate-200">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <MessageCircle className="w-5 h-5 text-teal-600" />
+              <h3 className="text-lg font-semibold text-slate-900">Discussion</h3>
+              {getContentComments?.('article', article.id).length > 0 && (
+                <span className="px-2 py-0.5 bg-teal-100 text-teal-700 rounded-full text-sm font-medium">
+                  {getContentComments('article', article.id).length}
+                </span>
+              )}
+            </div>
+            {getContentThreadId?.('article', article.id) && (
+              <button
+                onClick={() => onNavigate('thread', getContentThreadId('article', article.id))}
+                className="flex items-center gap-1 text-sm text-teal-600 hover:text-teal-700 font-medium"
+              >
+                View full discussion <ExternalLink className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
+          {/* Comment Input */}
+          <div className="mb-6">
+            <div className="flex gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white font-medium text-sm flex-shrink-0">
+                You
+              </div>
+              <div className="flex-1">
+                <textarea
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="Share your thoughts on this article..."
+                  className="w-full p-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
+                  rows={3}
+                />
+                <div className="flex justify-end mt-2">
+                  <button
+                    onClick={() => {
+                      if (newComment.trim()) {
+                        addContentComment?.('article', article.id, article.title, newComment);
+                        setNewComment('');
+                      }
+                    }}
+                    disabled={!newComment.trim()}
+                    className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Send className="w-4 h-4" />
+                    Post Comment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Comments List */}
+          {getContentComments?.('article', article.id).length > 0 ? (
+            <div className="space-y-4">
+              {getContentComments('article', article.id).slice(0, 5).map((comment, idx) => (
+                <div key={comment.id || idx} className="flex gap-3 p-4 bg-slate-50 rounded-lg">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-400 to-slate-500 flex items-center justify-center text-white font-medium text-sm flex-shrink-0">
+                    {comment.avatar || comment.author?.slice(0, 2) || 'U'}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-medium text-slate-900">{comment.author || 'Anonymous'}</span>
+                      <span className="text-sm text-slate-500">{comment.date || 'Just now'}</span>
+                    </div>
+                    <p className="text-slate-700 text-sm">{comment.content}</p>
+                  </div>
+                </div>
+              ))}
+              {getContentComments('article', article.id).length > 5 && (
+                <button
+                  onClick={() => onNavigate('thread', getContentThreadId('article', article.id))}
+                  className="w-full py-3 text-center text-teal-600 hover:text-teal-700 font-medium text-sm border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+                >
+                  View all {getContentComments('article', article.id).length} comments in Community
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="text-center py-8 bg-slate-50 rounded-lg">
+              <MessageCircle className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+              <p className="text-slate-500 text-sm">No comments yet. Be the first to share your thoughts!</p>
+            </div>
+          )}
+        </div>
       </article>
 
       {/* Related Articles */}

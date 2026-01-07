@@ -71,6 +71,12 @@ function App() {
     return saved ? JSON.parse(saved) : {}; // { threadId: [replies] }
   });
 
+  // Content discussions - maps content (article/comparison/casestudy) to discussion threads
+  const [contentDiscussions, setContentDiscussions] = useState(() => {
+    const saved = localStorage.getItem('contentDiscussions');
+    return saved ? JSON.parse(saved) : {}; // { "article-1": threadId, "comparison-2": threadId }
+  });
+
   // Following users - persisted to localStorage
   const [following, setFollowing] = useState(() => {
     const saved = localStorage.getItem('following');
@@ -109,6 +115,11 @@ function App() {
     localStorage.setItem('userReplies', JSON.stringify(userReplies));
   }, [userReplies]);
 
+  // Persist content discussions to localStorage
+  useEffect(() => {
+    localStorage.setItem('contentDiscussions', JSON.stringify(contentDiscussions));
+  }, [contentDiscussions]);
+
   // Persist following to localStorage
   useEffect(() => {
     localStorage.setItem('following', JSON.stringify(following));
@@ -142,6 +153,59 @@ function App() {
     };
     setUserThreads(prev => [newThread, ...prev]);
     return newThread.id;
+  };
+
+  // Create or get a discussion thread for content (article, comparison, casestudy)
+  const getOrCreateContentDiscussion = (contentType, contentId, contentTitle) => {
+    const key = `${contentType}-${contentId}`;
+    if (contentDiscussions[key]) {
+      return contentDiscussions[key];
+    }
+    // Create a new thread for this content
+    const newThread = {
+      id: Date.now(),
+      title: `Discussion: ${contentTitle}`,
+      preview: `Share your thoughts and questions about "${contentTitle}"`,
+      content: `This is a discussion thread for the ${contentType} "${contentTitle}". Share your thoughts, ask questions, and engage with the community!`,
+      category: 'Research Discussion',
+      date: 'Just now',
+      replies: 0,
+      likes: 0,
+      avatar: 'OM',
+      author: 'OpenMolecular',
+      featured: false,
+      threadReplies: [],
+      linkedContent: { type: contentType, id: contentId, title: contentTitle },
+    };
+    setUserThreads(prev => [newThread, ...prev]);
+    setContentDiscussions(prev => ({ ...prev, [key]: newThread.id }));
+    return newThread.id;
+  };
+
+  // Get comments for content (returns replies from the linked thread)
+  const getContentComments = (contentType, contentId) => {
+    const key = `${contentType}-${contentId}`;
+    const threadId = contentDiscussions[key];
+    if (!threadId) return [];
+
+    // Find the thread in userThreads
+    const thread = userThreads.find(t => t.id === threadId);
+    const staticReplies = thread?.threadReplies || [];
+    const userThreadReplies = userReplies[threadId] || [];
+    return [...staticReplies, ...userThreadReplies];
+  };
+
+  // Add a comment to content (creates thread if needed, then adds reply)
+  const addContentComment = (contentType, contentId, contentTitle, comment) => {
+    const threadId = getOrCreateContentDiscussion(contentType, contentId, contentTitle);
+    addReply(threadId, comment);
+    return threadId;
+  };
+
+  // Get thread ID for content (without creating)
+  const getContentThreadId = (contentType, contentId) => {
+    const key = `${contentType}-${contentId}`;
+    return contentDiscussions[key] || null;
   };
 
   // Toggle like on a thread
@@ -476,6 +540,9 @@ function App() {
             isItemSaved={isItemSaved}
             onGlossaryClick={setViewingGlossaryTerm}
             onUserClick={setViewingUserProfile}
+            getContentComments={getContentComments}
+            addContentComment={addContentComment}
+            getContentThreadId={getContentThreadId}
           />
         );
       case 'track':
@@ -494,6 +561,9 @@ function App() {
             caseStudyId={selectedCaseStudyId}
             onBack={() => handleNavigate('explore')}
             onNavigate={handleNavigate}
+            getContentComments={getContentComments}
+            addContentComment={addContentComment}
+            getContentThreadId={getContentThreadId}
           />
         );
       case 'comparison':
@@ -503,6 +573,9 @@ function App() {
             onBack={() => handleNavigate('explore')}
             onNavigate={handleNavigate}
             onGlossaryClick={setViewingGlossaryTerm}
+            getContentComments={getContentComments}
+            addContentComment={addContentComment}
+            getContentThreadId={getContentThreadId}
           />
         );
       case 'thread':
