@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User, Bookmark, FileText, Beaker, BarChart3, Lightbulb, Settings, Award, Clock, ChevronRight, PlayCircle, Download, Share2, CheckCircle, Users, UserMinus } from 'lucide-react';
+import { User, Bookmark, FileText, Beaker, BarChart3, Lightbulb, Settings, Award, Clock, ChevronRight, PlayCircle, Download, Share2, CheckCircle, Users, UserMinus, Pencil, X, Save } from 'lucide-react';
 import { trackDetails } from '../../data/modules';
 import { getUserByUsername } from '../../data/users';
 
@@ -11,8 +11,30 @@ const tabs = [
   { id: 'advice', label: 'Saved Tips', icon: Lightbulb },
 ];
 
-export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, learningProgress = {}, getTrackProgress, following = [], onUserClick }) {
+export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, learningProgress = {}, getTrackProgress, following = [], onUserClick, userProfile = {}, updateUserProfile }) {
   const [activeTab, setActiveTab] = useState('articles');
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [editName, setEditName] = useState(userProfile.name || '');
+  const [editBio, setEditBio] = useState(userProfile.bio || '');
+
+  const handleSaveProfile = () => {
+    updateUserProfile({
+      name: editName.trim(),
+      bio: editBio.trim(),
+    });
+    setIsEditingProfile(false);
+  };
+
+  const handleCancelEdit = () => {
+    setEditName(userProfile.name || '');
+    setEditBio(userProfile.bio || '');
+    setIsEditingProfile(false);
+  };
+
+  const getInitials = (name) => {
+    if (!name) return null;
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
 
   const totalSaved = Object.values(savedItems).reduce((sum, arr) => sum + arr.length, 0);
 
@@ -63,37 +85,98 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
       {/* Profile Header */}
       <div id="settings" className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 mb-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center">
-            <User className="w-10 h-10 text-white" />
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white text-2xl font-bold">
+            {getInitials(userProfile.name) || <User className="w-10 h-10" />}
           </div>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold text-slate-900 mb-1">Welcome Back</h1>
-            <p className="text-slate-600 mb-4">Track your learning progress and saved content</p>
-            <div className="flex flex-wrap gap-4">
-              <div className="flex items-center gap-2 text-sm text-slate-600">
-                <Bookmark className="w-4 h-4 text-teal-600" />
-                <span><strong>{totalSaved}</strong> items saved</span>
+            {isEditingProfile ? (
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Display Name</label>
+                  <input
+                    type="text"
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    placeholder="Enter your name"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    maxLength={50}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Bio</label>
+                  <textarea
+                    value={editBio}
+                    onChange={(e) => setEditBio(e.target.value)}
+                    placeholder="Tell us about yourself..."
+                    rows={3}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
+                    maxLength={200}
+                  />
+                  <p className="text-xs text-slate-500 mt-1">{editBio.length}/200 characters</p>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleSaveProfile}
+                    className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg text-sm font-medium hover:bg-teal-700 transition-colors"
+                  >
+                    <Save className="w-4 h-4" />
+                    Save
+                  </button>
+                  <button
+                    onClick={handleCancelEdit}
+                    className="flex items-center gap-2 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                    Cancel
+                  </button>
+                </div>
               </div>
-              <div className="flex items-center gap-2 text-sm text-slate-600">
-                <Clock className="w-4 h-4 text-teal-600" />
-                <span><strong>{hoursLearned}</strong> hours learned</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-slate-600">
-                <Award className="w-4 h-4 text-teal-600" />
-                <span><strong>{tracksCompleted}</strong> tracks completed</span>
-              </div>
-            </div>
+            ) : (
+              <>
+                <div className="flex items-center gap-3 mb-1">
+                  <h1 className="text-2xl font-bold text-slate-900">
+                    {userProfile.name || 'Welcome Back'}
+                  </h1>
+                  <button
+                    onClick={() => setIsEditingProfile(true)}
+                    className="p-1.5 text-slate-400 hover:text-teal-600 hover:bg-slate-100 rounded-lg transition-colors"
+                    title="Edit profile"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                </div>
+                <p className="text-slate-600 mb-4">
+                  {userProfile.bio || 'Track your learning progress and saved content'}
+                </p>
+                <div className="flex flex-wrap gap-4">
+                  <div className="flex items-center gap-2 text-sm text-slate-600">
+                    <Bookmark className="w-4 h-4 text-teal-600" />
+                    <span><strong>{totalSaved}</strong> items saved</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-slate-600">
+                    <Clock className="w-4 h-4 text-teal-600" />
+                    <span><strong>{hoursLearned}</strong> hours learned</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-slate-600">
+                    <Award className="w-4 h-4 text-teal-600" />
+                    <span><strong>{tracksCompleted}</strong> tracks completed</span>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
-          <button
-            onClick={() => {
-              const el = document.getElementById('settings-section');
-              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }}
-            className="flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg text-sm text-slate-600 hover:bg-slate-50 transition-colors"
-          >
-            <Settings className="w-4 h-4" />
-            Settings
-          </button>
+          {!isEditingProfile && (
+            <button
+              onClick={() => {
+                const el = document.getElementById('settings-section');
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+              className="flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg text-sm text-slate-600 hover:bg-slate-50 transition-colors"
+            >
+              <Settings className="w-4 h-4" />
+              Settings
+            </button>
+          )}
         </div>
       </div>
 

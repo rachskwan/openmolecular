@@ -77,6 +77,15 @@ function App() {
     return saved ? JSON.parse(saved) : []; // Array of usernames
   });
 
+  // User profile - persisted to localStorage
+  const [userProfile, setUserProfile] = useState(() => {
+    const saved = localStorage.getItem('userProfile');
+    return saved ? JSON.parse(saved) : {
+      name: '',
+      bio: '',
+    };
+  });
+
   // Toast notification state
   const [toast, setToast] = useState(null);
 
@@ -104,6 +113,11 @@ function App() {
   useEffect(() => {
     localStorage.setItem('following', JSON.stringify(following));
   }, [following]);
+
+  // Persist user profile to localStorage
+  useEffect(() => {
+    localStorage.setItem('userProfile', JSON.stringify(userProfile));
+  }, [userProfile]);
 
   // Auto-hide toast after 3 seconds
   useEffect(() => {
@@ -448,6 +462,8 @@ function App() {
             learningProgress={learningProgress}
             getTrackProgress={getTrackProgress}
             following={following}
+            userProfile={userProfile}
+            updateUserProfile={setUserProfile}
           />
         );
       case 'article':
