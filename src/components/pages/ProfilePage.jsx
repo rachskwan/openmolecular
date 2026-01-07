@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User, Bookmark, FileText, Beaker, BarChart3, Lightbulb, Settings, Award, Clock, ChevronRight, PlayCircle } from 'lucide-react';
+import { User, Bookmark, FileText, Beaker, BarChart3, Lightbulb, Settings, Award, Clock, ChevronRight, PlayCircle, Download, Share2, CheckCircle } from 'lucide-react';
 import { trackDetails } from '../../data/modules';
 
 const tabs = [
@@ -30,6 +30,32 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
 
   // Estimate hours learned (roughly 30 min per lesson)
   const hoursLearned = Math.round(totalLessonsCompleted * 0.5 * 10) / 10;
+
+  // Get completed tracks with details
+  const completedTracks = Object.keys(learningProgress)
+    .filter(trackId => {
+      const track = trackDetails[trackId];
+      const totalLessons = track?.lessons?.length || 0;
+      const completed = Object.values(learningProgress[trackId]).filter(l => l.completed).length;
+      return totalLessons > 0 && completed === totalLessons;
+    })
+    .map(trackId => {
+      const track = trackDetails[trackId];
+      // Find the latest completion date
+      const completionDates = Object.values(learningProgress[trackId])
+        .filter(l => l.completedAt)
+        .map(l => new Date(l.completedAt));
+      const latestDate = completionDates.length > 0
+        ? new Date(Math.max(...completionDates))
+        : new Date();
+      return {
+        id: trackId,
+        title: track.title,
+        completedAt: latestDate,
+        lessonsCount: track.lessons?.length || 0,
+      };
+    })
+    .sort((a, b) => b.completedAt - a.completedAt);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
@@ -245,6 +271,114 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
                 <p className="text-sm text-slate-400">Tracks Completed</p>
               </div>
             </div>
+          </div>
+        )}
+      </div>
+
+      {/* Earned Certificates Section */}
+      <div id="certificates" className="mt-8 bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <Award className="w-5 h-5 text-amber-500" />
+            Earned Certificates
+          </h2>
+          {completedTracks.length > 0 && (
+            <span className="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-sm font-medium">
+              {completedTracks.length} Certificate{completedTracks.length !== 1 ? 's' : ''}
+            </span>
+          )}
+        </div>
+
+        {completedTracks.length === 0 ? (
+          <div className="text-center py-12 bg-slate-50 rounded-xl">
+            <Award className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-slate-900 mb-2">No certificates yet</h3>
+            <p className="text-slate-600 mb-4 max-w-md mx-auto">
+              Complete a learning track to earn your first certificate. Each certificate validates your expertise in that topic.
+            </p>
+            <button
+              onClick={() => onNavigate('explore', 'tracks')}
+              className="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm font-medium hover:bg-teal-700 transition-colors"
+            >
+              Start a Learning Track
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {completedTracks.map(track => (
+              <div
+                key={track.id}
+                className="relative overflow-hidden rounded-xl border-2 border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50"
+              >
+                {/* Certificate Design */}
+                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-amber-200/50 to-transparent" />
+                <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-orange-200/30 to-transparent" />
+
+                <div className="relative p-6">
+                  <div className="flex items-start gap-4">
+                    {/* Certificate Badge */}
+                    <div className="flex-shrink-0">
+                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg">
+                        <Award className="w-8 h-8 text-white" />
+                      </div>
+                    </div>
+
+                    {/* Certificate Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <CheckCircle className="w-4 h-4 text-green-600" />
+                        <span className="text-xs font-medium text-green-700">Verified</span>
+                      </div>
+                      <h3 className="font-bold text-slate-900 mb-1 line-clamp-2">{track.title}</h3>
+                      <p className="text-sm text-slate-600 mb-3">
+                        Completed {track.lessonsCount} lessons on{' '}
+                        {track.completedAt.toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric'
+                        })}
+                      </p>
+
+                      {/* Action Buttons */}
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => {
+                            // Generate a simple certificate view (in real app, would download PDF)
+                            alert(`Certificate for "${track.title}" - In a production app, this would download a PDF certificate.`);
+                          }}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                        >
+                          <Download className="w-3.5 h-3.5" />
+                          Download
+                        </button>
+                        <button
+                          onClick={() => {
+                            const text = `I just earned my "${track.title}" certificate on OpenMolecular!`;
+                            if (navigator.share) {
+                              navigator.share({ title: 'My Certificate', text });
+                            } else {
+                              navigator.clipboard.writeText(text);
+                              alert('Certificate info copied to clipboard!');
+                            }
+                          }}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                        >
+                          <Share2 className="w-3.5 h-3.5" />
+                          Share
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Certificate ID */}
+                  <div className="mt-4 pt-4 border-t border-amber-200/50">
+                    <p className="text-xs text-slate-500">
+                      Certificate ID: OM-{track.id}-{track.completedAt.getFullYear()}-{String(track.completedAt.getMonth() + 1).padStart(2, '0')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
