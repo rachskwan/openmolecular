@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Search, X, TrendingUp, Clock, ChevronRight, FileText, BookOpen, MessageCircle, Beaker } from 'lucide-react';
+import { Search, X, TrendingUp, Clock, ChevronRight, FileText, BookOpen, MessageCircle, Beaker, GraduationCap } from 'lucide-react';
 import { glossaryData } from '../../data/glossary';
 import { articles } from '../../data/articles';
+import { tracks } from '../../data/modules';
+import { communityThreads } from '../../data/community';
 
 export default function SmartSearchModal({ onClose, onNavigate, onGlossaryClick }) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -30,22 +32,47 @@ export default function SmartSearchModal({ onClose, onNavigate, onGlossaryClick 
   };
 
   // Filter results based on search query
+  const query = searchQuery.toLowerCase().trim();
+
   const glossaryResults = Object.values(glossaryData)
     .filter(term =>
-      searchQuery &&
-      (term.term.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       term.fullName.toLowerCase().includes(searchQuery.toLowerCase()))
+      query &&
+      (term.term.toLowerCase().includes(query) ||
+       term.fullName.toLowerCase().includes(query) ||
+       term.definition.toLowerCase().includes(query) ||
+       term.category.toLowerCase().includes(query))
     )
     .slice(0, 4);
 
   const articleResults = articles
     .filter(article =>
-      searchQuery &&
-      article.title.toLowerCase().includes(searchQuery.toLowerCase())
+      query &&
+      (article.title.toLowerCase().includes(query) ||
+       article.introduction?.toLowerCase().includes(query) ||
+       article.category.toLowerCase().includes(query) ||
+       article.author.toLowerCase().includes(query))
     )
     .slice(0, 3);
 
-  const hasResults = glossaryResults.length > 0 || articleResults.length > 0;
+  const trackResults = tracks
+    .filter(track =>
+      query &&
+      (track.title.toLowerCase().includes(query) ||
+       track.description.toLowerCase().includes(query) ||
+       track.skills?.some(s => s.toLowerCase().includes(query)))
+    )
+    .slice(0, 2);
+
+  const threadResults = communityThreads
+    .filter(thread =>
+      query &&
+      (thread.title.toLowerCase().includes(query) ||
+       thread.preview.toLowerCase().includes(query) ||
+       thread.category.toLowerCase().includes(query))
+    )
+    .slice(0, 2);
+
+  const hasResults = glossaryResults.length > 0 || articleResults.length > 0 || trackResults.length > 0 || threadResults.length > 0;
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
@@ -200,7 +227,7 @@ export default function SmartSearchModal({ onClose, onNavigate, onGlossaryClick 
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-sm font-medium text-slate-500">Articles</span>
                       <button
-                        onClick={() => { onNavigate('explore'); onClose(); }}
+                        onClick={() => { onNavigate('explore', 'articles'); onClose(); }}
                         className="text-xs text-teal-600 hover:text-teal-700"
                       >
                         View All
@@ -210,12 +237,75 @@ export default function SmartSearchModal({ onClose, onNavigate, onGlossaryClick 
                       {articleResults.map(article => (
                         <button
                           key={article.id}
+                          onClick={() => { onNavigate('article', article.id); onClose(); }}
                           className="flex items-center gap-3 w-full p-3 rounded-lg bg-slate-50 hover:bg-teal-50 transition-colors text-left"
                         >
                           <FileText className="w-5 h-5 text-slate-400" />
                           <div className="flex-1 min-w-0">
                             <h4 className="font-medium text-slate-900 line-clamp-1">{article.title}</h4>
                             <p className="text-xs text-slate-500">{article.author} • {article.duration}</p>
+                          </div>
+                          <ChevronRight className="w-4 h-4 text-slate-400" />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Learning Track Results */}
+                {trackResults.length > 0 && (
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm font-medium text-slate-500">Learning Tracks</span>
+                      <button
+                        onClick={() => { onNavigate('explore', 'tracks'); onClose(); }}
+                        className="text-xs text-teal-600 hover:text-teal-700"
+                      >
+                        View All
+                      </button>
+                    </div>
+                    <div className="space-y-2">
+                      {trackResults.map(track => (
+                        <button
+                          key={track.id}
+                          onClick={() => { onNavigate('track', track.id); onClose(); }}
+                          className="flex items-center gap-3 w-full p-3 rounded-lg bg-slate-50 hover:bg-teal-50 transition-colors text-left"
+                        >
+                          <GraduationCap className="w-5 h-5 text-purple-500" />
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-medium text-slate-900 line-clamp-1">{track.title}</h4>
+                            <p className="text-xs text-slate-500">{track.modules} modules • {track.level}</p>
+                          </div>
+                          <ChevronRight className="w-4 h-4 text-slate-400" />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Community Thread Results */}
+                {threadResults.length > 0 && (
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm font-medium text-slate-500">Discussions</span>
+                      <button
+                        onClick={() => { onNavigate('community'); onClose(); }}
+                        className="text-xs text-teal-600 hover:text-teal-700"
+                      >
+                        View All
+                      </button>
+                    </div>
+                    <div className="space-y-2">
+                      {threadResults.map(thread => (
+                        <button
+                          key={thread.id}
+                          onClick={() => { onNavigate('thread', thread.id); onClose(); }}
+                          className="flex items-center gap-3 w-full p-3 rounded-lg bg-slate-50 hover:bg-teal-50 transition-colors text-left"
+                        >
+                          <MessageCircle className="w-5 h-5 text-blue-500" />
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-medium text-slate-900 line-clamp-1">{thread.title}</h4>
+                            <p className="text-xs text-slate-500">{thread.author} • {thread.replies} replies</p>
                           </div>
                           <ChevronRight className="w-4 h-4 text-slate-400" />
                         </button>
