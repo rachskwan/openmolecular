@@ -255,62 +255,9 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
         </div>
       </section>
 
-      {/* Certification Programs */}
-      <section className="bg-slate-900 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">B2B Certification Programs</h2>
-            <p className="text-slate-300 max-w-2xl mx-auto">
-              Validate your products and platforms with our industry-recognized certifications
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-slate-800 rounded-xl p-6 hover:bg-slate-750 transition-colors">
-              <Beaker className="w-10 h-10 text-teal-400 mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Omics Platform Validation</h3>
-              <p className="text-slate-400 text-sm mb-4">
-                Validate your LC-MS, GC-MS, or NMR platform against industry standards
-              </p>
-              <button
-                onClick={() => onNavigate('certification')}
-                className="text-teal-400 text-sm font-medium hover:text-teal-300"
-              >
-                Learn More →
-              </button>
-            </div>
-            <div className="bg-slate-800 rounded-xl p-6 hover:bg-slate-750 transition-colors">
-              <Apple className="w-10 h-10 text-emerald-400 mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Food Authenticity</h3>
-              <p className="text-slate-400 text-sm mb-4">
-                Verify ingredient sourcing and detect adulteration in food products
-              </p>
-              <button
-                onClick={() => onNavigate('certification')}
-                className="text-teal-400 text-sm font-medium hover:text-teal-300"
-              >
-                Learn More →
-              </button>
-            </div>
-            <div className="bg-slate-800 rounded-xl p-6 hover:bg-slate-750 transition-colors">
-              <Award className="w-10 h-10 text-amber-400 mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Cosmetics & Supplements QA</h3>
-              <p className="text-slate-400 text-sm mb-4">
-                Ensure potency, purity, and label accuracy for consumer products
-              </p>
-              <button
-                onClick={() => onNavigate('certification')}
-                className="text-teal-400 text-sm font-medium hover:text-teal-300"
-              >
-                Learn More →
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Explore by Topic */}
+      {/* Discover by Topic */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <h2 className="text-2xl font-bold text-slate-900 mb-6">Explore by Topic</h2>
+        <h2 className="text-2xl font-bold text-slate-900 mb-6">Discover by Topic</h2>
         <div className="flex flex-wrap gap-3 mb-6">
           {topics.map(topic => {
             const colors = colorClasses[topic.color];
@@ -445,6 +392,59 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
             )}
           </div>
         )}
+      </section>
+
+      {/* B2B Certification Programs */}
+      <section className="bg-slate-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">B2B Certification Programs</h2>
+            <p className="text-slate-300 max-w-2xl mx-auto">
+              Validate your products and platforms with our industry-recognized certifications
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-slate-800 rounded-xl p-6 hover:bg-slate-750 transition-colors">
+              <Beaker className="w-10 h-10 text-teal-400 mb-4" />
+              <h3 className="text-lg font-semibold mb-2">Omics Platform Validation</h3>
+              <p className="text-slate-400 text-sm mb-4">
+                Validate your LC-MS, GC-MS, or NMR platform against industry standards
+              </p>
+              <button
+                onClick={() => onNavigate('certification')}
+                className="text-teal-400 text-sm font-medium hover:text-teal-300"
+              >
+                Learn More →
+              </button>
+            </div>
+            <div className="bg-slate-800 rounded-xl p-6 hover:bg-slate-750 transition-colors">
+              <Apple className="w-10 h-10 text-emerald-400 mb-4" />
+              <h3 className="text-lg font-semibold mb-2">Food Authenticity</h3>
+              <p className="text-slate-400 text-sm mb-4">
+                Verify ingredient sourcing and detect adulteration in food products
+              </p>
+              <button
+                onClick={() => onNavigate('certification')}
+                className="text-teal-400 text-sm font-medium hover:text-teal-300"
+              >
+                Learn More →
+              </button>
+            </div>
+            <div className="bg-slate-800 rounded-xl p-6 hover:bg-slate-750 transition-colors">
+              <Award className="w-10 h-10 text-amber-400 mb-4" />
+              <h3 className="text-lg font-semibold mb-2">Cosmetics & Supplements QA</h3>
+              <p className="text-slate-400 text-sm mb-4">
+                Ensure potency, purity, and label accuracy for consumer products
+              </p>
+              <button
+                onClick={() => onNavigate('certification')}
+                className="text-teal-400 text-sm font-medium hover:text-teal-300"
+              >
+                Learn More →
+              </button>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   );
