@@ -55,16 +55,14 @@ const pages = [
       { id: 'about', label: 'About Us', icon: Globe, section: 'about-section' },
     ]
   },
-  {
-    id: 'profile',
-    label: 'Profile',
-    icon: User,
-    subtabs: [
-      { id: 'saved', label: 'Saved Items', icon: Bookmark, section: 'saved' },
-      { id: 'progress', label: 'My Progress', icon: BarChart3, section: 'progress' },
-      { id: 'settings', label: 'Settings', icon: Settings, section: 'settings' },
-    ]
-  },
+];
+
+// Profile subtabs for dropdown
+const profileSubtabs = [
+  { id: 'saved', label: 'Saved Items', icon: Bookmark, section: 'saved' },
+  { id: 'progress', label: 'My Progress', icon: BarChart3, section: 'progress' },
+  { id: 'certificates', label: 'Certificates', icon: Award, section: 'certificates' },
+  { id: 'settings', label: 'Settings', icon: Settings, section: 'settings-section' },
 ];
 
 const defaultNotifications = [
@@ -110,6 +108,7 @@ export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredPage, setHoveredPage] = useState(null);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [notifications, setNotifications] = useState(defaultNotifications);
 
   const unreadCount = notifications.filter(n => !n.read).length;
@@ -160,6 +159,17 @@ export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
         }
       }, 100);
     }
+  };
+
+  const handleProfileSubtabClick = (subtab) => {
+    setShowProfileMenu(false);
+    setCurrentPage('profile');
+    setTimeout(() => {
+      const element = document.getElementById(subtab.section);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   };
 
   return (
@@ -243,7 +253,10 @@ export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
             </button>
             <div className="relative">
               <button
-                onClick={() => setShowNotifications(!showNotifications)}
+                onClick={() => {
+                  setShowNotifications(!showNotifications);
+                  setShowProfileMenu(false);
+                }}
                 className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors relative"
               >
                 <Bell className="w-5 h-5" />
@@ -334,6 +347,67 @@ export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
               )}
             </div>
 
+            {/* Profile Icon */}
+            <div className="relative">
+              <button
+                onClick={() => {
+                  setShowProfileMenu(!showProfileMenu);
+                  setShowNotifications(false);
+                }}
+                className={`p-2 rounded-lg transition-colors ${
+                  currentPage === 'profile'
+                    ? 'bg-teal-100 text-teal-700'
+                    : 'text-slate-500 hover:bg-slate-100'
+                }`}
+              >
+                <User className="w-5 h-5" />
+              </button>
+
+              {/* Profile Dropdown */}
+              {showProfileMenu && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowProfileMenu(false)}
+                  />
+                  <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-lg border border-slate-200 z-50 overflow-hidden">
+                    <div className="p-3 border-b border-slate-200">
+                      <button
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          setCurrentPage('profile');
+                        }}
+                        className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-teal-50 transition-colors"
+                      >
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white font-medium">
+                          <User className="w-5 h-5" />
+                        </div>
+                        <div className="text-left">
+                          <p className="font-medium text-slate-900 text-sm">My Profile</p>
+                          <p className="text-xs text-slate-500">View your profile</p>
+                        </div>
+                      </button>
+                    </div>
+                    <div className="py-2">
+                      {profileSubtabs.map((subtab) => {
+                        const SubIcon = subtab.icon;
+                        return (
+                          <button
+                            key={subtab.id}
+                            onClick={() => handleProfileSubtabClick(subtab)}
+                            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-teal-50 hover:text-teal-700 transition-colors text-left"
+                          >
+                            <SubIcon className="w-4 h-4 flex-shrink-0" />
+                            <span>{subtab.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+
             {/* Mobile Menu Button */}
             <button
               className="md:hidden p-2 rounded-lg text-slate-500 hover:bg-slate-100"
@@ -348,6 +422,42 @@ export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-slate-200 py-4 max-h-[70vh] overflow-y-auto">
             <div className="flex flex-col gap-1">
+              {/* Profile Section for Mobile */}
+              <div className="mb-2 pb-2 border-b border-slate-200">
+                <button
+                  onClick={() => {
+                    setCurrentPage('profile');
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                    currentPage === 'profile'
+                      ? 'bg-teal-50 text-teal-700'
+                      : 'text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  <User className="w-5 h-5" />
+                  Profile
+                </button>
+                <div className="ml-8 mt-1 mb-2 space-y-1">
+                  {profileSubtabs.map(subtab => {
+                    const SubIcon = subtab.icon;
+                    return (
+                      <button
+                        key={subtab.id}
+                        onClick={() => {
+                          handleProfileSubtabClick(subtab);
+                          setMobileMenuOpen(false);
+                        }}
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors text-left"
+                      >
+                        <SubIcon className="w-3.5 h-3.5 flex-shrink-0" />
+                        {subtab.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               {pages.map(page => {
                 const Icon = page.icon;
                 return (
