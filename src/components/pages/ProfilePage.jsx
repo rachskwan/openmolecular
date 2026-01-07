@@ -58,7 +58,10 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
             </div>
           </div>
           <button
-            onClick={() => onNavigate('explore')}
+            onClick={() => {
+              const el = document.getElementById('settings-section');
+              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }}
             className="flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg text-sm text-slate-600 hover:bg-slate-50 transition-colors"
           >
             <Settings className="w-4 h-4" />
@@ -244,6 +247,78 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
             </div>
           </div>
         )}
+      </div>
+
+      {/* Settings Section */}
+      <div id="settings-section" className="mt-8 bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+        <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+          <Settings className="w-5 h-5" />
+          Settings
+        </h2>
+        <div className="space-y-6">
+          {/* Notification Preferences */}
+          <div className="pb-6 border-b border-slate-200">
+            <h3 className="font-medium text-slate-900 mb-4">Notification Preferences</h3>
+            <div className="space-y-3">
+              <label className="flex items-center justify-between">
+                <span className="text-sm text-slate-600">Email notifications for new content</span>
+                <input type="checkbox" defaultChecked className="w-4 h-4 text-teal-600 rounded border-slate-300 focus:ring-teal-500" />
+              </label>
+              <label className="flex items-center justify-between">
+                <span className="text-sm text-slate-600">Community reply notifications</span>
+                <input type="checkbox" defaultChecked className="w-4 h-4 text-teal-600 rounded border-slate-300 focus:ring-teal-500" />
+              </label>
+              <label className="flex items-center justify-between">
+                <span className="text-sm text-slate-600">Learning progress reminders</span>
+                <input type="checkbox" defaultChecked className="w-4 h-4 text-teal-600 rounded border-slate-300 focus:ring-teal-500" />
+              </label>
+            </div>
+          </div>
+
+          {/* Display Preferences */}
+          <div className="pb-6 border-b border-slate-200">
+            <h3 className="font-medium text-slate-900 mb-4">Display Preferences</h3>
+            <div className="space-y-3">
+              <label className="flex items-center justify-between">
+                <span className="text-sm text-slate-600">Show glossary terms inline</span>
+                <input type="checkbox" defaultChecked className="w-4 h-4 text-teal-600 rounded border-slate-300 focus:ring-teal-500" />
+              </label>
+              <label className="flex items-center justify-between">
+                <span className="text-sm text-slate-600">Auto-play videos</span>
+                <input type="checkbox" className="w-4 h-4 text-teal-600 rounded border-slate-300 focus:ring-teal-500" />
+              </label>
+            </div>
+          </div>
+
+          {/* Data Management */}
+          <div>
+            <h3 className="font-medium text-slate-900 mb-4">Data Management</h3>
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={() => {
+                  if (confirm('Are you sure you want to reset your learning progress? This cannot be undone.')) {
+                    localStorage.removeItem('learningProgress');
+                    window.location.reload();
+                  }
+                }}
+                className="px-4 py-2 text-sm text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
+              >
+                Reset Learning Progress
+              </button>
+              <button
+                onClick={() => {
+                  if (confirm('Are you sure you want to clear all saved items? This cannot be undone.')) {
+                    localStorage.removeItem('savedItems');
+                    window.location.reload();
+                  }
+                }}
+                className="px-4 py-2 text-sm text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
+              >
+                Clear Saved Items
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

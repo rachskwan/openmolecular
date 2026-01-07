@@ -66,9 +66,60 @@ const pages = [
   },
 ];
 
+const defaultNotifications = [
+  {
+    id: 1,
+    type: 'reply',
+    title: 'New reply to your discussion',
+    message: 'Sarah Chen replied to "Best time to take NAD+ supplements?"',
+    time: '5 min ago',
+    read: false,
+  },
+  {
+    id: 2,
+    type: 'achievement',
+    title: 'Achievement Unlocked!',
+    message: 'You completed the "Metabolomics Fundamentals" track',
+    time: '1 hour ago',
+    read: false,
+  },
+  {
+    id: 3,
+    type: 'like',
+    title: 'Your post was liked',
+    message: 'Dr. Michael Torres liked your comment',
+    time: '3 hours ago',
+    read: false,
+  },
+  {
+    id: 4,
+    type: 'new',
+    title: 'New article published',
+    message: 'Check out "Understanding Omega-3 Index Testing"',
+    time: '1 day ago',
+    read: true,
+  },
+];
+
 export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredPage, setHoveredPage] = useState(null);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState(defaultNotifications);
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  const markAsRead = (id) => {
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+  };
+
+  const markAllAsRead = () => {
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+  };
+
+  const dismissNotification = (id) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  };
 
   const handleSubtabClick = (pageId, subtab) => {
     setHoveredPage(null);
@@ -166,10 +217,101 @@ export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
             >
               <Search className="w-5 h-5" />
             </button>
-            <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors relative">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-teal-500 rounded-full" />
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors relative"
+              >
+                <Bell className="w-5 h-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-teal-500 rounded-full" />
+                )}
+              </button>
+
+              {/* Notifications Dropdown */}
+              {showNotifications && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowNotifications(false)}
+                  />
+                  <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-lg border border-slate-200 z-50 overflow-hidden">
+                    <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+                      <h3 className="font-semibold text-slate-900">Notifications</h3>
+                      {unreadCount > 0 && (
+                        <button
+                          onClick={markAllAsRead}
+                          className="text-xs text-teal-600 hover:text-teal-700"
+                        >
+                          Mark all as read
+                        </button>
+                      )}
+                    </div>
+                    <div className="max-h-80 overflow-y-auto">
+                      {notifications.length === 0 ? (
+                        <div className="p-6 text-center">
+                          <Bell className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                          <p className="text-sm text-slate-500">No notifications</p>
+                        </div>
+                      ) : (
+                        notifications.map(notification => (
+                          <div
+                            key={notification.id}
+                            className={`p-3 border-b border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer ${
+                              !notification.read ? 'bg-teal-50/50' : ''
+                            }`}
+                            onClick={() => markAsRead(notification.id)}
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                                notification.type === 'reply' ? 'bg-blue-100 text-blue-600' :
+                                notification.type === 'achievement' ? 'bg-amber-100 text-amber-600' :
+                                notification.type === 'like' ? 'bg-pink-100 text-pink-600' :
+                                'bg-teal-100 text-teal-600'
+                              }`}>
+                                {notification.type === 'reply' ? <MessageSquare className="w-4 h-4" /> :
+                                 notification.type === 'achievement' ? <Trophy className="w-4 h-4" /> :
+                                 notification.type === 'like' ? <Heart className="w-4 h-4" /> :
+                                 <FileText className="w-4 h-4" />}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-start justify-between gap-2">
+                                  <p className={`text-sm ${!notification.read ? 'font-medium text-slate-900' : 'text-slate-700'}`}>
+                                    {notification.title}
+                                  </p>
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      dismissNotification(notification.id);
+                                    }}
+                                    className="p-1 rounded hover:bg-slate-200 text-slate-400 hover:text-slate-600"
+                                  >
+                                    <X className="w-3 h-3" />
+                                  </button>
+                                </div>
+                                <p className="text-xs text-slate-500 mt-0.5 line-clamp-2">{notification.message}</p>
+                                <p className="text-xs text-slate-400 mt-1">{notification.time}</p>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                    <div className="p-3 border-t border-slate-200 bg-slate-50">
+                      <button
+                        onClick={() => {
+                          setCurrentPage('profile');
+                          setShowNotifications(false);
+                        }}
+                        className="w-full text-center text-sm text-teal-600 hover:text-teal-700 font-medium"
+                      >
+                        View all activity
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
 
             {/* Mobile Menu Button */}
             <button
