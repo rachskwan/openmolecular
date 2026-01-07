@@ -414,7 +414,14 @@ function App() {
       case 'resources':
         return <ResourcesPage {...commonProps} />;
       case 'profile':
-        return <ProfilePage {...commonProps} savedItems={savedItems} />;
+        return (
+          <ProfilePage
+            {...commonProps}
+            savedItems={savedItems}
+            learningProgress={learningProgress}
+            getTrackProgress={getTrackProgress}
+          />
+        );
       case 'article':
         return (
           <ArticleDetailPage
