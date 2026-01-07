@@ -74,6 +74,7 @@ const defaultNotifications = [
     message: 'Sarah Chen replied to "Best time to take NAD+ supplements?"',
     time: '5 min ago',
     read: false,
+    link: { page: 'thread', id: 2 },
   },
   {
     id: 2,
@@ -82,6 +83,7 @@ const defaultNotifications = [
     message: 'You completed the "Metabolomics Fundamentals" track',
     time: '1 hour ago',
     read: false,
+    link: { page: 'track', id: 1 },
   },
   {
     id: 3,
@@ -90,6 +92,7 @@ const defaultNotifications = [
     message: 'Dr. Michael Torres liked your comment',
     time: '3 hours ago',
     read: false,
+    link: { page: 'thread', id: 1 },
   },
   {
     id: 4,
@@ -98,6 +101,7 @@ const defaultNotifications = [
     message: 'Check out "Understanding Omega-3 Index Testing"',
     time: '1 day ago',
     read: true,
+    link: { page: 'article', id: 3 },
   },
 ];
 
@@ -119,6 +123,25 @@ export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
 
   const dismissNotification = (id) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
+  };
+
+  const handleNotificationClick = (notification) => {
+    markAsRead(notification.id);
+    setShowNotifications(false);
+    if (notification.link) {
+      setCurrentPage(notification.link.page, notification.link.id);
+    }
+  };
+
+  const handleViewAllActivity = () => {
+    setShowNotifications(false);
+    setCurrentPage('profile');
+    setTimeout(() => {
+      const element = document.getElementById('notifications-section');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   };
 
   const handleSubtabClick = (pageId, subtab) => {
@@ -260,7 +283,7 @@ export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
                             className={`p-3 border-b border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer ${
                               !notification.read ? 'bg-teal-50/50' : ''
                             }`}
-                            onClick={() => markAsRead(notification.id)}
+                            onClick={() => handleNotificationClick(notification)}
                           >
                             <div className="flex items-start gap-3">
                               <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
@@ -299,10 +322,7 @@ export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
                     </div>
                     <div className="p-3 border-t border-slate-200 bg-slate-50">
                       <button
-                        onClick={() => {
-                          setCurrentPage('profile');
-                          setShowNotifications(false);
-                        }}
+                        onClick={handleViewAllActivity}
                         className="w-full text-center text-sm text-teal-600 hover:text-teal-700 font-medium"
                       >
                         View all activity

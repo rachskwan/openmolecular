@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { User, Bookmark, FileText, Beaker, BarChart3, Lightbulb, Settings, Award, Clock, ChevronRight, PlayCircle, Download, Share2, CheckCircle, Users, UserMinus, Pencil, X, Save, Camera, Trash2 } from 'lucide-react';
+import { User, Bookmark, FileText, Beaker, BarChart3, Lightbulb, Settings, Award, Clock, ChevronRight, PlayCircle, Download, Share2, CheckCircle, Users, UserMinus, Pencil, X, Save, Camera, Trash2, Bell, MessageSquare, Heart, Trophy } from 'lucide-react';
 import { trackDetails } from '../../data/modules';
 import { getUserByUsername } from '../../data/users';
 
@@ -609,6 +609,94 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
             })}
           </div>
         )}
+      </div>
+
+      {/* Notifications Section */}
+      <div id="notifications-section" className="mt-8 bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <Bell className="w-5 h-5 text-blue-500" />
+            Recent Activity
+          </h2>
+        </div>
+
+        <div className="space-y-3">
+          {/* Sample activity items - in a real app these would come from props/state */}
+          <div
+            className="flex items-start gap-4 p-4 rounded-xl bg-blue-50 border border-blue-100 cursor-pointer hover:bg-blue-100 transition-colors"
+            onClick={() => onNavigate('thread', 2)}
+          >
+            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+              <MessageSquare className="w-5 h-5 text-blue-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-slate-900">New reply to your discussion</p>
+              <p className="text-sm text-slate-600 mt-0.5">Sarah Chen replied to "Best time to take NAD+ supplements?"</p>
+              <p className="text-xs text-slate-400 mt-1">5 min ago</p>
+            </div>
+            <ChevronRight className="w-5 h-5 text-slate-400 flex-shrink-0" />
+          </div>
+
+          <div
+            className="flex items-start gap-4 p-4 rounded-xl bg-amber-50 border border-amber-100 cursor-pointer hover:bg-amber-100 transition-colors"
+            onClick={() => onNavigate('track', 1)}
+          >
+            <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+              <Trophy className="w-5 h-5 text-amber-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-slate-900">Achievement Unlocked!</p>
+              <p className="text-sm text-slate-600 mt-0.5">You completed the "Metabolomics Fundamentals" track</p>
+              <p className="text-xs text-slate-400 mt-1">1 hour ago</p>
+            </div>
+            <ChevronRight className="w-5 h-5 text-slate-400 flex-shrink-0" />
+          </div>
+
+          <div
+            className="flex items-start gap-4 p-4 rounded-xl bg-pink-50 border border-pink-100 cursor-pointer hover:bg-pink-100 transition-colors"
+            onClick={() => onNavigate('thread', 1)}
+          >
+            <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center flex-shrink-0">
+              <Heart className="w-5 h-5 text-pink-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-slate-900">Your post was liked</p>
+              <p className="text-sm text-slate-600 mt-0.5">Dr. Michael Torres liked your comment</p>
+              <p className="text-xs text-slate-400 mt-1">3 hours ago</p>
+            </div>
+            <ChevronRight className="w-5 h-5 text-slate-400 flex-shrink-0" />
+          </div>
+
+          <div
+            className="flex items-start gap-4 p-4 rounded-xl bg-teal-50 border border-teal-100 cursor-pointer hover:bg-teal-100 transition-colors"
+            onClick={() => onNavigate('article', 3)}
+          >
+            <div className="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0">
+              <FileText className="w-5 h-5 text-teal-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-slate-900">New article published</p>
+              <p className="text-sm text-slate-600 mt-0.5">Check out "Understanding Omega-3 Index Testing"</p>
+              <p className="text-xs text-slate-400 mt-1">1 day ago</p>
+            </div>
+            <ChevronRight className="w-5 h-5 text-slate-400 flex-shrink-0" />
+          </div>
+
+          <div
+            className="flex items-start gap-4 p-4 rounded-xl bg-purple-50 border border-purple-100 cursor-pointer hover:bg-purple-100 transition-colors"
+            onClick={() => onUserClick?.('NutritionNerd')}
+          >
+            <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+              <Users className="w-5 h-5 text-purple-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-slate-900">New follower</p>
+              <p className="text-sm text-slate-600 mt-0.5">NutritionNerd started following you</p>
+              <p className="text-xs text-slate-400 mt-1">2 days ago</p>
+            </div>
+            <ChevronRight className="w-5 h-5 text-slate-400 flex-shrink-0" />
+          </div>
+        </div>
       </div>
 
       {/* Settings Section */}
