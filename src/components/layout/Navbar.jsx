@@ -30,7 +30,6 @@ const pages = [
     icon: Users,
     subtabs: [
       { id: 'discussions', label: 'Discussions', icon: MessageSquare, section: 'discussions' },
-      { id: 'faqs', label: 'FAQs', icon: HelpCircle, section: 'faqs' },
       { id: 'guidelines', label: 'Guidelines', icon: Shield, section: 'guidelines' },
     ]
   },

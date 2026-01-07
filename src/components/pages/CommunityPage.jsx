@@ -465,27 +465,6 @@ export default function CommunityPage({ onNavigate, onUserClick, userThreads = [
         </div>
       </div>
 
-      {/* FAQs Section */}
-      <div id="faqs" className="mt-12 bg-white rounded-xl p-6 shadow-sm border border-slate-200">
-        <h2 className="text-xl font-bold text-slate-900 mb-6">Frequently Asked Questions</h2>
-        <div className="space-y-4">
-          {[
-            { q: 'What is metabolomics?', a: 'Metabolomics is the study of small molecules (metabolites) in cells, tissues, and organisms. It helps us understand how our body processes nutrients and responds to environmental factors.' },
-            { q: 'How do biomarkers work?', a: 'Biomarkers are measurable indicators of biological states or conditions. They can help track health status, disease progression, or response to treatments.' },
-            { q: 'What tests can I get done?', a: 'Various metabolomic tests are available including fatty acid profiles, organic acid tests, amino acid panels, and comprehensive metabolic panels. Check our Certification page for testing partners.' },
-            { q: 'How do I interpret my results?', a: 'Our learning tracks and articles provide guidance on understanding test results. We recommend working with a healthcare provider for personalized interpretation.' },
-          ].map((faq, idx) => (
-            <details key={idx} className="group">
-              <summary className="flex items-center justify-between p-4 bg-slate-50 rounded-lg cursor-pointer hover:bg-slate-100 transition-colors">
-                <span className="font-medium text-slate-900">{faq.q}</span>
-                <ChevronRight className="w-5 h-5 text-slate-400 group-open:rotate-90 transition-transform" />
-              </summary>
-              <p className="p-4 text-slate-600">{faq.a}</p>
-            </details>
-          ))}
-        </div>
-      </div>
-
       {/* Guidelines Section */}
       <div id="guidelines" className="mt-8 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200">
         <h2 className="text-xl font-bold text-slate-900 mb-4">Community Guidelines</h2>

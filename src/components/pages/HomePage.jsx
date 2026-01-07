@@ -1,10 +1,82 @@
-import { Search, Play, FileText, Zap, TrendingUp, Star, ChevronRight, Beaker, Apple, Award, Gamepad2 } from 'lucide-react';
+import { useState } from 'react';
+import { Search, Play, FileText, Zap, TrendingUp, Star, ChevronRight, Beaker, Apple, Award, Gamepad2, X, BookOpen, MessageCircle } from 'lucide-react';
 import { articles } from '../../data/articles';
 import { glossaryData } from '../../data/glossary';
+import { communityThreads } from '../../data/community';
+
+// Topic definitions with keywords for filtering
+const topics = [
+  { name: 'Omega-3', keywords: ['omega-3', 'omega 3', 'fish oil', 'epa', 'dha', 'fatty acid'], color: 'blue' },
+  { name: 'NAD+', keywords: ['nad+', 'nad', 'nmn', 'nicotinamide', 'longevity', 'aging'], color: 'purple' },
+  { name: 'Inflammation', keywords: ['inflammation', 'inflammatory', 'crp', 'cytokine', 'anti-inflammatory'], color: 'red' },
+  { name: 'Gut Health', keywords: ['gut', 'microbiome', 'probiotic', 'digestive', 'bacteria', 'intestinal'], color: 'green' },
+  { name: 'Metabolomics', keywords: ['metabolomics', 'metabolite', 'metabolism', 'metabolic'], color: 'teal' },
+  { name: 'Biomarkers', keywords: ['biomarker', 'marker', 'indicator', 'testing', 'measurement'], color: 'amber' },
+  { name: 'Mitochondria', keywords: ['mitochondria', 'mitochondrial', 'atp', 'energy', 'cellular'], color: 'orange' },
+  { name: 'Cardiovascular', keywords: ['cardiovascular', 'heart', 'cardiac', 'cholesterol', 'lipid', 'blood pressure'], color: 'rose' },
+  { name: 'Brain Health', keywords: ['brain', 'cognitive', 'neurological', 'memory', 'mental', 'neurotransmitter'], color: 'indigo' },
+  { name: 'Hormones', keywords: ['hormone', 'hormonal', 'cortisol', 'insulin', 'thyroid', 'testosterone', 'estrogen'], color: 'pink' },
+  { name: 'Vitamins', keywords: ['vitamin', 'b12', 'vitamin d', 'folate', 'b6', 'nutrient'], color: 'cyan' },
+  { name: 'Antioxidants', keywords: ['antioxidant', 'oxidative', 'free radical', 'glutathione', 'coq10'], color: 'emerald' },
+];
+
+const colorClasses = {
+  blue: { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-200', activeBg: 'bg-blue-500' },
+  purple: { bg: 'bg-purple-100', text: 'text-purple-700', border: 'border-purple-200', activeBg: 'bg-purple-500' },
+  red: { bg: 'bg-red-100', text: 'text-red-700', border: 'border-red-200', activeBg: 'bg-red-500' },
+  green: { bg: 'bg-green-100', text: 'text-green-700', border: 'border-green-200', activeBg: 'bg-green-500' },
+  teal: { bg: 'bg-teal-100', text: 'text-teal-700', border: 'border-teal-200', activeBg: 'bg-teal-500' },
+  amber: { bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-200', activeBg: 'bg-amber-500' },
+  orange: { bg: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-200', activeBg: 'bg-orange-500' },
+  rose: { bg: 'bg-rose-100', text: 'text-rose-700', border: 'border-rose-200', activeBg: 'bg-rose-500' },
+  indigo: { bg: 'bg-indigo-100', text: 'text-indigo-700', border: 'border-indigo-200', activeBg: 'bg-indigo-500' },
+  pink: { bg: 'bg-pink-100', text: 'text-pink-700', border: 'border-pink-200', activeBg: 'bg-pink-500' },
+  cyan: { bg: 'bg-cyan-100', text: 'text-cyan-700', border: 'border-cyan-200', activeBg: 'bg-cyan-500' },
+  emerald: { bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-200', activeBg: 'bg-emerald-500' },
+};
 
 export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onSearchClick }) {
+  const [selectedTopic, setSelectedTopic] = useState(null);
+
   const featuredArticles = articles.filter(a => a.featured).slice(0, 3);
   const moleculeOfDay = glossaryData['NAD+'];
+
+  // Get filtered content based on selected topic
+  const getFilteredContent = (topicName) => {
+    const topic = topics.find(t => t.name === topicName);
+    if (!topic) return { articles: [], glossaryTerms: [], discussions: [] };
+
+    const matchesKeywords = (text) => {
+      if (!text) return false;
+      const lowerText = text.toLowerCase();
+      return topic.keywords.some(keyword => lowerText.includes(keyword));
+    };
+
+    const filteredArticles = articles.filter(a =>
+      matchesKeywords(a.title) || matchesKeywords(a.category) || matchesKeywords(a.description)
+    ).slice(0, 4);
+
+    const filteredGlossary = Object.values(glossaryData).filter(term =>
+      matchesKeywords(term.term) || matchesKeywords(term.fullName) || matchesKeywords(term.definition) || matchesKeywords(term.category)
+    ).slice(0, 6);
+
+    const filteredDiscussions = communityThreads.filter(t =>
+      matchesKeywords(t.title) || matchesKeywords(t.preview) || matchesKeywords(t.content)
+    ).slice(0, 3);
+
+    return { articles: filteredArticles, glossaryTerms: filteredGlossary, discussions: filteredDiscussions };
+  };
+
+  const handleTopicClick = (topicName) => {
+    if (selectedTopic === topicName) {
+      setSelectedTopic(null);
+    } else {
+      setSelectedTopic(topicName);
+    }
+  };
+
+  const filteredContent = selectedTopic ? getFilteredContent(selectedTopic) : null;
+  const selectedTopicData = selectedTopic ? topics.find(t => t.name === selectedTopic) : null;
 
   return (
     <div>
@@ -236,20 +308,143 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
         </div>
       </section>
 
-      {/* Quick Links */}
+      {/* Explore by Topic */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <h2 className="text-2xl font-bold text-slate-900 mb-6">Explore by Topic</h2>
-        <div className="flex flex-wrap gap-3">
-          {['Omega-3', 'NAD+', 'Inflammation', 'Gut-Brain Axis', 'Metabolomics', 'Biomarkers', 'Mitochondria', 'Epigenetics'].map(topic => (
-            <button
-              key={topic}
-              onClick={() => onGlossaryClick(topic)}
-              className="px-4 py-2 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:border-teal-500 hover:text-teal-600 transition-colors"
-            >
-              {topic}
-            </button>
-          ))}
+        <div className="flex flex-wrap gap-3 mb-6">
+          {topics.map(topic => {
+            const colors = colorClasses[topic.color];
+            const isSelected = selectedTopic === topic.name;
+            return (
+              <button
+                key={topic.name}
+                onClick={() => handleTopicClick(topic.name)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${
+                  isSelected
+                    ? `${colors.activeBg} text-white shadow-md`
+                    : `bg-white border ${colors.border} ${colors.text} hover:${colors.bg}`
+                }`}
+              >
+                {topic.name}
+                {isSelected && <X className="w-4 h-4" />}
+              </button>
+            );
+          })}
         </div>
+
+        {/* Filtered Content Display */}
+        {selectedTopic && filteredContent && (
+          <div className={`rounded-xl border-2 ${colorClasses[selectedTopicData?.color || 'teal'].border} p-6 bg-white`}>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold text-slate-900">
+                Content about <span className={colorClasses[selectedTopicData?.color || 'teal'].text}>{selectedTopic}</span>
+              </h3>
+              <button
+                onClick={() => setSelectedTopic(null)}
+                className="text-sm text-slate-500 hover:text-slate-700"
+              >
+                Clear filter
+              </button>
+            </div>
+
+            {/* Articles */}
+            {filteredContent.articles.length > 0 && (
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <FileText className="w-5 h-5 text-slate-600" />
+                  <h4 className="font-medium text-slate-900">Articles</h4>
+                  <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs">{filteredContent.articles.length}</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {filteredContent.articles.map(article => (
+                    <button
+                      key={article.id}
+                      onClick={() => onNavigate('article', article.id)}
+                      className="p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors text-left"
+                    >
+                      <span className="text-xs text-teal-600 font-medium">{article.category}</span>
+                      <h5 className="font-medium text-slate-900 mt-1 line-clamp-2">{article.title}</h5>
+                      <p className="text-xs text-slate-500 mt-2">{article.duration}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Glossary Terms */}
+            {filteredContent.glossaryTerms.length > 0 && (
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <BookOpen className="w-5 h-5 text-slate-600" />
+                  <h4 className="font-medium text-slate-900">Glossary Terms</h4>
+                  <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs">{filteredContent.glossaryTerms.length}</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {filteredContent.glossaryTerms.map(term => (
+                    <button
+                      key={term.term}
+                      onClick={() => onGlossaryClick(term.term)}
+                      className="px-3 py-2 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors text-left flex items-center gap-2"
+                    >
+                      <span className="text-lg">{term.icon}</span>
+                      <div>
+                        <span className="font-medium text-slate-900 text-sm">{term.term}</span>
+                        {term.fullName && term.fullName !== term.term && (
+                          <span className="text-xs text-slate-500 block">{term.fullName}</span>
+                        )}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Discussions */}
+            {filteredContent.discussions.length > 0 && (
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <MessageCircle className="w-5 h-5 text-slate-600" />
+                  <h4 className="font-medium text-slate-900">Community Discussions</h4>
+                  <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs">{filteredContent.discussions.length}</span>
+                </div>
+                <div className="space-y-3">
+                  {filteredContent.discussions.map(thread => (
+                    <button
+                      key={thread.id}
+                      onClick={() => onNavigate('thread', thread.id)}
+                      className="w-full p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors text-left flex items-start gap-4"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white font-medium text-sm flex-shrink-0">
+                        {thread.avatar}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h5 className="font-medium text-slate-900 line-clamp-1">{thread.title}</h5>
+                        <p className="text-sm text-slate-600 line-clamp-1 mt-0.5">{thread.preview}</p>
+                        <div className="flex items-center gap-3 mt-2 text-xs text-slate-500">
+                          <span>{thread.author}</span>
+                          <span>{thread.replies} replies</span>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* No results */}
+            {filteredContent.articles.length === 0 && filteredContent.glossaryTerms.length === 0 && filteredContent.discussions.length === 0 && (
+              <div className="text-center py-8">
+                <p className="text-slate-500">No content found for this topic yet.</p>
+                <button
+                  onClick={() => onNavigate('explore')}
+                  className="mt-4 text-teal-600 font-medium hover:text-teal-700"
+                >
+                  Browse all content →
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </section>
     </div>
   );
