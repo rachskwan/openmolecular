@@ -50,7 +50,8 @@ const pages = [
     icon: BookOpen,
     subtabs: [
       { id: 'glossary', label: 'Glossary', icon: FileText, section: 'glossary-section' },
-      { id: 'partners', label: 'Testing Partners', icon: Beaker, section: 'partners' },
+      { id: 'faqs', label: 'FAQs', icon: HelpCircle, section: 'faqs-section' },
+      { id: 'newsletter', label: 'Newsletter', icon: MessageSquare, section: 'newsletter-section' },
       { id: 'about', label: 'About Us', icon: Globe, section: 'about-section' },
     ]
   },
