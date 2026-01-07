@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { ArrowLeft, Clock, Users, Trophy, ChevronRight, CheckCircle, XCircle, RotateCcw, Gamepad2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ArrowLeft, Clock, Users, Trophy, ChevronRight, CheckCircle, XCircle, RotateCcw, Gamepad2, Lightbulb, AlertTriangle, Shuffle } from 'lucide-react';
 import { interactives } from '../../data/interactives';
 
 export default function InteractiveDetailPage({ interactiveId, onBack, onNavigate }) {
@@ -10,6 +10,24 @@ export default function InteractiveDetailPage({ interactiveId, onBack, onNavigat
   const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState(0);
   const [answers, setAnswers] = useState([]);
+
+  // Game-specific states
+  const [matchCards, setMatchCards] = useState([]);
+  const [flippedCards, setFlippedCards] = useState([]);
+  const [matchedPairs, setMatchedPairs] = useState([]);
+  const [scrambledWord, setScrambledWord] = useState('');
+  const [userInput, setUserInput] = useState('');
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [showHint, setShowHint] = useState(false);
+  const [currentChallenge, setCurrentChallenge] = useState(0);
+  const [selectedRedFlags, setSelectedRedFlags] = useState([]);
+  const [rankingOrder, setRankingOrder] = useState([]);
+  const [totalItems, setTotalItems] = useState(0);
+
+  // Reset game state when interactive changes
+  useEffect(() => {
+    handleRestart();
+  }, [interactiveId]);
 
   if (!interactive) {
     return (
@@ -26,7 +44,20 @@ export default function InteractiveDetailPage({ interactiveId, onBack, onNavigat
   }
 
   const isQuiz = interactive.type === 'Quiz' && interactive.content?.questions;
+  const isGame = interactive.type === 'Game';
   const questions = interactive.content?.questions || [];
+
+  // Determine game type
+  const getGameType = () => {
+    if (interactive.content?.pairs) return 'match';
+    if (interactive.content?.words) return 'scramble';
+    if (interactive.content?.challenges && interactive.title.includes('Detective')) return 'detective';
+    if (interactive.content?.matchups) return 'showdown';
+    if (interactive.content?.challenges && interactive.title.includes('Rankings')) return 'rankings';
+    return null;
+  };
+
+  const gameType = getGameType();
 
   const handleStartGame = () => {
     setGameState('playing');
@@ -35,6 +66,51 @@ export default function InteractiveDetailPage({ interactiveId, onBack, onNavigat
     setShowExplanation(false);
     setScore(0);
     setAnswers([]);
+
+    // Initialize game-specific state
+    if (gameType === 'match' && interactive.content?.pairs) {
+      const pairs = interactive.content.pairs;
+      const cards = [];
+      pairs.forEach((pair, idx) => {
+        cards.push({ id: `mol-${idx}`, type: 'molecule', content: pair.molecule, pairId: idx });
+        cards.push({ id: `func-${idx}`, type: 'function', content: pair.function, pairId: idx });
+      });
+      // Shuffle cards
+      const shuffled = cards.sort(() => Math.random() - 0.5);
+      setMatchCards(shuffled);
+      setFlippedCards([]);
+      setMatchedPairs([]);
+      setTotalItems(pairs.length);
+    }
+
+    if (gameType === 'scramble' && interactive.content?.words) {
+      setCurrentWordIndex(0);
+      setScrambledWord(interactive.content.words[0].scrambled);
+      setUserInput('');
+      setShowHint(false);
+      setTotalItems(interactive.content.words.length);
+    }
+
+    if (gameType === 'detective' && interactive.content?.challenges) {
+      setCurrentChallenge(0);
+      setSelectedRedFlags([]);
+      setTotalItems(interactive.content.challenges.length);
+    }
+
+    if (gameType === 'showdown' && interactive.content?.matchups) {
+      setCurrentChallenge(0);
+      setSelectedAnswer(null);
+      setShowExplanation(false);
+      setTotalItems(interactive.content.matchups.length);
+    }
+
+    if (gameType === 'rankings' && interactive.content?.challenges) {
+      setCurrentChallenge(0);
+      const foods = [...interactive.content.challenges[0].foods];
+      setRankingOrder(foods.sort(() => Math.random() - 0.5));
+      setShowExplanation(false);
+      setTotalItems(interactive.content.challenges.length);
+    }
   };
 
   const handleSelectAnswer = (answerIndex) => {
@@ -70,15 +146,172 @@ export default function InteractiveDetailPage({ interactiveId, onBack, onNavigat
     setShowExplanation(false);
     setScore(0);
     setAnswers([]);
+    setMatchCards([]);
+    setFlippedCards([]);
+    setMatchedPairs([]);
+    setScrambledWord('');
+    setUserInput('');
+    setCurrentWordIndex(0);
+    setShowHint(false);
+    setCurrentChallenge(0);
+    setSelectedRedFlags([]);
+    setRankingOrder([]);
+  };
+
+  // Match Game handlers
+  const handleCardClick = (card) => {
+    if (flippedCards.length === 2) return;
+    if (flippedCards.find(c => c.id === card.id)) return;
+    if (matchedPairs.includes(card.pairId)) return;
+
+    const newFlipped = [...flippedCards, card];
+    setFlippedCards(newFlipped);
+
+    if (newFlipped.length === 2) {
+      if (newFlipped[0].pairId === newFlipped[1].pairId) {
+        setMatchedPairs(prev => [...prev, card.pairId]);
+        setScore(prev => prev + 1);
+        setTimeout(() => setFlippedCards([]), 500);
+
+        if (matchedPairs.length + 1 === totalItems) {
+          setTimeout(() => setGameState('results'), 800);
+        }
+      } else {
+        setTimeout(() => setFlippedCards([]), 1000);
+      }
+    }
+  };
+
+  // Scramble Game handlers
+  const handleScrambleSubmit = () => {
+    const words = interactive.content.words;
+    const currentWord = words[currentWordIndex];
+    const isCorrect = userInput.toUpperCase() === currentWord.answer;
+
+    if (isCorrect) {
+      setScore(prev => prev + 1);
+    }
+    setAnswers(prev => [...prev, { word: currentWord.answer, userAnswer: userInput.toUpperCase(), isCorrect }]);
+
+    if (currentWordIndex < words.length - 1) {
+      setCurrentWordIndex(prev => prev + 1);
+      setScrambledWord(words[currentWordIndex + 1].scrambled);
+      setUserInput('');
+      setShowHint(false);
+    } else {
+      setGameState('results');
+    }
+  };
+
+  // Detective Game handlers
+  const handleRedFlagToggle = (ingredient) => {
+    setSelectedRedFlags(prev =>
+      prev.includes(ingredient)
+        ? prev.filter(i => i !== ingredient)
+        : [...prev, ingredient]
+    );
+  };
+
+  const handleDetectiveSubmit = () => {
+    const challenge = interactive.content.challenges[currentChallenge];
+    const correctFlags = challenge.redFlags;
+    const isCorrect = correctFlags.every(f => selectedRedFlags.includes(f)) &&
+                      selectedRedFlags.every(f => correctFlags.includes(f));
+
+    if (isCorrect) {
+      setScore(prev => prev + 1);
+    }
+    setAnswers(prev => [...prev, { correct: correctFlags, selected: selectedRedFlags, isCorrect }]);
+    setShowExplanation(true);
+  };
+
+  const handleDetectiveNext = () => {
+    if (currentChallenge < interactive.content.challenges.length - 1) {
+      setCurrentChallenge(prev => prev + 1);
+      setSelectedRedFlags([]);
+      setShowExplanation(false);
+    } else {
+      setGameState('results');
+    }
+  };
+
+  // Showdown Game handlers
+  const handleShowdownSelect = (choice) => {
+    if (showExplanation) return;
+    setSelectedAnswer(choice);
+  };
+
+  const handleShowdownSubmit = () => {
+    const matchup = interactive.content.matchups[currentChallenge];
+    const isCorrect = selectedAnswer === matchup.winner;
+
+    if (isCorrect) {
+      setScore(prev => prev + 1);
+    }
+    setAnswers(prev => [...prev, { correct: matchup.winner, selected: selectedAnswer, isCorrect }]);
+    setShowExplanation(true);
+  };
+
+  const handleShowdownNext = () => {
+    if (currentChallenge < interactive.content.matchups.length - 1) {
+      setCurrentChallenge(prev => prev + 1);
+      setSelectedAnswer(null);
+      setShowExplanation(false);
+    } else {
+      setGameState('results');
+    }
+  };
+
+  // Rankings Game handlers
+  const moveItem = (index, direction) => {
+    const newOrder = [...rankingOrder];
+    const newIndex = direction === 'up' ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= newOrder.length) return;
+    [newOrder[index], newOrder[newIndex]] = [newOrder[newIndex], newOrder[index]];
+    setRankingOrder(newOrder);
+  };
+
+  const handleRankingsSubmit = () => {
+    const challenge = interactive.content.challenges[currentChallenge];
+    const isCorrect = JSON.stringify(rankingOrder) === JSON.stringify(challenge.correctOrder);
+
+    if (isCorrect) {
+      setScore(prev => prev + 1);
+    }
+    setAnswers(prev => [...prev, { correct: challenge.correctOrder, selected: rankingOrder, isCorrect }]);
+    setShowExplanation(true);
+  };
+
+  const handleRankingsNext = () => {
+    if (currentChallenge < interactive.content.challenges.length - 1) {
+      const nextChallenge = currentChallenge + 1;
+      setCurrentChallenge(nextChallenge);
+      const foods = [...interactive.content.challenges[nextChallenge].foods];
+      setRankingOrder(foods.sort(() => Math.random() - 0.5));
+      setShowExplanation(false);
+    } else {
+      setGameState('results');
+    }
   };
 
   const getScoreMessage = () => {
-    const percentage = (score / questions.length) * 100;
+    const total = isQuiz ? questions.length : totalItems;
+    const percentage = (score / total) * 100;
     if (percentage === 100) return { emoji: '🏆', message: 'Perfect score! You\'re an expert!' };
     if (percentage >= 80) return { emoji: '🌟', message: 'Excellent! You really know your stuff!' };
     if (percentage >= 60) return { emoji: '👍', message: 'Good job! Keep learning!' };
     if (percentage >= 40) return { emoji: '📚', message: 'Not bad! Room for improvement.' };
     return { emoji: '💪', message: 'Keep studying! You\'ll get there!' };
+  };
+
+  const getProgressText = () => {
+    if (isQuiz) return `Question ${currentQuestion + 1} of ${questions.length}`;
+    if (gameType === 'match') return `${matchedPairs.length} of ${totalItems} pairs matched`;
+    if (gameType === 'scramble') return `Word ${currentWordIndex + 1} of ${totalItems}`;
+    if (gameType === 'detective') return `Product ${currentChallenge + 1} of ${totalItems}`;
+    if (gameType === 'showdown') return `Matchup ${currentChallenge + 1} of ${totalItems}`;
+    if (gameType === 'rankings') return `Challenge ${currentChallenge + 1} of ${totalItems}`;
+    return '';
   };
 
   return (
@@ -93,10 +326,8 @@ export default function InteractiveDetailPage({ interactiveId, onBack, onNavigat
             <ArrowLeft className="w-5 h-5" />
             <span className="font-medium">Back to Explore</span>
           </button>
-          {gameState === 'playing' && isQuiz && (
-            <span className="text-sm text-slate-500">
-              Question {currentQuestion + 1} of {questions.length}
-            </span>
+          {gameState === 'playing' && (
+            <span className="text-sm text-slate-500">{getProgressText()}</span>
           )}
         </div>
       </div>
@@ -148,6 +379,31 @@ export default function InteractiveDetailPage({ interactiveId, onBack, onNavigat
               {isQuiz && (
                 <p className="text-slate-600 mb-6">
                   Answer {questions.length} questions to test your knowledge. Good luck!
+                </p>
+              )}
+              {gameType === 'match' && (
+                <p className="text-slate-600 mb-6">
+                  Match {interactive.content.pairs.length} molecules with their functions. Click two cards to flip them!
+                </p>
+              )}
+              {gameType === 'scramble' && (
+                <p className="text-slate-600 mb-6">
+                  Unscramble {interactive.content.words.length} scientific terms. Use the hints if you get stuck!
+                </p>
+              )}
+              {gameType === 'detective' && (
+                <p className="text-slate-600 mb-6">
+                  Analyze {interactive.content.challenges.length} food products and identify the hidden red flags!
+                </p>
+              )}
+              {gameType === 'showdown' && (
+                <p className="text-slate-600 mb-6">
+                  Compare {interactive.content.matchups.length} product matchups and pick the healthier option!
+                </p>
+              )}
+              {gameType === 'rankings' && (
+                <p className="text-slate-600 mb-6">
+                  Rank foods by their antioxidant content in {interactive.content.challenges.length} challenges!
                 </p>
               )}
               <button
@@ -261,40 +517,436 @@ export default function InteractiveDetailPage({ interactiveId, onBack, onNavigat
           </div>
         )}
 
-        {/* Playing State - Non-Quiz (placeholder) */}
-        {gameState === 'playing' && !isQuiz && (
-          <div className="bg-white rounded-xl p-8 shadow-sm border border-slate-200 text-center">
-            <span className="text-6xl mb-4 block">{interactive.icon}</span>
-            <h2 className="text-xl font-semibold text-slate-900 mb-4">
-              {interactive.title}
-            </h2>
-            <p className="text-slate-600 mb-6">
-              This interactive tool is coming soon! Check back later for the full experience.
-            </p>
-            <button
-              onClick={handleRestart}
-              className="px-6 py-3 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition-colors"
-            >
-              Go Back
-            </button>
+        {/* Playing State - Match Game */}
+        {gameState === 'playing' && gameType === 'match' && (
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="h-2 bg-slate-100">
+              <div
+                className={`h-full bg-gradient-to-r ${interactive.color} transition-all duration-300`}
+                style={{ width: `${(matchedPairs.length / totalItems) * 100}%` }}
+              />
+            </div>
+            <div className="p-8">
+              <div className="text-center mb-6">
+                <h2 className="text-xl font-semibold text-slate-900">Match the molecules with their functions</h2>
+                <p className="text-slate-600 mt-2">Score: {score} / {totalItems}</p>
+              </div>
+              <div className="grid grid-cols-3 md:grid-cols-4 gap-4">
+                {matchCards.map(card => {
+                  const isFlipped = flippedCards.find(c => c.id === card.id);
+                  const isMatched = matchedPairs.includes(card.pairId);
+
+                  return (
+                    <button
+                      key={card.id}
+                      onClick={() => handleCardClick(card)}
+                      disabled={isMatched}
+                      className={`aspect-square rounded-xl border-2 transition-all duration-300 flex items-center justify-center p-3 text-center ${
+                        isMatched
+                          ? 'bg-green-100 border-green-300 cursor-default'
+                          : isFlipped
+                            ? card.type === 'molecule'
+                              ? 'bg-blue-100 border-blue-400'
+                              : 'bg-purple-100 border-purple-400'
+                            : 'bg-slate-100 border-slate-300 hover:border-slate-400 cursor-pointer'
+                      }`}
+                    >
+                      {(isFlipped || isMatched) ? (
+                        <span className={`text-sm font-medium ${
+                          isMatched ? 'text-green-700' :
+                          card.type === 'molecule' ? 'text-blue-700' : 'text-purple-700'
+                        }`}>
+                          {card.content}
+                        </span>
+                      ) : (
+                        <span className="text-2xl">❓</span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Playing State - Scramble Game */}
+        {gameState === 'playing' && gameType === 'scramble' && (
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="h-2 bg-slate-100">
+              <div
+                className={`h-full bg-gradient-to-r ${interactive.color} transition-all duration-300`}
+                style={{ width: `${((currentWordIndex + 1) / totalItems) * 100}%` }}
+              />
+            </div>
+            <div className="p-8">
+              <div className="text-center mb-8">
+                <h2 className="text-xl font-semibold text-slate-900 mb-4">Unscramble this word:</h2>
+                <div className="flex justify-center gap-2 mb-6">
+                  {scrambledWord.split('').map((letter, idx) => (
+                    <span key={idx} className={`w-10 h-10 flex items-center justify-center bg-gradient-to-br ${interactive.color} text-white font-bold text-lg rounded-lg`}>
+                      {letter}
+                    </span>
+                  ))}
+                </div>
+
+                {showHint && (
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 inline-block">
+                    <div className="flex items-center gap-2 text-amber-700">
+                      <Lightbulb className="w-5 h-5" />
+                      <span className="font-medium">Hint:</span>
+                      <span>{interactive.content.words[currentWordIndex].hint}</span>
+                    </div>
+                  </div>
+                )}
+
+                <input
+                  type="text"
+                  value={userInput}
+                  onChange={(e) => setUserInput(e.target.value.toUpperCase())}
+                  onKeyPress={(e) => e.key === 'Enter' && handleScrambleSubmit()}
+                  placeholder="Type your answer..."
+                  className="w-full max-w-md px-4 py-3 text-center text-lg font-medium border-2 border-slate-300 rounded-xl focus:border-blue-500 focus:outline-none uppercase"
+                />
+              </div>
+
+              <div className="flex justify-center gap-4">
+                {!showHint && (
+                  <button
+                    onClick={() => setShowHint(true)}
+                    className="px-6 py-3 bg-amber-100 text-amber-700 rounded-xl font-medium hover:bg-amber-200 transition-colors flex items-center gap-2"
+                  >
+                    <Lightbulb className="w-5 h-5" />
+                    Show Hint
+                  </button>
+                )}
+                <button
+                  onClick={handleScrambleSubmit}
+                  disabled={!userInput.trim()}
+                  className={`px-6 py-3 rounded-xl font-medium transition-colors ${
+                    !userInput.trim()
+                      ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                      : `bg-gradient-to-r ${interactive.color} text-white hover:shadow-lg`
+                  }`}
+                >
+                  Submit Answer
+                </button>
+              </div>
+
+              <div className="mt-6 text-center text-sm text-slate-500">
+                Score: {score} / {currentWordIndex + (answers.length > currentWordIndex ? 0 : 0)}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Playing State - Detective Game */}
+        {gameState === 'playing' && gameType === 'detective' && (
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="h-2 bg-slate-100">
+              <div
+                className={`h-full bg-gradient-to-r ${interactive.color} transition-all duration-300`}
+                style={{ width: `${((currentChallenge + 1) / totalItems) * 100}%` }}
+              />
+            </div>
+            <div className="p-8">
+              {(() => {
+                const challenge = interactive.content.challenges[currentChallenge];
+                return (
+                  <>
+                    <div className="text-center mb-6">
+                      <h2 className="text-xl font-semibold text-slate-900">{challenge.product}</h2>
+                      <p className="text-slate-600 mt-2">Select the ingredients that are red flags:</p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 mb-6">
+                      {challenge.ingredients.map((ingredient, idx) => {
+                        const isSelected = selectedRedFlags.includes(ingredient);
+                        const isRedFlag = challenge.redFlags.includes(ingredient);
+
+                        let bgColor = 'bg-white border-slate-200 hover:border-slate-400';
+                        if (showExplanation) {
+                          if (isRedFlag) {
+                            bgColor = 'bg-red-50 border-red-400';
+                          } else {
+                            bgColor = 'bg-green-50 border-green-300';
+                          }
+                        } else if (isSelected) {
+                          bgColor = 'bg-red-100 border-red-400';
+                        }
+
+                        return (
+                          <button
+                            key={idx}
+                            onClick={() => !showExplanation && handleRedFlagToggle(ingredient)}
+                            disabled={showExplanation}
+                            className={`p-4 rounded-xl border-2 transition-all text-left ${bgColor}`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="font-medium text-slate-700">{ingredient}</span>
+                              {showExplanation && isRedFlag && (
+                                <AlertTriangle className="w-5 h-5 text-red-500" />
+                              )}
+                              {showExplanation && !isRedFlag && (
+                                <CheckCircle className="w-5 h-5 text-green-500" />
+                              )}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {showExplanation && (
+                      <div className="bg-slate-50 rounded-xl p-4 mb-6">
+                        <p className="text-slate-700">
+                          <strong>Explanation:</strong> {challenge.explanation}
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="flex justify-end gap-4">
+                      {!showExplanation ? (
+                        <button
+                          onClick={handleDetectiveSubmit}
+                          className={`px-6 py-3 bg-gradient-to-r ${interactive.color} text-white rounded-xl font-medium hover:shadow-lg transition-shadow`}
+                        >
+                          Check Answer
+                        </button>
+                      ) : (
+                        <button
+                          onClick={handleDetectiveNext}
+                          className={`px-6 py-3 bg-gradient-to-r ${interactive.color} text-white rounded-xl font-medium hover:shadow-lg transition-shadow flex items-center gap-2`}
+                        >
+                          {currentChallenge < totalItems - 1 ? 'Next Product' : 'See Results'}
+                          <ChevronRight className="w-5 h-5" />
+                        </button>
+                      )}
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
+          </div>
+        )}
+
+        {/* Playing State - Showdown Game */}
+        {gameState === 'playing' && gameType === 'showdown' && (
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="h-2 bg-slate-100">
+              <div
+                className={`h-full bg-gradient-to-r ${interactive.color} transition-all duration-300`}
+                style={{ width: `${((currentChallenge + 1) / totalItems) * 100}%` }}
+              />
+            </div>
+            <div className="p-8">
+              {(() => {
+                const matchup = interactive.content.matchups[currentChallenge];
+                return (
+                  <>
+                    <div className="text-center mb-6">
+                      <h2 className="text-xl font-semibold text-slate-900">Which is healthier?</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                      {['A', 'B'].map(choice => {
+                        const product = choice === 'A' ? matchup.productA : matchup.productB;
+                        const isSelected = selectedAnswer === choice;
+                        const isWinner = matchup.winner === choice;
+
+                        let borderColor = 'border-slate-200';
+                        if (showExplanation) {
+                          borderColor = isWinner ? 'border-green-400 bg-green-50' : 'border-red-200 bg-red-50';
+                        } else if (isSelected) {
+                          borderColor = 'border-blue-400 bg-blue-50';
+                        }
+
+                        return (
+                          <button
+                            key={choice}
+                            onClick={() => handleShowdownSelect(choice)}
+                            disabled={showExplanation}
+                            className={`p-6 rounded-xl border-2 transition-all text-left ${borderColor} ${!showExplanation && 'hover:border-slate-400'}`}
+                          >
+                            <div className="flex items-center justify-between mb-4">
+                              <h3 className="font-semibold text-lg text-slate-900">{product.name}</h3>
+                              {showExplanation && isWinner && <CheckCircle className="w-6 h-6 text-green-500" />}
+                            </div>
+                            <div className="space-y-2 text-sm">
+                              {Object.entries(product).filter(([key]) => key !== 'name').map(([key, value]) => (
+                                <div key={key} className="flex justify-between">
+                                  <span className="text-slate-500 capitalize">{key.replace(/([A-Z])/g, ' $1')}</span>
+                                  <span className="font-medium text-slate-700">{value}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {showExplanation && (
+                      <div className="bg-slate-50 rounded-xl p-4 mb-6">
+                        <p className="text-slate-700">
+                          <strong>Explanation:</strong> {matchup.explanation}
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="flex justify-end gap-4">
+                      {!showExplanation ? (
+                        <button
+                          onClick={handleShowdownSubmit}
+                          disabled={!selectedAnswer}
+                          className={`px-6 py-3 rounded-xl font-medium transition-colors ${
+                            !selectedAnswer
+                              ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                              : `bg-gradient-to-r ${interactive.color} text-white hover:shadow-lg`
+                          }`}
+                        >
+                          Submit Choice
+                        </button>
+                      ) : (
+                        <button
+                          onClick={handleShowdownNext}
+                          className={`px-6 py-3 bg-gradient-to-r ${interactive.color} text-white rounded-xl font-medium hover:shadow-lg transition-shadow flex items-center gap-2`}
+                        >
+                          {currentChallenge < totalItems - 1 ? 'Next Matchup' : 'See Results'}
+                          <ChevronRight className="w-5 h-5" />
+                        </button>
+                      )}
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
+          </div>
+        )}
+
+        {/* Playing State - Rankings Game */}
+        {gameState === 'playing' && gameType === 'rankings' && (
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="h-2 bg-slate-100">
+              <div
+                className={`h-full bg-gradient-to-r ${interactive.color} transition-all duration-300`}
+                style={{ width: `${((currentChallenge + 1) / totalItems) * 100}%` }}
+              />
+            </div>
+            <div className="p-8">
+              {(() => {
+                const challenge = interactive.content.challenges[currentChallenge];
+                return (
+                  <>
+                    <div className="text-center mb-6">
+                      <h2 className="text-xl font-semibold text-slate-900">Rank from highest to lowest</h2>
+                      <p className="text-slate-600 mt-2">{challenge.metric}</p>
+                    </div>
+
+                    <div className="max-w-md mx-auto space-y-3 mb-6">
+                      {rankingOrder.map((item, idx) => {
+                        const correctPosition = showExplanation ? challenge.correctOrder.indexOf(item) : -1;
+                        const isCorrectPosition = showExplanation && correctPosition === idx;
+
+                        return (
+                          <div
+                            key={item}
+                            className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all ${
+                              showExplanation
+                                ? isCorrectPosition
+                                  ? 'bg-green-50 border-green-300'
+                                  : 'bg-red-50 border-red-300'
+                                : 'bg-white border-slate-200'
+                            }`}
+                          >
+                            <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                              showExplanation
+                                ? isCorrectPosition ? 'bg-green-200 text-green-700' : 'bg-red-200 text-red-700'
+                                : 'bg-slate-200 text-slate-600'
+                            }`}>
+                              {idx + 1}
+                            </span>
+                            <span className="flex-1 font-medium text-slate-700">{item}</span>
+                            {!showExplanation && (
+                              <div className="flex gap-1">
+                                <button
+                                  onClick={() => moveItem(idx, 'up')}
+                                  disabled={idx === 0}
+                                  className="p-1 rounded hover:bg-slate-100 disabled:opacity-30"
+                                >
+                                  ▲
+                                </button>
+                                <button
+                                  onClick={() => moveItem(idx, 'down')}
+                                  disabled={idx === rankingOrder.length - 1}
+                                  className="p-1 rounded hover:bg-slate-100 disabled:opacity-30"
+                                >
+                                  ▼
+                                </button>
+                              </div>
+                            )}
+                            {showExplanation && !isCorrectPosition && (
+                              <span className="text-xs text-red-600">Should be #{correctPosition + 1}</span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {showExplanation && (
+                      <div className="bg-slate-50 rounded-xl p-4 mb-6">
+                        <p className="text-slate-700">
+                          <strong>Explanation:</strong> {challenge.explanation}
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="flex justify-center gap-4">
+                      {!showExplanation && (
+                        <button
+                          onClick={() => setRankingOrder([...rankingOrder].sort(() => Math.random() - 0.5))}
+                          className="px-6 py-3 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition-colors flex items-center gap-2"
+                        >
+                          <Shuffle className="w-5 h-5" />
+                          Shuffle
+                        </button>
+                      )}
+                      {!showExplanation ? (
+                        <button
+                          onClick={handleRankingsSubmit}
+                          className={`px-6 py-3 bg-gradient-to-r ${interactive.color} text-white rounded-xl font-medium hover:shadow-lg transition-shadow`}
+                        >
+                          Check Order
+                        </button>
+                      ) : (
+                        <button
+                          onClick={handleRankingsNext}
+                          className={`px-6 py-3 bg-gradient-to-r ${interactive.color} text-white rounded-xl font-medium hover:shadow-lg transition-shadow flex items-center gap-2`}
+                        >
+                          {currentChallenge < totalItems - 1 ? 'Next Challenge' : 'See Results'}
+                          <ChevronRight className="w-5 h-5" />
+                        </button>
+                      )}
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
           </div>
         )}
 
         {/* Results State */}
-        {gameState === 'results' && isQuiz && (
+        {gameState === 'results' && (
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
             {/* Score Header */}
             <div className={`bg-gradient-to-br ${interactive.color} p-8 text-white text-center`}>
               <span className="text-6xl mb-4 block">{getScoreMessage().emoji}</span>
               <h2 className="text-3xl font-bold mb-2">
-                {score} / {questions.length}
+                {score} / {isQuiz ? questions.length : totalItems}
               </h2>
               <p className="text-lg opacity-90">{getScoreMessage().message}</p>
             </div>
 
             {/* Results Breakdown */}
             <div className="p-8">
-              <h3 className="font-semibold text-slate-900 mb-4">Your Answers</h3>
+              <h3 className="font-semibold text-slate-900 mb-4">Your Results</h3>
               <div className="space-y-3 mb-8">
                 {answers.map((answer, idx) => (
                   <div
@@ -305,7 +957,12 @@ export default function InteractiveDetailPage({ interactiveId, onBack, onNavigat
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-medium text-slate-900">
-                        Q{idx + 1}: {questions[idx].question.substring(0, 50)}...
+                        {isQuiz && `Q${idx + 1}: ${questions[idx].question.substring(0, 40)}...`}
+                        {gameType === 'scramble' && `Word ${idx + 1}: ${answer.word}`}
+                        {gameType === 'detective' && `Product ${idx + 1}`}
+                        {gameType === 'showdown' && `Matchup ${idx + 1}`}
+                        {gameType === 'rankings' && `Challenge ${idx + 1}`}
+                        {gameType === 'match' && `Match ${idx + 1}`}
                       </span>
                       {answer.isCorrect ? (
                         <CheckCircle className="w-5 h-5 text-green-600" />
