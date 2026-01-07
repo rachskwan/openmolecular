@@ -71,6 +71,12 @@ function App() {
     return saved ? JSON.parse(saved) : {}; // { threadId: [replies] }
   });
 
+  // Following users - persisted to localStorage
+  const [following, setFollowing] = useState(() => {
+    const saved = localStorage.getItem('following');
+    return saved ? JSON.parse(saved) : []; // Array of usernames
+  });
+
   // Toast notification state
   const [toast, setToast] = useState(null);
 
@@ -93,6 +99,11 @@ function App() {
   useEffect(() => {
     localStorage.setItem('userReplies', JSON.stringify(userReplies));
   }, [userReplies]);
+
+  // Persist following to localStorage
+  useEffect(() => {
+    localStorage.setItem('following', JSON.stringify(following));
+  }, [following]);
 
   // Auto-hide toast after 3 seconds
   useEffect(() => {
@@ -170,6 +181,21 @@ function App() {
 
   // Get replies for a thread (user-created ones)
   const getRepliesForThread = (threadId) => userReplies[threadId] || [];
+
+  // Toggle follow a user
+  const toggleFollow = (username) => {
+    setFollowing(prev => {
+      const isCurrentlyFollowing = prev.includes(username);
+      if (isCurrentlyFollowing) {
+        return prev.filter(u => u !== username);
+      } else {
+        return [...prev, username];
+      }
+    });
+  };
+
+  // Check if following a user
+  const isFollowing = (username) => following.includes(username);
 
   // Share functionality
   const handleShare = async (title, url) => {
@@ -401,6 +427,7 @@ function App() {
             userThreads={userThreads}
             toggleThreadLike={toggleThreadLike}
             isThreadLiked={isThreadLiked}
+            following={following}
           />
         );
       case 'certification':
@@ -420,6 +447,7 @@ function App() {
             savedItems={savedItems}
             learningProgress={learningProgress}
             getTrackProgress={getTrackProgress}
+            following={following}
           />
         );
       case 'article':
@@ -565,6 +593,8 @@ function App() {
           username={viewingUserProfile}
           onClose={() => setViewingUserProfile(null)}
           onNavigate={handleNavigate}
+          toggleFollow={toggleFollow}
+          isFollowing={isFollowing}
         />
       )}
 

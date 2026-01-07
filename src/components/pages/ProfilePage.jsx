@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { User, Bookmark, FileText, Beaker, BarChart3, Lightbulb, Settings, Award, Clock, ChevronRight, PlayCircle, Download, Share2, CheckCircle } from 'lucide-react';
+import { User, Bookmark, FileText, Beaker, BarChart3, Lightbulb, Settings, Award, Clock, ChevronRight, PlayCircle, Download, Share2, CheckCircle, Users, UserMinus } from 'lucide-react';
 import { trackDetails } from '../../data/modules';
+import { getUserByUsername } from '../../data/users';
 
 const tabs = [
   { id: 'articles', label: 'Articles', icon: FileText },
@@ -10,7 +11,7 @@ const tabs = [
   { id: 'advice', label: 'Saved Tips', icon: Lightbulb },
 ];
 
-export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, learningProgress = {}, getTrackProgress }) {
+export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, learningProgress = {}, getTrackProgress, following = [], onUserClick }) {
   const [activeTab, setActiveTab] = useState('articles');
 
   const totalSaved = Object.values(savedItems).reduce((sum, arr) => sum + arr.length, 0);
@@ -379,6 +380,79 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
                 </div>
               </div>
             ))}
+          </div>
+        )}
+      </div>
+
+      {/* Following Section */}
+      <div id="following-section" className="mt-8 bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <Users className="w-5 h-5 text-purple-500" />
+            People You Follow
+          </h2>
+          {following.length > 0 && (
+            <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
+              {following.length} Following
+            </span>
+          )}
+        </div>
+
+        {following.length === 0 ? (
+          <div className="text-center py-12 bg-slate-50 rounded-xl">
+            <Users className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-slate-900 mb-2">Not following anyone yet</h3>
+            <p className="text-slate-600 mb-4 max-w-md mx-auto">
+              Follow community members to see their posts and stay connected with their contributions.
+            </p>
+            <button
+              onClick={() => onNavigate('community')}
+              className="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm font-medium hover:bg-teal-700 transition-colors"
+            >
+              Explore Community
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {following.map(username => {
+              const user = getUserByUsername(username);
+              return (
+                <div
+                  key={username}
+                  className="flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:shadow-md transition-shadow"
+                >
+                  <button
+                    onClick={() => onUserClick?.(username)}
+                    className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white font-medium hover:ring-2 hover:ring-teal-300 hover:ring-offset-2 transition-all"
+                  >
+                    {user.avatar}
+                  </button>
+                  <div className="flex-1 min-w-0">
+                    <button
+                      onClick={() => onUserClick?.(username)}
+                      className="font-medium text-slate-900 hover:text-teal-600 transition-colors truncate block"
+                    >
+                      {user.fullName}
+                    </button>
+                    <p className="text-sm text-slate-500 truncate">@{user.username}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-xs text-slate-400">{user.stats.followers} followers</span>
+                      {user.badges[0] && (
+                        <span className="px-1.5 py-0.5 bg-purple-100 text-purple-700 rounded text-xs truncate max-w-[100px]">
+                          {user.badges[0]}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => onUserClick?.(username)}
+                    className="p-2 text-slate-400 hover:text-teal-600 hover:bg-slate-100 rounded-lg transition-colors"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

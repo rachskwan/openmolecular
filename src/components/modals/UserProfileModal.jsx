@@ -1,8 +1,9 @@
-import { X, MapPin, Calendar, Award, MessageSquare, Heart, Users, BookOpen, ChevronRight } from 'lucide-react';
+import { X, MapPin, Calendar, Award, MessageSquare, Heart, Users, BookOpen, ChevronRight, UserPlus, UserCheck } from 'lucide-react';
 import { getUserByUsername } from '../../data/users';
 
-export default function UserProfileModal({ username, onClose, onNavigate }) {
+export default function UserProfileModal({ username, onClose, onNavigate, toggleFollow, isFollowing }) {
   const user = getUserByUsername(username);
+  const following = isFollowing ? isFollowing(username) : false;
 
   const getBadgeColor = (badge) => {
     if (badge.includes('Verified') || badge.includes('Official')) return 'bg-blue-100 text-blue-700';
@@ -161,17 +162,31 @@ export default function UserProfileModal({ username, onClose, onNavigate }) {
         <div className="border-t border-slate-200 p-4 bg-slate-50">
           <div className="flex gap-3">
             <button
-              onClick={onClose}
-              className="flex-1 py-2.5 border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-100 transition-colors"
+              onClick={() => toggleFollow && toggleFollow(username)}
+              className={`flex-1 py-2.5 font-medium rounded-lg transition-colors flex items-center justify-center gap-2 ${
+                following
+                  ? 'bg-teal-100 text-teal-700 border border-teal-300 hover:bg-teal-200'
+                  : 'bg-teal-600 hover:bg-teal-700 text-white'
+              }`}
             >
-              Close
+              {following ? (
+                <>
+                  <UserCheck className="w-4 h-4" />
+                  Following
+                </>
+              ) : (
+                <>
+                  <UserPlus className="w-4 h-4" />
+                  Follow
+                </>
+              )}
             </button>
             <button
               onClick={() => {
                 onClose();
                 onNavigate('community');
               }}
-              className="flex-1 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+              className="flex-1 py-2.5 border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-100 transition-colors flex items-center justify-center gap-2"
             >
               View Posts
               <ChevronRight className="w-4 h-4" />

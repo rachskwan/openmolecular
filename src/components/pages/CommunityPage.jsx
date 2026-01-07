@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { MessageCircle, ThumbsUp, TrendingUp, Star, ChevronRight, ChevronLeft, Search, X } from 'lucide-react';
+import { MessageCircle, ThumbsUp, TrendingUp, Star, ChevronRight, ChevronLeft, Search, X, Users } from 'lucide-react';
 import { communityThreads, communityCategories } from '../../data/community';
+import { getUserByUsername } from '../../data/users';
 
 const THREADS_PER_PAGE = 5;
 
@@ -27,7 +28,7 @@ const parseDate = (dateStr) => {
   return new Date(dateStr);
 };
 
-export default function CommunityPage({ onNavigate, onUserClick, userThreads = [], toggleThreadLike, isThreadLiked }) {
+export default function CommunityPage({ onNavigate, onUserClick, userThreads = [], toggleThreadLike, isThreadLiked, following = [] }) {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTopic, setActiveTopic] = useState(null);
@@ -345,6 +346,51 @@ export default function CommunityPage({ onNavigate, onUserClick, userThreads = [
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* People You Follow */}
+          <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+            <div className="flex items-center gap-2 mb-4">
+              <Users className="w-5 h-5 text-purple-500" />
+              <h3 className="font-semibold text-slate-900">People You Follow</h3>
+              {following.length > 0 && (
+                <span className="ml-auto px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
+                  {following.length}
+                </span>
+              )}
+            </div>
+            {following.length === 0 ? (
+              <p className="text-sm text-slate-500 text-center py-4">
+                You're not following anyone yet. Click on a user's profile to follow them!
+              </p>
+            ) : (
+              <div className="space-y-2">
+                {following.slice(0, 5).map(username => {
+                  const user = getUserByUsername(username);
+                  return (
+                    <button
+                      key={username}
+                      onClick={() => onUserClick?.(username)}
+                      className="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-slate-50 transition-colors"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white text-xs font-medium">
+                        {user.avatar}
+                      </div>
+                      <div className="flex-1 text-left min-w-0">
+                        <p className="text-sm font-medium text-slate-900 truncate">{user.fullName}</p>
+                        <p className="text-xs text-slate-500 truncate">@{user.username}</p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-slate-400" />
+                    </button>
+                  );
+                })}
+                {following.length > 5 && (
+                  <p className="text-xs text-center text-slate-500 pt-2">
+                    +{following.length - 5} more
+                  </p>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Start Discussion CTA */}
