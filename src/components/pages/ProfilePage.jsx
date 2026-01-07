@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { User, Bookmark, FileText, Beaker, BarChart3, Lightbulb, Settings, Award, Clock, ChevronRight, PlayCircle, Download, Share2, CheckCircle, Users, UserMinus, Pencil, X, Save } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { User, Bookmark, FileText, Beaker, BarChart3, Lightbulb, Settings, Award, Clock, ChevronRight, PlayCircle, Download, Share2, CheckCircle, Users, UserMinus, Pencil, X, Save, Camera, Trash2 } from 'lucide-react';
 import { trackDetails } from '../../data/modules';
 import { getUserByUsername } from '../../data/users';
 
@@ -16,11 +16,14 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [editName, setEditName] = useState(userProfile.name || '');
   const [editBio, setEditBio] = useState(userProfile.bio || '');
+  const [editPicture, setEditPicture] = useState(userProfile.picture || '');
+  const fileInputRef = useRef(null);
 
   const handleSaveProfile = () => {
     updateUserProfile({
       name: editName.trim(),
       bio: editBio.trim(),
+      picture: editPicture,
     });
     setIsEditingProfile(false);
   };
@@ -28,7 +31,32 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
   const handleCancelEdit = () => {
     setEditName(userProfile.name || '');
     setEditBio(userProfile.bio || '');
+    setEditPicture(userProfile.picture || '');
     setIsEditingProfile(false);
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Check file size (max 500KB to avoid localStorage limits)
+      if (file.size > 500 * 1024) {
+        alert('Image too large. Please choose an image under 500KB.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditPicture(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemovePicture = () => {
+    setEditPicture('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const getInitials = (name) => {
@@ -85,9 +113,52 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
       {/* Profile Header */}
       <div id="settings" className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 mb-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white text-2xl font-bold">
-            {getInitials(userProfile.name) || <User className="w-10 h-10" />}
-          </div>
+          {/* Avatar */}
+          {isEditingProfile ? (
+            <div className="relative">
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white text-2xl font-bold overflow-hidden">
+                {editPicture ? (
+                  <img src={editPicture} alt="Profile" className="w-full h-full object-cover" />
+                ) : getInitials(editName) || (
+                  <User className="w-12 h-12" />
+                )}
+              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+              <div className="absolute -bottom-1 -right-1 flex gap-1">
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="p-2 bg-teal-600 text-white rounded-full hover:bg-teal-700 transition-colors shadow-lg"
+                  title="Upload photo"
+                >
+                  <Camera className="w-4 h-4" />
+                </button>
+                {editPicture && (
+                  <button
+                    onClick={handleRemovePicture}
+                    className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors shadow-lg"
+                    title="Remove photo"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+              <p className="text-xs text-slate-500 mt-2 text-center">Max 500KB</p>
+            </div>
+          ) : (
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white text-2xl font-bold overflow-hidden">
+              {userProfile.picture ? (
+                <img src={userProfile.picture} alt="Profile" className="w-full h-full object-cover" />
+              ) : getInitials(userProfile.name) || (
+                <User className="w-10 h-10" />
+              )}
+            </div>
+          )}
           <div className="flex-1">
             {isEditingProfile ? (
               <div className="space-y-4">
