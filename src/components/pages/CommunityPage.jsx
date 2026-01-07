@@ -1,7 +1,15 @@
 import { useState } from 'react';
-import { MessageCircle, ThumbsUp, TrendingUp, Star, ChevronRight, ChevronLeft, Search, X, Users } from 'lucide-react';
+import { MessageCircle, ThumbsUp, TrendingUp, Star, ChevronRight, ChevronLeft, Search, X, Users, Rss } from 'lucide-react';
 import { communityThreads, communityCategories } from '../../data/community';
 import { getUserByUsername } from '../../data/users';
+
+// Insert "Feed" after "All" in the categories
+const getCategoriesWithFeed = () => {
+  const cats = [...communityCategories];
+  const allIndex = cats.indexOf('All');
+  cats.splice(allIndex + 1, 0, 'Feed');
+  return cats;
+};
 
 const THREADS_PER_PAGE = 5;
 
@@ -43,9 +51,15 @@ export default function CommunityPage({ onNavigate, onUserClick, userThreads = [
   });
 
   // Filter by category
-  let filteredThreads = activeCategory === 'All'
-    ? sortedThreads
-    : sortedThreads.filter(t => t.category === activeCategory);
+  let filteredThreads;
+  if (activeCategory === 'All') {
+    filteredThreads = sortedThreads;
+  } else if (activeCategory === 'Feed') {
+    // Show only threads from people the user follows
+    filteredThreads = sortedThreads.filter(t => following.includes(t.author));
+  } else {
+    filteredThreads = sortedThreads.filter(t => t.category === activeCategory);
+  }
 
   // Filter by trending topic
   if (activeTopic) {
@@ -151,17 +165,29 @@ export default function CommunityPage({ onNavigate, onUserClick, userThreads = [
 
           {/* Category Filter */}
           <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-            {communityCategories.map(cat => (
+            {getCategoriesWithFeed().map(cat => (
               <button
                 key={cat}
                 onClick={() => handleCategoryChange(cat)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors flex items-center gap-1.5 ${
                   activeCategory === cat && !activeTopic
-                    ? 'bg-teal-100 text-teal-700'
+                    ? cat === 'Feed'
+                      ? 'bg-purple-100 text-purple-700'
+                      : 'bg-teal-100 text-teal-700'
                     : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
                 }`}
               >
+                {cat === 'Feed' && <Rss className="w-4 h-4" />}
                 {cat}
+                {cat === 'Feed' && following.length > 0 && (
+                  <span className={`px-1.5 py-0.5 rounded text-xs ${
+                    activeCategory === 'Feed' && !activeTopic
+                      ? 'bg-purple-200 text-purple-800'
+                      : 'bg-slate-200 text-slate-600'
+                  }`}>
+                    {following.length}
+                  </span>
+                )}
               </button>
             ))}
           </div>
@@ -233,15 +259,45 @@ export default function CommunityPage({ onNavigate, onUserClick, userThreads = [
               ))
             ) : (
               <div className="text-center py-12 bg-white rounded-xl border border-slate-200">
-                <MessageCircle className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                <p className="text-slate-500">No discussions found</p>
-                {(activeTopic || searchQuery) && (
-                  <button
-                    onClick={clearFilters}
-                    className="mt-2 text-teal-600 hover:text-teal-700 text-sm font-medium"
-                  >
-                    Clear filters
-                  </button>
+                {activeCategory === 'Feed' ? (
+                  <>
+                    <Rss className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                    {following.length === 0 ? (
+                      <>
+                        <p className="text-slate-900 font-medium mb-2">Your feed is empty</p>
+                        <p className="text-slate-500 mb-4">Follow community members to see their posts here</p>
+                        <button
+                          onClick={() => handleCategoryChange('All')}
+                          className="text-teal-600 hover:text-teal-700 text-sm font-medium"
+                        >
+                          Browse all discussions
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-slate-500 mb-2">No posts from people you follow</p>
+                        <button
+                          onClick={() => handleCategoryChange('All')}
+                          className="text-teal-600 hover:text-teal-700 text-sm font-medium"
+                        >
+                          Browse all discussions
+                        </button>
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <MessageCircle className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                    <p className="text-slate-500">No discussions found</p>
+                    {(activeTopic || searchQuery) && (
+                      <button
+                        onClick={clearFilters}
+                        className="mt-2 text-teal-600 hover:text-teal-700 text-sm font-medium"
+                      >
+                        Clear filters
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             )}
