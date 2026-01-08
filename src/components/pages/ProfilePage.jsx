@@ -362,33 +362,63 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
             <p className="text-sm font-medium text-slate-700 mb-3">Badges</p>
             <div className="flex flex-wrap gap-2">
               {totalLessonsCompleted >= 1 && (
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-full" title="Complete your first lesson">
-                  <Zap className="w-4 h-4 text-amber-500" />
-                  <span className="text-sm font-medium text-amber-700">First Steps</span>
+                <div className="group relative">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-full cursor-default">
+                    <Zap className="w-4 h-4 text-amber-500" />
+                    <span className="text-sm font-medium text-amber-700">First Steps</span>
+                  </div>
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                    Completed first lesson
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800" />
+                  </div>
                 </div>
               )}
               {tracksCompleted >= 1 && (
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-200 rounded-full" title="Complete a learning track">
-                  <Target className="w-4 h-4 text-teal-500" />
-                  <span className="text-sm font-medium text-teal-700">Track Master</span>
+                <div className="group relative">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-200 rounded-full cursor-default">
+                    <Target className="w-4 h-4 text-teal-500" />
+                    <span className="text-sm font-medium text-teal-700">Track Master</span>
+                  </div>
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                    Finished a learning track
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800" />
+                  </div>
                 </div>
               )}
               {totalSaved >= 5 && (
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-full" title="Save 5+ items">
-                  <Star className="w-4 h-4 text-purple-500" />
-                  <span className="text-sm font-medium text-purple-700">Curator</span>
+                <div className="group relative">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-full cursor-default">
+                    <Star className="w-4 h-4 text-purple-500" />
+                    <span className="text-sm font-medium text-purple-700">Curator</span>
+                  </div>
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                    Saved 5+ items
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800" />
+                  </div>
                 </div>
               )}
               {following.length >= 3 && (
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-pink-50 to-rose-50 border border-pink-200 rounded-full" title="Follow 3+ community members">
-                  <Heart className="w-4 h-4 text-pink-500" />
-                  <span className="text-sm font-medium text-pink-700">Social</span>
+                <div className="group relative">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-pink-50 to-rose-50 border border-pink-200 rounded-full cursor-default">
+                    <Heart className="w-4 h-4 text-pink-500" />
+                    <span className="text-sm font-medium text-pink-700">Social</span>
+                  </div>
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                    Following 3+ members
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800" />
+                  </div>
                 </div>
               )}
               {hoursLearned >= 5 && (
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-full" title="Learn for 5+ hours">
-                  <Flame className="w-4 h-4 text-orange-500" />
-                  <span className="text-sm font-medium text-orange-700">Dedicated</span>
+                <div className="group relative">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-full cursor-default">
+                    <Flame className="w-4 h-4 text-orange-500" />
+                    <span className="text-sm font-medium text-orange-700">Dedicated</span>
+                  </div>
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                    5+ hours of learning
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800" />
+                  </div>
                 </div>
               )}
               {totalLessonsCompleted === 0 && totalSaved === 0 && following.length === 0 && (
