@@ -1,9 +1,41 @@
-import { useState, Suspense, lazy } from 'react';
-import { Search, Play, FileText, Zap, TrendingUp, Star, ChevronRight, Beaker, Apple, Award, Gamepad2, X, BookOpen, MessageCircle, FlaskConical, Heart, Utensils, Brain, ShoppingBag, BarChart3, Clock, Users, Video } from 'lucide-react';
+import { useState, useEffect, Suspense, lazy } from 'react';
+import { Search, Play, FileText, Zap, TrendingUp, Star, ChevronRight, Beaker, Apple, Award, Gamepad2, X, BookOpen, MessageCircle, FlaskConical, Heart, Utensils, Brain, ShoppingBag, BarChart3, Clock, Users, Video, Quote } from 'lucide-react';
 
 // Lazy load the biohacker background for better performance
 const BiohackerBackground = lazy(() => import('../hero/BiohackerBackground'));
 import { articles, videos } from '../../data/articles';
+
+// Carousel topics - curiosity-sparking biohacker themes
+const carouselTopics = [
+  { text: 'Why is my HRV crashing?', color: 'text-rose-400' },
+  { text: 'NAD+ at 40 vs 25', color: 'text-purple-400' },
+  { text: 'Ozempic metabolomics', color: 'text-cyan-400' },
+  { text: 'APOE4 & Alzheimer\'s risk', color: 'text-amber-400' },
+  { text: 'Rapamycin cycling protocols', color: 'text-emerald-400' },
+  { text: 'Why cold plunge works', color: 'text-sky-400' },
+  { text: 'Seed oils: real data', color: 'text-orange-400' },
+  { text: 'MTHFR & methylation', color: 'text-violet-400' },
+  { text: 'Continuous glucose insights', color: 'text-teal-400' },
+  { text: 'Thyroid & fatigue link', color: 'text-pink-400' },
+  { text: 'Metformin vs berberine', color: 'text-lime-400' },
+  { text: 'Gut-brain axis markers', color: 'text-indigo-400' },
+  { text: 'PCOS reversal biomarkers', color: 'text-fuchsia-400' },
+  { text: 'Peptides: BPC-157 data', color: 'text-blue-400' },
+  { text: 'Creatine for longevity', color: 'text-green-400' },
+  { text: 'Omega-3 index optimization', color: 'text-cyan-400' },
+];
+
+// User quotes/comments
+const userQuotes = [
+  { quote: "Finally understood why my inflammation markers were high", user: "biohacker_mike", time: "2h ago" },
+  { quote: "The NAD+ protocol changed my energy levels completely", user: "sarah_optimized", time: "4h ago" },
+  { quote: "Wish I knew about MTHFR variants years ago", user: "data_driven_dan", time: "6h ago" },
+  { quote: "CGM data + this platform = game changer", user: "glucose_guru", time: "8h ago" },
+  { quote: "Real user data > influencer opinions", user: "skeptical_steve", time: "12h ago" },
+  { quote: "My doctor was impressed with my biomarker knowledge", user: "informed_patient", time: "1d ago" },
+  { quote: "Tracked my Omega-3 index from 4% to 10%", user: "fatty_acid_fan", time: "1d ago" },
+  { quote: "The peptide comparisons saved me months of research", user: "peptide_pioneer", time: "2d ago" },
+];
 import { glossaryData } from '../../data/glossary';
 import { communityThreads } from '../../data/community';
 import { interactives } from '../../data/interactives';
@@ -184,29 +216,55 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
   const filteredContent = selectedTopic ? getFilteredContent(selectedTopic) : null;
   const selectedTopicData = selectedTopic ? topics.find(t => t.name === selectedTopic) : null;
 
+  // Carousel state
+  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentQuoteIndex((prev) => (prev + 1) % userQuotes.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div>
       {/* Hero Section */}
-      <section id="hero" className="relative bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white overflow-hidden min-h-[500px]">
-        {/* Biohacker Data Background */}
-        <Suspense fallback={
-          <div className="absolute inset-0 opacity-10">
-            <div
-              className="absolute inset-0"
-              style={{
-                backgroundImage: `
-                  linear-gradient(rgba(20, 184, 166, 0.3) 1px, transparent 1px),
-                  linear-gradient(90deg, rgba(20, 184, 166, 0.3) 1px, transparent 1px)
-                `,
-                backgroundSize: '40px 40px',
-              }}
-            />
-          </div>
-        }>
-          <BiohackerBackground />
-        </Suspense>
+      <section id="hero" className="relative bg-gradient-to-br from-slate-800 via-slate-700 to-slate-800 text-white overflow-hidden min-h-[580px]">
+        {/* Biohacker Data Background - reduced opacity */}
+        <div className="absolute inset-0 opacity-30">
+          <Suspense fallback={
+            <div className="absolute inset-0 opacity-10">
+              <div
+                className="absolute inset-0"
+                style={{
+                  backgroundImage: `
+                    linear-gradient(rgba(20, 184, 166, 0.2) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(20, 184, 166, 0.2) 1px, transparent 1px)
+                  `,
+                  backgroundSize: '40px 40px',
+                }}
+              />
+            </div>
+          }>
+            <BiohackerBackground />
+          </Suspense>
+        </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 z-10">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 z-10">
+          {/* Topic Carousel - Top */}
+          <div className="mb-8 overflow-hidden">
+            <div className="flex animate-scroll-left">
+              {[...carouselTopics, ...carouselTopics].map((topic, idx) => (
+                <span
+                  key={idx}
+                  className={`flex-shrink-0 px-4 py-1.5 mx-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium ${topic.color} hover:bg-white/10 cursor-pointer transition-colors whitespace-nowrap`}
+                >
+                  {topic.text}
+                </span>
+              ))}
+            </div>
+          </div>
+
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-3xl sm:text-5xl font-bold mb-6">
               Learn how molecular science{' '}
@@ -218,7 +276,7 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
               Explore the fascinating world of metabolomics, biomarkers, and molecular pathways.
               Understand what your body is really telling you.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
               <button
                 onClick={onSearchClick}
                 className="flex items-center justify-center gap-2 px-6 py-3 bg-teal-500 hover:bg-teal-600 rounded-lg font-medium transition-colors"
@@ -233,6 +291,49 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
                 <Play className="w-5 h-5" />
                 Take the Quiz
               </button>
+            </div>
+
+            {/* User Quote Carousel */}
+            <div className="relative h-20 flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center justify-center">
+                {userQuotes.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className={`absolute transition-all duration-500 ease-in-out ${
+                      idx === currentQuoteIndex
+                        ? 'opacity-100 translate-y-0'
+                        : 'opacity-0 translate-y-4'
+                    }`}
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="flex items-center gap-2 text-slate-400">
+                        <Quote className="w-4 h-4" />
+                        <span className="text-sm italic text-slate-300">"{item.quote}"</span>
+                        <Quote className="w-4 h-4 rotate-180" />
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-slate-500">
+                        <span className="text-teal-400">@{item.user}</span>
+                        <span>•</span>
+                        <span>{item.time}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Topic Carousel - Bottom (reversed direction) */}
+          <div className="mt-8 overflow-hidden">
+            <div className="flex animate-scroll-right">
+              {[...carouselTopics.slice().reverse(), ...carouselTopics.slice().reverse()].map((topic, idx) => (
+                <span
+                  key={idx}
+                  className={`flex-shrink-0 px-4 py-1.5 mx-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium ${topic.color} hover:bg-white/10 cursor-pointer transition-colors whitespace-nowrap`}
+                >
+                  {topic.text}
+                </span>
+              ))}
             </div>
           </div>
         </div>
