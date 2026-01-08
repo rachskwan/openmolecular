@@ -16,6 +16,8 @@ import InteractiveDetailPage from './components/pages/InteractiveDetailPage';
 import LessonViewPage from './components/pages/LessonViewPage';
 import NewDiscussionPage from './components/pages/NewDiscussionPage';
 import SettingsPage from './components/pages/SettingsPage';
+import AboutPage from './components/pages/AboutPage';
+import GlossaryPage from './components/pages/GlossaryPage';
 import SmartSearchModal from './components/modals/SmartSearchModal';
 import GlossaryTermModal from './components/modals/GlossaryTermModal';
 import QuizModal from './components/modals/QuizModal';
@@ -609,6 +611,19 @@ function App() {
           <SettingsPage
             onBack={() => handleNavigate('profile')}
             onNavigate={handleNavigate}
+          />
+        );
+      case 'about':
+        return (
+          <AboutPage
+            onBack={() => handleNavigate('resources')}
+          />
+        );
+      case 'glossary':
+        return (
+          <GlossaryPage
+            onBack={() => handleNavigate('resources')}
+            onGlossaryClick={setViewingGlossaryTerm}
           />
         );
       case 'interactive':

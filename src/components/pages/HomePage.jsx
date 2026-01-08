@@ -588,277 +588,226 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
         </div>
       </section>
 
-      {/* Browse by Category */}
+      {/* Browse by Category & Discover by Topic - Side by Side */}
       <section className="bg-slate-50 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">Browse by Category</h2>
-          <p className="text-slate-600 mb-8">Explore content organized by major themes</p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Browse by Category */}
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">Browse by Category</h2>
+              <p className="text-slate-600 mb-6">Explore content organized by major themes</p>
 
-          <div className="space-y-6">
-            {categories.map(category => {
-              const Icon = category.icon;
-              const colors = categoryColorClasses[category.color];
-              const isExpanded = expandedCategory === category.id;
-              const content = isExpanded ? getCategoryContent(category) : null;
+              <div className="space-y-4">
+                {categories.map(category => {
+                  const Icon = category.icon;
+                  const colors = categoryColorClasses[category.color];
+                  const isExpanded = expandedCategory === category.id;
+                  const content = isExpanded ? getCategoryContent(category) : null;
 
-              return (
-                <div key={category.id} className={`rounded-xl border ${colors.border} overflow-hidden transition-all`}>
-                  {/* Category Header */}
-                  <button
-                    onClick={() => setExpandedCategory(isExpanded ? null : category.id)}
-                    className={`w-full ${colors.bg} p-6 flex items-center gap-4 ${colors.hover} transition-colors`}
-                  >
-                    <div className={`w-12 h-12 rounded-xl ${colors.icon} flex items-center justify-center`}>
-                      <Icon className="w-6 h-6" />
+                  return (
+                    <div key={category.id} className={`rounded-xl border ${colors.border} overflow-hidden transition-all`}>
+                      {/* Category Header */}
+                      <button
+                        onClick={() => setExpandedCategory(isExpanded ? null : category.id)}
+                        className={`w-full ${colors.bg} p-4 flex items-center gap-3 ${colors.hover} transition-colors`}
+                      >
+                        <div className={`w-10 h-10 rounded-lg ${colors.icon} flex items-center justify-center`}>
+                          <Icon className="w-5 h-5" />
+                        </div>
+                        <div className="flex-1 text-left">
+                          <h3 className="font-semibold text-slate-900">{category.name}</h3>
+                          <p className="text-xs text-slate-600">{category.description}</p>
+                        </div>
+                        <ChevronRight className={`w-5 h-5 text-slate-400 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                      </button>
+
+                      {/* Expanded Content */}
+                      {isExpanded && content && (
+                        <div className="bg-white p-4 border-t border-slate-100">
+                          <div className="space-y-4">
+                            {/* Articles */}
+                            {content.articles.length > 0 && (
+                              <div>
+                                <div className="flex items-center gap-2 mb-2">
+                                  <FileText className="w-3 h-3 text-slate-500" />
+                                  <span className="text-xs font-medium text-slate-700">Articles</span>
+                                </div>
+                                <div className="space-y-2">
+                                  {content.articles.slice(0, 3).map(article => (
+                                    <button
+                                      key={article.id}
+                                      onClick={() => onNavigate('article', article.id)}
+                                      className="w-full p-2 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors text-left"
+                                    >
+                                      <h5 className="font-medium text-slate-900 text-sm line-clamp-1">{article.title}</h5>
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Key Terms */}
+                            {content.glossaryTerms.length > 0 && (
+                              <div>
+                                <div className="flex items-center gap-2 mb-2">
+                                  <BookOpen className="w-3 h-3 text-slate-500" />
+                                  <span className="text-xs font-medium text-slate-700">Key Terms</span>
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                  {content.glossaryTerms.slice(0, 4).map(term => (
+                                    <button
+                                      key={term.term}
+                                      onClick={() => onGlossaryClick(term.term)}
+                                      className="px-2 py-1 bg-slate-50 rounded hover:bg-slate-100 transition-colors text-xs font-medium text-slate-700 flex items-center gap-1"
+                                    >
+                                      <span>{term.icon}</span> {term.term}
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Explore More Link */}
+                            <button
+                              onClick={() => onNavigate('explore')}
+                              className={`text-xs font-medium ${colors.text} hover:underline`}
+                            >
+                              Explore more →
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    <div className="flex-1 text-left">
-                      <h3 className="font-semibold text-slate-900 text-lg">{category.name}</h3>
-                      <p className="text-sm text-slate-600">{category.description}</p>
-                    </div>
-                    <ChevronRight className={`w-5 h-5 text-slate-400 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
-                  </button>
+                  );
+                })}
+              </div>
+            </div>
 
-                  {/* Expanded Content */}
-                  {isExpanded && content && (
-                    <div className="bg-white p-6 border-t border-slate-100">
-                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        {/* Articles Column */}
-                        <div>
-                          <div className="flex items-center gap-2 mb-4">
-                            <FileText className="w-4 h-4 text-slate-500" />
-                            <h4 className="font-medium text-slate-900 text-sm">Articles</h4>
-                          </div>
-                          {content.articles.length > 0 ? (
-                            <div className="space-y-3">
-                              {content.articles.map(article => (
-                                <button
-                                  key={article.id}
-                                  onClick={() => onNavigate('article', article.id)}
-                                  className="w-full p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors text-left"
-                                >
-                                  <span className={`text-xs font-medium ${colors.text}`}>{article.category}</span>
-                                  <h5 className="font-medium text-slate-900 text-sm mt-1 line-clamp-2">{article.title}</h5>
-                                </button>
-                              ))}
-                            </div>
-                          ) : (
-                            <p className="text-sm text-slate-400 italic">No articles yet</p>
-                          )}
-                        </div>
+            {/* Discover by Topic */}
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">Discover by Topic</h2>
+              <p className="text-slate-600 mb-6">Click a topic to find related content</p>
 
-                        {/* Glossary Column */}
-                        <div>
-                          <div className="flex items-center gap-2 mb-4">
-                            <BookOpen className="w-4 h-4 text-slate-500" />
-                            <h4 className="font-medium text-slate-900 text-sm">Key Terms</h4>
-                          </div>
-                          {content.glossaryTerms.length > 0 ? (
-                            <div className="space-y-2">
-                              {content.glossaryTerms.map(term => (
-                                <button
-                                  key={term.term}
-                                  onClick={() => onGlossaryClick(term.term)}
-                                  className="w-full p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors text-left flex items-center gap-3"
-                                >
-                                  <span className="text-xl">{term.icon}</span>
-                                  <div>
-                                    <span className="font-medium text-slate-900 text-sm">{term.term}</span>
-                                    {term.fullName && term.fullName !== term.term && (
-                                      <span className="text-xs text-slate-500 block">{term.fullName}</span>
-                                    )}
-                                  </div>
-                                </button>
-                              ))}
-                            </div>
-                          ) : (
-                            <p className="text-sm text-slate-400 italic">No terms yet</p>
-                          )}
-                        </div>
+              <div className="flex flex-wrap gap-2 mb-6">
+                {topics.map(topic => {
+                  const colors = colorClasses[topic.color];
+                  const isSelected = selectedTopic === topic.name;
+                  return (
+                    <button
+                      key={topic.name}
+                      onClick={() => handleTopicClick(topic.name)}
+                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all flex items-center gap-1 ${
+                        isSelected
+                          ? `${colors.activeBg} text-white shadow-md`
+                          : `bg-white border ${colors.border} ${colors.text} hover:${colors.bg}`
+                      }`}
+                    >
+                      {topic.name}
+                      {isSelected && <X className="w-3 h-3" />}
+                    </button>
+                  );
+                })}
+              </div>
 
-                        {/* Discussions Column */}
-                        <div>
-                          <div className="flex items-center gap-2 mb-4">
-                            <MessageCircle className="w-4 h-4 text-slate-500" />
-                            <h4 className="font-medium text-slate-900 text-sm">Discussions</h4>
-                          </div>
-                          {content.discussions.length > 0 ? (
-                            <div className="space-y-3">
-                              {content.discussions.map(thread => (
-                                <button
-                                  key={thread.id}
-                                  onClick={() => onNavigate('thread', thread.id)}
-                                  className="w-full p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors text-left"
-                                >
-                                  <h5 className="font-medium text-slate-900 text-sm line-clamp-2">{thread.title}</h5>
-                                  <div className="flex items-center gap-2 mt-2 text-xs text-slate-500">
-                                    <span>{thread.author}</span>
-                                    <span>•</span>
-                                    <span>{thread.replies} replies</span>
-                                  </div>
-                                </button>
-                              ))}
-                            </div>
-                          ) : (
-                            <p className="text-sm text-slate-400 italic">No discussions yet</p>
-                          )}
-                        </div>
+              {/* Filtered Content Display */}
+              {selectedTopic && filteredContent ? (
+                <div className={`rounded-xl border-2 ${colorClasses[selectedTopicData?.color || 'teal'].border} p-4 bg-white`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-sm font-semibold text-slate-900">
+                      <span className={colorClasses[selectedTopicData?.color || 'teal'].text}>{selectedTopic}</span> content
+                    </h3>
+                    <button
+                      onClick={() => setSelectedTopic(null)}
+                      className="text-xs text-slate-500 hover:text-slate-700"
+                    >
+                      Clear
+                    </button>
+                  </div>
+
+                  {/* Articles */}
+                  {filteredContent.articles.length > 0 && (
+                    <div className="mb-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <FileText className="w-4 h-4 text-slate-600" />
+                        <span className="text-xs font-medium text-slate-700">Articles ({filteredContent.articles.length})</span>
                       </div>
-
-                      {/* Explore More Link */}
-                      <div className="mt-6 pt-4 border-t border-slate-100 text-center">
-                        <button
-                          onClick={() => onNavigate('explore')}
-                          className={`text-sm font-medium ${colors.text} hover:underline`}
-                        >
-                          Explore more {category.name.toLowerCase()} content →
-                        </button>
+                      <div className="space-y-2">
+                        {filteredContent.articles.slice(0, 3).map(article => (
+                          <button
+                            key={article.id}
+                            onClick={() => onNavigate('article', article.id)}
+                            className="w-full p-2 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors text-left"
+                          >
+                            <h5 className="font-medium text-slate-900 text-sm line-clamp-1">{article.title}</h5>
+                            <p className="text-xs text-slate-500">{article.duration}</p>
+                          </button>
+                        ))}
                       </div>
                     </div>
                   )}
+
+                  {/* Glossary Terms */}
+                  {filteredContent.glossaryTerms.length > 0 && (
+                    <div className="mb-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <BookOpen className="w-4 h-4 text-slate-600" />
+                        <span className="text-xs font-medium text-slate-700">Terms ({filteredContent.glossaryTerms.length})</span>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {filteredContent.glossaryTerms.slice(0, 6).map(term => (
+                          <button
+                            key={term.term}
+                            onClick={() => onGlossaryClick(term.term)}
+                            className="px-2 py-1 bg-slate-50 rounded hover:bg-slate-100 transition-colors text-xs flex items-center gap-1"
+                          >
+                            <span>{term.icon}</span>
+                            <span className="font-medium text-slate-900">{term.term}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Discussions */}
+                  {filteredContent.discussions.length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <MessageCircle className="w-4 h-4 text-slate-600" />
+                        <span className="text-xs font-medium text-slate-700">Discussions ({filteredContent.discussions.length})</span>
+                      </div>
+                      <div className="space-y-2">
+                        {filteredContent.discussions.slice(0, 2).map(thread => (
+                          <button
+                            key={thread.id}
+                            onClick={() => onNavigate('thread', thread.id)}
+                            className="w-full p-2 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors text-left"
+                          >
+                            <h5 className="font-medium text-slate-900 text-sm line-clamp-1">{thread.title}</h5>
+                            <p className="text-xs text-slate-500">{thread.replies} replies</p>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* No results */}
+                  {filteredContent.articles.length === 0 && filteredContent.glossaryTerms.length === 0 && filteredContent.discussions.length === 0 && (
+                    <div className="text-center py-4">
+                      <p className="text-sm text-slate-500">No content found for this topic yet.</p>
+                    </div>
+                  )}
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Discover by Topic */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <h2 className="text-2xl font-bold text-slate-900 mb-6">Discover by Topic</h2>
-        <div className="flex flex-wrap gap-3 mb-6">
-          {topics.map(topic => {
-            const colors = colorClasses[topic.color];
-            const isSelected = selectedTopic === topic.name;
-            return (
-              <button
-                key={topic.name}
-                onClick={() => handleTopicClick(topic.name)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${
-                  isSelected
-                    ? `${colors.activeBg} text-white shadow-md`
-                    : `bg-white border ${colors.border} ${colors.text} hover:${colors.bg}`
-                }`}
-              >
-                {topic.name}
-                {isSelected && <X className="w-4 h-4" />}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Filtered Content Display */}
-        {selectedTopic && filteredContent && (
-          <div className={`rounded-xl border-2 ${colorClasses[selectedTopicData?.color || 'teal'].border} p-6 bg-white`}>
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-slate-900">
-                Content about <span className={colorClasses[selectedTopicData?.color || 'teal'].text}>{selectedTopic}</span>
-              </h3>
-              <button
-                onClick={() => setSelectedTopic(null)}
-                className="text-sm text-slate-500 hover:text-slate-700"
-              >
-                Clear filter
-              </button>
+              ) : (
+                <div className="bg-white rounded-xl border border-slate-200 p-6 text-center">
+                  <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Search className="w-6 h-6 text-slate-400" />
+                  </div>
+                  <p className="text-sm text-slate-600">Select a topic above to discover related articles, terms, and discussions</p>
+                </div>
+              )}
             </div>
-
-            {/* Articles */}
-            {filteredContent.articles.length > 0 && (
-              <div className="mb-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <FileText className="w-5 h-5 text-slate-600" />
-                  <h4 className="font-medium text-slate-900">Articles</h4>
-                  <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs">{filteredContent.articles.length}</span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {filteredContent.articles.map(article => (
-                    <button
-                      key={article.id}
-                      onClick={() => onNavigate('article', article.id)}
-                      className="p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors text-left"
-                    >
-                      <span className="text-xs text-teal-600 font-medium">{article.category}</span>
-                      <h5 className="font-medium text-slate-900 mt-1 line-clamp-2">{article.title}</h5>
-                      <p className="text-xs text-slate-500 mt-2">{article.duration}</p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Glossary Terms */}
-            {filteredContent.glossaryTerms.length > 0 && (
-              <div className="mb-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <BookOpen className="w-5 h-5 text-slate-600" />
-                  <h4 className="font-medium text-slate-900">Glossary Terms</h4>
-                  <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs">{filteredContent.glossaryTerms.length}</span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {filteredContent.glossaryTerms.map(term => (
-                    <button
-                      key={term.term}
-                      onClick={() => onGlossaryClick(term.term)}
-                      className="px-3 py-2 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors text-left flex items-center gap-2"
-                    >
-                      <span className="text-lg">{term.icon}</span>
-                      <div>
-                        <span className="font-medium text-slate-900 text-sm">{term.term}</span>
-                        {term.fullName && term.fullName !== term.term && (
-                          <span className="text-xs text-slate-500 block">{term.fullName}</span>
-                        )}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Discussions */}
-            {filteredContent.discussions.length > 0 && (
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <MessageCircle className="w-5 h-5 text-slate-600" />
-                  <h4 className="font-medium text-slate-900">Community Discussions</h4>
-                  <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs">{filteredContent.discussions.length}</span>
-                </div>
-                <div className="space-y-3">
-                  {filteredContent.discussions.map(thread => (
-                    <button
-                      key={thread.id}
-                      onClick={() => onNavigate('thread', thread.id)}
-                      className="w-full p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors text-left flex items-start gap-4"
-                    >
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white font-medium text-sm flex-shrink-0">
-                        {thread.avatar}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h5 className="font-medium text-slate-900 line-clamp-1">{thread.title}</h5>
-                        <p className="text-sm text-slate-600 line-clamp-1 mt-0.5">{thread.preview}</p>
-                        <div className="flex items-center gap-3 mt-2 text-xs text-slate-500">
-                          <span>{thread.author}</span>
-                          <span>{thread.replies} replies</span>
-                        </div>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* No results */}
-            {filteredContent.articles.length === 0 && filteredContent.glossaryTerms.length === 0 && filteredContent.discussions.length === 0 && (
-              <div className="text-center py-8">
-                <p className="text-slate-500">No content found for this topic yet.</p>
-                <button
-                  onClick={() => onNavigate('explore')}
-                  className="mt-4 text-teal-600 font-medium hover:text-teal-700"
-                >
-                  Browse all content →
-                </button>
-              </div>
-            )}
           </div>
-        )}
+        </div>
       </section>
     </div>
   );
