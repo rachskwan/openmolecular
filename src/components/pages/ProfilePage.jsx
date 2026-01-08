@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { User, Bookmark, FileText, Beaker, BarChart3, Lightbulb, Award, Clock, ChevronRight, PlayCircle, Download, Share2, CheckCircle, Users, Pencil, X, Save, Camera, Trash2 } from 'lucide-react';
+import { User, Bookmark, FileText, Beaker, BarChart3, Lightbulb, Award, Clock, ChevronRight, PlayCircle, Download, Share2, CheckCircle, Users, Pencil, X, Save, Camera, Trash2, Zap, Flame, Target, Star, Heart } from 'lucide-react';
 import { trackDetails } from '../../data/modules';
 import { getUserByUsername } from '../../data/users';
 
@@ -219,67 +219,70 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
                 <p className="text-slate-600 mb-4">
                   {userProfile.bio || 'Track your learning progress and saved content'}
                 </p>
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-wrap items-center gap-4">
                   <div className="flex items-center gap-2 text-sm text-slate-600">
                     <Bookmark className="w-4 h-4 text-teal-600" />
-                    <span><strong>{totalSaved}</strong> items saved</span>
+                    <span><strong>{totalSaved}</strong> saved</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-slate-600">
                     <Clock className="w-4 h-4 text-teal-600" />
-                    <span><strong>{hoursLearned}</strong> hours learned</span>
+                    <span><strong>{hoursLearned}</strong> hrs</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-slate-600">
                     <Award className="w-4 h-4 text-teal-600" />
-                    <span><strong>{tracksCompleted}</strong> tracks completed</span>
+                    <span><strong>{tracksCompleted}</strong> tracks</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-slate-600">
-                    <Users className="w-4 h-4 text-purple-500" />
-                    <span><strong>{following.length}</strong> following</span>
-                  </div>
+                  <span className="text-slate-300">|</span>
+                  <button
+                    onClick={() => onNavigate('community')}
+                    className="flex items-center gap-3 text-sm hover:text-teal-600 transition-colors"
+                  >
+                    <span className="text-slate-600"><strong>{following.length}</strong> following</span>
+                    <span className="text-slate-600"><strong>12</strong> followers</span>
+                  </button>
                 </div>
               </>
             )}
           </div>
         </div>
 
-        {/* People You Follow */}
-        {following.length > 0 && !isEditingProfile && (
+        {/* Badges */}
+        {!isEditingProfile && (
           <div className="mt-4 pt-4 border-t border-slate-200">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-sm font-medium text-slate-700">People You Follow</p>
-              <button
-                onClick={() => onNavigate('community')}
-                className="text-xs text-teal-600 hover:text-teal-700"
-              >
-                Find more
-              </button>
-            </div>
+            <p className="text-sm font-medium text-slate-700 mb-3">Badges</p>
             <div className="flex flex-wrap gap-2">
-              {following.slice(0, 6).map(username => {
-                const user = getUserByUsername(username);
-                return (
-                  <button
-                    key={username}
-                    onClick={() => onUserClick?.(username)}
-                    className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded-full hover:bg-slate-100 transition-colors"
-                  >
-                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white text-xs font-medium">
-                      {user.avatar}
-                    </div>
-                    <span className="text-sm text-slate-700">{user.fullName.split(' ')[0]}</span>
-                  </button>
-                );
-              })}
-              {following.length > 6 && (
-                <button
-                  onClick={() => {
-                    const el = document.getElementById('following-section');
-                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }}
-                  className="px-3 py-1.5 text-sm text-slate-500 hover:text-slate-700"
-                >
-                  +{following.length - 6} more
-                </button>
+              {totalLessonsCompleted >= 1 && (
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-full" title="Complete your first lesson">
+                  <Zap className="w-4 h-4 text-amber-500" />
+                  <span className="text-sm font-medium text-amber-700">First Steps</span>
+                </div>
+              )}
+              {tracksCompleted >= 1 && (
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-200 rounded-full" title="Complete a learning track">
+                  <Target className="w-4 h-4 text-teal-500" />
+                  <span className="text-sm font-medium text-teal-700">Track Master</span>
+                </div>
+              )}
+              {totalSaved >= 5 && (
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-full" title="Save 5+ items">
+                  <Star className="w-4 h-4 text-purple-500" />
+                  <span className="text-sm font-medium text-purple-700">Curator</span>
+                </div>
+              )}
+              {following.length >= 3 && (
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-pink-50 to-rose-50 border border-pink-200 rounded-full" title="Follow 3+ community members">
+                  <Heart className="w-4 h-4 text-pink-500" />
+                  <span className="text-sm font-medium text-pink-700">Social</span>
+                </div>
+              )}
+              {hoursLearned >= 5 && (
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-full" title="Learn for 5+ hours">
+                  <Flame className="w-4 h-4 text-orange-500" />
+                  <span className="text-sm font-medium text-orange-700">Dedicated</span>
+                </div>
+              )}
+              {totalLessonsCompleted === 0 && totalSaved === 0 && following.length === 0 && (
+                <p className="text-sm text-slate-400 italic">Complete lessons and engage with content to earn badges!</p>
               )}
             </div>
           </div>
