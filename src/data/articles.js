@@ -12,6 +12,7 @@ export const articles = [
     featured: true,
     premium: false,
     heroImage: 'omega3',
+    image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&h=400&fit=crop',
     introduction: 'Your Omega-3 Index is one of the most actionable biomarkers you can track. Unlike many health metrics that feel abstract, this number directly reflects your dietary choices and has clear implications for your cardiovascular and brain health.',
     sections: [
       {
@@ -76,6 +77,7 @@ An index below 4% is associated with increased cardiovascular risk and may indic
     saves: 456,
     premium: true,
     heroImage: 'nad',
+    image: 'https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=600&h=400&fit=crop',
     introduction: 'NAD+ (nicotinamide adenine dinucleotide) has emerged as one of the most exciting molecules in longevity research. This coenzyme is essential for hundreds of metabolic processes and naturally declines with age.',
     sections: [
       {
@@ -139,6 +141,7 @@ The field is moving rapidly, with new delivery methods and combination approache
     saves: 189,
     premium: false,
     heroImage: 'inflammation',
+    image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=600&h=400&fit=crop',
     introduction: 'Chronic low-grade inflammation is linked to virtually every major disease of aging. The good news? Several biomarkers can help you detect and track inflammation before it causes problems.',
     sections: [
       {
@@ -204,6 +207,7 @@ While primarily an iron storage marker, elevated ferritin can indicate inflammat
     saves: 312,
     premium: false,
     heroImage: 'metabolomics',
+    image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=600&h=400&fit=crop',
     introduction: 'Metabolomics is the comprehensive study of small molecules in biological systems. While genomics tells you what might happen, metabolomics tells you what is actually happening in your body right now.',
     sections: [
       {
@@ -276,6 +280,7 @@ Work with a qualified practitioner to interpret results in context of your healt
     featured: true,
     premium: true,
     heroImage: 'gutbrain',
+    image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&h=400&fit=crop',
     introduction: 'Your gut and brain are in constant communication through the gut-brain axis. This bidirectional highway influences everything from mood and cognition to stress response and mental health.',
     sections: [
       {
@@ -352,6 +357,7 @@ While we can't yet treat mental illness with probiotics alone, gut health is inc
     saves: 278,
     premium: true,
     heroImage: 'lipids',
+    image: 'https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=600&h=400&fit=crop',
     introduction: 'The standard lipid panel gives you a glimpse of cardiovascular health, but the "good" vs "bad" cholesterol narrative oversimplifies the picture. Understanding the nuances can help you make better decisions.',
     sections: [
       {
@@ -425,6 +431,7 @@ Work with your healthcare provider to interpret results and determine if medicat
     saves: 198,
     premium: false,
     heroImage: 'circadian',
+    image: 'https://images.unsplash.com/photo-1495364141860-b0d03eccd065?w=600&h=400&fit=crop',
     introduction: 'Your body runs on internal clocks that affect everything from hormone production to how you process food. Understanding circadian biology can help you optimize health beyond just what you eat.',
     sections: [
       {
@@ -500,6 +507,7 @@ Minimizing circadian disruption is increasingly recognized as important as diet 
     saves: 367,
     premium: true,
     heroImage: 'nutrigenomics',
+    image: 'https://images.unsplash.com/photo-1518152006812-edab29b069ac?w=600&h=400&fit=crop',
     introduction: 'Your genes are not your destiny. Nutrients and food compounds directly influence which genes are turned on or off—a field called nutrigenomics. Understanding these interactions opens the door to truly personalized nutrition.',
     sections: [
       {
@@ -581,6 +589,7 @@ While the science is promising, we're still early. Focus on foundational nutriti
     saves: 145,
     premium: false,
     heroImage: 'massspec',
+    image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=600&h=400&fit=crop',
     introduction: 'Mass spectrometry is the technology that makes modern metabolomics possible. This powerful analytical technique can identify and quantify thousands of molecules in a single sample—here\'s how it works.',
     sections: [
       {

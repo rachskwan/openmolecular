@@ -304,8 +304,18 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
               onClick={() => onNavigate('article', article.id)}
               className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
             >
-              <div className="h-40 bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
-                <FileText className="w-12 h-12 text-slate-400" />
+              <div className="h-40 bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden">
+                {article.image ? (
+                  <img
+                    src={article.image}
+                    alt={article.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <FileText className="w-12 h-12 text-slate-400" />
+                  </div>
+                )}
               </div>
               <div className="p-5">
                 <div className="flex items-center gap-2 mb-2">

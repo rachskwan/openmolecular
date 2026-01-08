@@ -165,8 +165,18 @@ export default function ExplorePage({ onNavigate, toggleSaveItem, isItemSaved, i
               onClick={() => onNavigate('article', article.id)}
               className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
             >
-              <div className="h-32 bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center relative">
-                <FileText className="w-10 h-10 text-slate-400" />
+              <div className="h-40 bg-gradient-to-br from-slate-100 to-slate-200 relative overflow-hidden">
+                {article.image ? (
+                  <img
+                    src={article.image}
+                    alt={article.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <FileText className="w-10 h-10 text-slate-400" />
+                  </div>
+                )}
                 {article.premium && (
                   <div className="absolute top-2 right-2 p-1.5 bg-amber-100 rounded-full">
                     <Lock className="w-4 h-4 text-amber-600" />
