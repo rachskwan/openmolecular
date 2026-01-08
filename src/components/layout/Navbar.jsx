@@ -35,10 +35,10 @@ const pages = [
   },
   {
     id: 'certification',
-    label: 'Certification',
-    icon: Award,
+    label: 'Services',
+    icon: Beaker,
     subtabs: [
-      { id: 'programs', label: 'Our Programs', icon: Building2, section: 'programs' },
+      { id: 'programs', label: 'Our Services', icon: Building2, section: 'programs' },
       { id: 'process', label: 'How It Works', icon: CheckCircle, section: 'process' },
       { id: 'success', label: 'Success Stories', icon: Trophy, section: 'success' },
     ]

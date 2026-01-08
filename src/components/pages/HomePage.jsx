@@ -509,13 +509,13 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
         </div>
       </section>
 
-      {/* B2B Certification Programs */}
+      {/* Multiomics Services */}
       <section className="bg-slate-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">B2B Certification Programs</h2>
+            <h2 className="text-3xl font-bold mb-4">Multiomics Services</h2>
             <p className="text-slate-300 max-w-2xl mx-auto">
-              Validate your products and platforms with our industry-recognized certifications
+              Comprehensive analytical services for metabolomics, proteomics, and beyond
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
