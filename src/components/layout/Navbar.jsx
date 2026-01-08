@@ -105,7 +105,7 @@ const defaultNotifications = [
   },
 ];
 
-export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
+export default function Navbar({ currentPage, setCurrentPage, onSearchClick, isLoggedIn, authUser, onLogin, onSignup, onLogout }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredPage, setHoveredPage] = useState(null);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -170,10 +170,7 @@ export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
 
     // Handle logout action
     if (subtab.action === 'logout') {
-      if (confirm('Are you sure you want to log out? Your saved data will remain on this device.')) {
-        localStorage.removeItem('userProfile');
-        window.location.reload();
-      }
+      onLogout?.();
       return;
     }
 
@@ -392,47 +389,81 @@ export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
                     onClick={() => setShowProfileMenu(false)}
                   />
                   <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-lg border border-slate-200 z-50 overflow-hidden">
-                    <div className="p-3 border-b border-slate-200">
-                      <button
-                        onClick={() => {
-                          setShowProfileMenu(false);
-                          setCurrentPage('profile');
-                        }}
-                        className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-teal-50 transition-colors"
-                      >
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white font-medium">
-                          <User className="w-5 h-5" />
-                        </div>
-                        <div className="text-left">
-                          <p className="font-medium text-slate-900 text-sm">My Profile</p>
-                          <p className="text-xs text-slate-500">View your profile</p>
-                        </div>
-                      </button>
-                    </div>
-                    <div className="py-2">
-                      {profileSubtabs.filter(s => s.id !== 'logout').map((subtab) => {
-                        const SubIcon = subtab.icon;
-                        return (
+                    {isLoggedIn ? (
+                      <>
+                        <div className="p-3 border-b border-slate-200">
                           <button
-                            key={subtab.id}
-                            onClick={() => handleProfileSubtabClick(subtab)}
-                            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-teal-50 hover:text-teal-700 transition-colors text-left"
+                            onClick={() => {
+                              setShowProfileMenu(false);
+                              setCurrentPage('profile');
+                            }}
+                            className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-teal-50 transition-colors"
                           >
-                            <SubIcon className="w-4 h-4 flex-shrink-0" />
-                            <span>{subtab.label}</span>
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white font-medium">
+                              {authUser?.name?.[0]?.toUpperCase() || <User className="w-5 h-5" />}
+                            </div>
+                            <div className="text-left">
+                              <p className="font-medium text-slate-900 text-sm">{authUser?.name || 'My Profile'}</p>
+                              <p className="text-xs text-slate-500">@{authUser?.username || 'user'}</p>
+                            </div>
                           </button>
-                        );
-                      })}
-                    </div>
-                    <div className="border-t border-slate-200 py-2">
-                      <button
-                        onClick={() => handleProfileSubtabClick({ action: 'logout' })}
-                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors text-left"
-                      >
-                        <LogOut className="w-4 h-4 flex-shrink-0" />
-                        <span>Log Out</span>
-                      </button>
-                    </div>
+                        </div>
+                        <div className="py-2">
+                          {profileSubtabs.filter(s => s.id !== 'logout').map((subtab) => {
+                            const SubIcon = subtab.icon;
+                            return (
+                              <button
+                                key={subtab.id}
+                                onClick={() => handleProfileSubtabClick(subtab)}
+                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-teal-50 hover:text-teal-700 transition-colors text-left"
+                              >
+                                <SubIcon className="w-4 h-4 flex-shrink-0" />
+                                <span>{subtab.label}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <div className="border-t border-slate-200 py-2">
+                          <button
+                            onClick={() => handleProfileSubtabClick({ action: 'logout' })}
+                            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors text-left"
+                          >
+                            <LogOut className="w-4 h-4 flex-shrink-0" />
+                            <span>Log Out</span>
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="p-4">
+                        <div className="text-center mb-4">
+                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white mx-auto mb-2">
+                            <User className="w-6 h-6" />
+                          </div>
+                          <p className="font-medium text-slate-900">Welcome!</p>
+                          <p className="text-xs text-slate-500 mt-1">Sign in to save your progress</p>
+                        </div>
+                        <div className="space-y-2">
+                          <button
+                            onClick={() => {
+                              setShowProfileMenu(false);
+                              onLogin?.();
+                            }}
+                            className="w-full py-2.5 bg-gradient-to-r from-teal-500 to-emerald-600 text-white font-medium rounded-lg hover:from-teal-600 hover:to-emerald-700 transition-all text-sm"
+                          >
+                            Sign In
+                          </button>
+                          <button
+                            onClick={() => {
+                              setShowProfileMenu(false);
+                              onSignup?.();
+                            }}
+                            className="w-full py-2.5 border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-50 transition-colors text-sm"
+                          >
+                            Create Account
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </>
               )}
@@ -454,48 +485,73 @@ export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
             <div className="flex flex-col gap-1">
               {/* Profile Section for Mobile */}
               <div className="mb-2 pb-2 border-b border-slate-200">
-                <button
-                  onClick={() => {
-                    setCurrentPage('profile');
-                    setMobileMenuOpen(false);
-                  }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
-                    currentPage === 'profile'
-                      ? 'bg-teal-50 text-teal-700'
-                      : 'text-slate-600 hover:bg-slate-100'
-                  }`}
-                >
-                  <User className="w-5 h-5" />
-                  Profile
-                </button>
-                <div className="ml-8 mt-1 mb-2 space-y-1">
-                  {profileSubtabs.filter(s => s.id !== 'logout').map(subtab => {
-                    const SubIcon = subtab.icon;
-                    return (
+                {isLoggedIn ? (
+                  <>
+                    <button
+                      onClick={() => {
+                        setCurrentPage('profile');
+                        setMobileMenuOpen(false);
+                      }}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                        currentPage === 'profile'
+                          ? 'bg-teal-50 text-teal-700'
+                          : 'text-slate-600 hover:bg-slate-100'
+                      }`}
+                    >
+                      <User className="w-5 h-5" />
+                      {authUser?.name || 'Profile'}
+                    </button>
+                    <div className="ml-8 mt-1 mb-2 space-y-1">
+                      {profileSubtabs.filter(s => s.id !== 'logout').map(subtab => {
+                        const SubIcon = subtab.icon;
+                        return (
+                          <button
+                            key={subtab.id}
+                            onClick={() => {
+                              handleProfileSubtabClick(subtab);
+                              setMobileMenuOpen(false);
+                            }}
+                            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors text-left"
+                          >
+                            <SubIcon className="w-3.5 h-3.5 flex-shrink-0" />
+                            {subtab.label}
+                          </button>
+                        );
+                      })}
                       <button
-                        key={subtab.id}
                         onClick={() => {
-                          handleProfileSubtabClick(subtab);
+                          handleProfileSubtabClick({ action: 'logout' });
                           setMobileMenuOpen(false);
                         }}
-                        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors text-left"
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors text-left"
                       >
-                        <SubIcon className="w-3.5 h-3.5 flex-shrink-0" />
-                        {subtab.label}
+                        <LogOut className="w-3.5 h-3.5 flex-shrink-0" />
+                        Log Out
                       </button>
-                    );
-                  })}
-                  <button
-                    onClick={() => {
-                      handleProfileSubtabClick({ action: 'logout' });
-                      setMobileMenuOpen(false);
-                    }}
-                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors text-left"
-                  >
-                    <LogOut className="w-3.5 h-3.5 flex-shrink-0" />
-                    Log Out
-                  </button>
-                </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="px-4 py-3 space-y-2">
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        onLogin?.();
+                      }}
+                      className="w-full py-2.5 bg-gradient-to-r from-teal-500 to-emerald-600 text-white font-medium rounded-lg hover:from-teal-600 hover:to-emerald-700 transition-all text-sm"
+                    >
+                      Sign In
+                    </button>
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        onSignup?.();
+                      }}
+                      className="w-full py-2.5 border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-50 transition-colors text-sm"
+                    >
+                      Create Account
+                    </button>
+                  </div>
+                )}
               </div>
 
               {pages.map(page => {

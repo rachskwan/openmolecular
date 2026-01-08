@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, ChevronRight, ChevronLeft, CheckCircle, BookOpen, Beaker, Brain, Apple } from 'lucide-react';
+import { X, ChevronRight, ChevronLeft, CheckCircle, BookOpen, Beaker, Brain, Apple, User, Sparkles } from 'lucide-react';
 
 const quizQuestions = [
   {
@@ -136,7 +136,7 @@ const getRecommendations = (answers) => {
   return recommendations;
 };
 
-export default function QuizModal({ onClose, onNavigate }) {
+export default function QuizModal({ onClose, onNavigate, isLoggedIn, onSignup }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
@@ -313,6 +313,33 @@ export default function QuizModal({ onClose, onNavigate }) {
                       </button>
                     );
                   })}
+
+                  {/* Signup prompt for non-logged in users */}
+                  {!isLoggedIn && (
+                    <div className="mt-6 p-4 bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl border border-teal-200">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center flex-shrink-0">
+                          <Sparkles className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-slate-900 mb-1">Save your personalized path</h4>
+                          <p className="text-sm text-slate-600 mb-3">
+                            Create a free account to track your progress and get personalized recommendations.
+                          </p>
+                          <button
+                            onClick={() => {
+                              onClose();
+                              onSignup?.();
+                            }}
+                            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-emerald-600 text-white text-sm font-medium rounded-lg hover:from-teal-600 hover:to-emerald-700 transition-all"
+                          >
+                            <User className="w-4 h-4" />
+                            Create Free Account
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </>
             )}

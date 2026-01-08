@@ -24,12 +24,26 @@ import GlossaryTermModal from './components/modals/GlossaryTermModal';
 import QuizModal from './components/modals/QuizModal';
 import ConsultationModal from './components/modals/ConsultationModal';
 import UserProfileModal from './components/modals/UserProfileModal';
+import AuthModal from './components/modals/AuthModal';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [showSmartSearch, setShowSmartSearch] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState('login');
   const [consultationModal, setConsultationModal] = useState({ show: false, type: 'consultation' });
+
+  // Authentication state - persisted to localStorage
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    const saved = localStorage.getItem('authUser');
+    return saved ? JSON.parse(saved).isLoggedIn : false;
+  });
+
+  const [authUser, setAuthUser] = useState(() => {
+    const saved = localStorage.getItem('authUser');
+    return saved ? JSON.parse(saved) : null;
+  });
   const [viewingUserProfile, setViewingUserProfile] = useState(null);
   const [viewingGlossaryTerm, setViewingGlossaryTerm] = useState(null);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
@@ -133,6 +147,41 @@ function App() {
   useEffect(() => {
     localStorage.setItem('userProfile', JSON.stringify(userProfile));
   }, [userProfile]);
+
+  // Persist auth user to localStorage
+  useEffect(() => {
+    if (authUser) {
+      localStorage.setItem('authUser', JSON.stringify(authUser));
+    }
+  }, [authUser]);
+
+  // Handle user authentication
+  const handleAuth = (userData) => {
+    setAuthUser(userData);
+    setIsLoggedIn(true);
+    // Also update userProfile with auth data
+    setUserProfile(prev => ({
+      ...prev,
+      name: userData.name || prev.name,
+      email: userData.email,
+      username: userData.username,
+    }));
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    if (confirm('Are you sure you want to log out?')) {
+      setIsLoggedIn(false);
+      setAuthUser(null);
+      localStorage.removeItem('authUser');
+    }
+  };
+
+  // Open auth modal
+  const openAuthModal = (mode = 'login') => {
+    setAuthModalMode(mode);
+    setShowAuthModal(true);
+  };
 
   // Auto-hide toast after 3 seconds
   useEffect(() => {
@@ -665,6 +714,11 @@ function App() {
         currentPage={currentPage}
         setCurrentPage={handleNavigate}
         onSearchClick={() => setShowSmartSearch(true)}
+        isLoggedIn={isLoggedIn}
+        authUser={authUser}
+        onLogin={() => openAuthModal('login')}
+        onSignup={() => openAuthModal('signup')}
+        onLogout={handleLogout}
       />
 
       <main>
@@ -697,6 +751,8 @@ function App() {
         <QuizModal
           onClose={() => setShowQuiz(false)}
           onNavigate={handleNavigate}
+          isLoggedIn={isLoggedIn}
+          onSignup={() => openAuthModal('signup')}
         />
       )}
 
@@ -716,6 +772,14 @@ function App() {
           isFollowing={isFollowing}
         />
       )}
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onAuth={handleAuth}
+        initialMode={authModalMode}
+      />
 
       {/* Toast Notification */}
       {toast && (
