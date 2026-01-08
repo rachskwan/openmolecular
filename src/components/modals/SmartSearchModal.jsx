@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Search, X, TrendingUp, Clock, ChevronRight, FileText, BookOpen, MessageCircle, Beaker, GraduationCap } from 'lucide-react';
-import { useGlossary } from '../../hooks/useGlossary';
+import { glossaryData } from '../../data/glossary';
 import { useArticles } from '../../hooks/useArticles';
 import { tracks } from '../../data/modules';
 import { communityThreads } from '../../data/community';
@@ -9,7 +9,6 @@ export default function SmartSearchModal({ onClose, onNavigate, onGlossaryClick,
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [isSearching, setIsSearching] = useState(false);
   const { articles } = useArticles();
-  const { glossaryData } = useGlossary();
 
   const trendingSearches = [
     'Omega-3 Index',

@@ -1,20 +1,8 @@
-import { X, Bookmark, ChevronRight, ExternalLink, Loader2 } from 'lucide-react';
-import { useGlossaryTerm } from '../../hooks/useGlossary';
+import { X, Bookmark, ChevronRight, ExternalLink } from 'lucide-react';
+import { glossaryData } from '../../data/glossary';
 
 export default function GlossaryTermModal({ term, onClose, onTermClick, onNavigate, toggleSaveItem, isItemSaved }) {
-  const { term: termData, loading } = useGlossaryTerm(term);
-
-  if (loading) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-        <div className="relative bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl text-center">
-          <Loader2 className="w-8 h-8 text-teal-500 animate-spin mx-auto" />
-          <p className="text-slate-600 mt-2">Loading...</p>
-        </div>
-      </div>
-    );
-  }
+  const termData = glossaryData[term];
 
   if (!termData) {
     return (
