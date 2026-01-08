@@ -229,39 +229,48 @@ export default function ExplorePage({ onNavigate, toggleSaveItem, isItemSaved, i
                 <button
                   key={track.id}
                   onClick={() => onNavigate('track', track.id)}
-                  className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+                  className="bg-white rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left overflow-hidden group"
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center">
-                      <BookOpen className="w-6 h-6 text-white" />
-                    </div>
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                  {/* Track Image */}
+                  <div className="relative h-40 overflow-hidden">
+                    <img
+                      src={track.image}
+                      alt={track.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                    <span className={`absolute top-3 right-3 px-2 py-1 rounded text-xs font-medium ${
                       track.level === 'Beginner' ? 'bg-green-100 text-green-700' :
                       track.level === 'Intermediate' ? 'bg-amber-100 text-amber-700' :
                       'bg-red-100 text-red-700'
                     }`}>
                       {track.level}
                     </span>
+                    <div className="absolute bottom-3 left-3 right-3">
+                      <h3 className="font-semibold text-white text-lg drop-shadow-md">{track.title}</h3>
+                    </div>
                   </div>
-                  <h3 className="font-semibold text-slate-900 mb-2">{track.title}</h3>
-                  <p className="text-sm text-slate-600 mb-4 line-clamp-2">{track.description}</p>
-                  <div className="flex items-center gap-4 text-sm text-slate-500 mb-4">
-                    <span className="flex items-center gap-1">
-                      <BookOpen className="w-4 h-4" /> {track.modules} modules
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" /> {track.hours} hours
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {track.skills.map((skill, idx) => (
-                      <span key={idx} className="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs">
-                        {skill}
+                  {/* Track Content */}
+                  <div className="p-5">
+                    <p className="text-sm text-slate-600 mb-4 line-clamp-2">{track.description}</p>
+                    <div className="flex items-center gap-4 text-sm text-slate-500 mb-4">
+                      <span className="flex items-center gap-1">
+                        <BookOpen className="w-4 h-4" /> {track.modules} modules
                       </span>
-                    ))}
-                  </div>
-                  <div className="flex items-center gap-1 text-teal-600 text-sm font-medium">
-                    View track <ChevronRight className="w-4 h-4" />
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" /> {track.hours} hours
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {track.skills.map((skill, idx) => (
+                        <span key={idx} className="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-1 text-teal-600 text-sm font-medium">
+                      View track <ChevronRight className="w-4 h-4" />
+                    </div>
                   </div>
                 </button>
               ))}

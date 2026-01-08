@@ -1,10 +1,10 @@
 export const tracks = [
-  { id: 1, title: 'Multi-Omics Foundations', modules: 6, hours: 8, level: 'Beginner', category: 'science', description: 'Master the fundamentals of genomics, transcriptomics, proteomics, and metabolomics.', skills: ['Omics Basics', 'Data Interpretation', 'Systems Biology'] },
-  { id: 2, title: 'Mass Spec & Molecule Discovery', modules: 5, hours: 6, level: 'Intermediate', category: 'science', description: 'Learn how mass spectrometry reveals molecular secrets and enables discovery.', skills: ['LC-MS', 'GC-MS', 'Spectra Analysis'] },
-  { id: 3, title: 'Molecular Pathways for Health', modules: 8, hours: 10, level: 'Intermediate', category: 'health', description: 'Understand the molecular mechanisms behind inflammation, aging, and disease.', skills: ['Pathway Analysis', 'Health Biomarkers', 'Disease Mechanisms'] },
-  { id: 4, title: 'Biomarker Interpretation', modules: 4, hours: 5, level: 'Advanced', category: 'health', description: 'Learn to read and interpret biomarker panels for personalized health insights.', skills: ['Panel Analysis', 'Clinical Interpretation', 'Personalized Nutrition'] },
-  { id: 5, title: 'Metabolic Biochemistry', modules: 7, hours: 9, level: 'Intermediate', category: 'nutrition', description: 'Deep dive into metabolic pathways and nutrient-gene interactions.', skills: ['Metabolism', 'Nutrient Signaling', 'Biochemistry'] },
-  { id: 6, title: 'Neurobiology & Signaling', modules: 5, hours: 7, level: 'Advanced', category: 'brain', description: 'Explore cognitive biomarkers and the gut-brain molecular connection.', skills: ['Neuroscience', 'Molecular Signaling', 'Stress Biology'] },
+  { id: 1, title: 'Multi-Omics Foundations', modules: 6, hours: 8, level: 'Beginner', category: 'science', description: 'Master the fundamentals of genomics, transcriptomics, proteomics, and metabolomics.', skills: ['Omics Basics', 'Data Interpretation', 'Systems Biology'], image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&h=600&fit=crop' },
+  { id: 2, title: 'Mass Spec & Molecule Discovery', modules: 5, hours: 6, level: 'Intermediate', category: 'science', description: 'Learn how mass spectrometry reveals molecular secrets and enables discovery.', skills: ['LC-MS', 'GC-MS', 'Spectra Analysis'], image: 'https://images.unsplash.com/photo-1576086213369-97a306d36557?w=800&h=600&fit=crop' },
+  { id: 3, title: 'Molecular Pathways for Health', modules: 8, hours: 10, level: 'Intermediate', category: 'health', description: 'Understand the molecular mechanisms behind inflammation, aging, and disease.', skills: ['Pathway Analysis', 'Health Biomarkers', 'Disease Mechanisms'], image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&h=600&fit=crop' },
+  { id: 4, title: 'Biomarker Interpretation', modules: 4, hours: 5, level: 'Advanced', category: 'health', description: 'Learn to read and interpret biomarker panels for personalized health insights.', skills: ['Panel Analysis', 'Clinical Interpretation', 'Personalized Nutrition'], image: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&h=600&fit=crop' },
+  { id: 5, title: 'Metabolic Biochemistry', modules: 7, hours: 9, level: 'Intermediate', category: 'nutrition', description: 'Deep dive into metabolic pathways and nutrient-gene interactions.', skills: ['Metabolism', 'Nutrient Signaling', 'Biochemistry'], image: 'https://images.unsplash.com/photo-1518152006812-edab29b069ac?w=800&h=600&fit=crop' },
+  { id: 6, title: 'Neurobiology & Signaling', modules: 5, hours: 7, level: 'Advanced', category: 'brain', description: 'Explore cognitive biomarkers and the gut-brain molecular connection.', skills: ['Neuroscience', 'Molecular Signaling', 'Stress Biology'], image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&h=600&fit=crop' },
 ];
 
 export const trackDetails = {
@@ -22,6 +22,7 @@ export const trackDetails = {
     instructorBio: 'Dr. Chen is a systems biologist with 15 years of experience in multi-omics research.',
     enrolled: 2340,
     rating: 4.8,
+    image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&h=600&fit=crop',
     lessons: [
       {
         id: 1,
@@ -133,6 +134,7 @@ export const trackDetails = {
     instructorBio: 'Dr. Park leads a mass spectrometry core facility and has analyzed over 50,000 samples.',
     enrolled: 1856,
     rating: 4.9,
+    image: 'https://images.unsplash.com/photo-1576086213369-97a306d36557?w=800&h=600&fit=crop',
     lessons: [
       {
         id: 1,
@@ -230,6 +232,7 @@ export const trackDetails = {
     instructorBio: 'Dr. Lopez is an immunologist specializing in inflammatory pathways and their role in chronic disease.',
     enrolled: 3124,
     rating: 4.7,
+    image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&h=600&fit=crop',
     lessons: [
       {
         id: 1,
@@ -373,6 +376,7 @@ export const trackDetails = {
     instructorBio: 'Dr. Kim is a clinical biochemist who has interpreted over 10,000 metabolomics panels.',
     enrolled: 1245,
     rating: 4.9,
+    image: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&h=600&fit=crop',
     lessons: [
       {
         id: 1,
@@ -455,6 +459,7 @@ export const trackDetails = {
     instructorBio: 'Dr. Chang is a nutrigenomics researcher studying how diet influences metabolic health.',
     enrolled: 2567,
     rating: 4.6,
+    image: 'https://images.unsplash.com/photo-1518152006812-edab29b069ac?w=800&h=600&fit=crop',
     lessons: [
       {
         id: 1,
@@ -584,6 +589,7 @@ export const trackDetails = {
     instructorBio: 'Dr. Watson is a neuroscientist studying the molecular basis of mood and cognition.',
     enrolled: 1678,
     rating: 4.8,
+    image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&h=600&fit=crop',
     lessons: [
       {
         id: 1,

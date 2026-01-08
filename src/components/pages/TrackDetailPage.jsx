@@ -64,14 +64,28 @@ export default function TrackDetailPage({ trackId, onBack, onNavigate, isLessonC
       </div>
 
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-teal-600 to-emerald-700 text-white">
-        <div className="max-w-5xl mx-auto px-4 py-12">
+      <div className="relative text-white overflow-hidden">
+        {/* Background Image */}
+        {track.image && (
+          <>
+            <img
+              src={track.image}
+              alt={track.title}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/80 to-slate-900/60" />
+          </>
+        )}
+        {!track.image && (
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-600 to-emerald-700" />
+        )}
+        <div className="relative max-w-5xl mx-auto px-4 py-12">
           {/* Badges */}
           <div className="flex flex-wrap items-center gap-2 mb-4">
-            <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
+            <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium backdrop-blur-sm">
               {track.category}
             </span>
-            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+            <span className={`px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm ${
               track.level === 'Beginner' ? 'bg-green-400/30' :
               track.level === 'Intermediate' ? 'bg-amber-400/30' :
               'bg-red-400/30'
@@ -86,12 +100,12 @@ export default function TrackDetailPage({ trackId, onBack, onNavigate, isLessonC
           </h1>
 
           {/* Description */}
-          <p className="text-lg text-teal-100 mb-6 max-w-3xl">
+          <p className="text-lg text-white/80 mb-6 max-w-3xl">
             {track.longDescription}
           </p>
 
           {/* Stats */}
-          <div className="flex flex-wrap items-center gap-6 text-teal-100">
+          <div className="flex flex-wrap items-center gap-6 text-white/80">
             <div className="flex items-center gap-2">
               <BookOpen className="w-5 h-5" />
               <span>{totalLessons} lessons</span>
