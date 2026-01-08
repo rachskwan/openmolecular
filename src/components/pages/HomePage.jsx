@@ -64,18 +64,37 @@ const categoryColorClasses = {
 
 // Topic definitions with keywords for filtering
 const topics = [
+  // Core Science & Biomarkers
   { name: 'Omega-3', keywords: ['omega-3', 'omega 3', 'fish oil', 'epa', 'dha', 'fatty acid'], color: 'blue' },
   { name: 'NAD+', keywords: ['nad+', 'nad', 'nmn', 'nicotinamide', 'longevity', 'aging'], color: 'purple' },
-  { name: 'Inflammation', keywords: ['inflammation', 'inflammatory', 'crp', 'cytokine', 'anti-inflammatory'], color: 'red' },
-  { name: 'Gut Health', keywords: ['gut', 'microbiome', 'probiotic', 'digestive', 'bacteria', 'intestinal'], color: 'green' },
   { name: 'Metabolomics', keywords: ['metabolomics', 'metabolite', 'metabolism', 'metabolic'], color: 'teal' },
   { name: 'Biomarkers', keywords: ['biomarker', 'marker', 'indicator', 'testing', 'measurement'], color: 'amber' },
   { name: 'Mitochondria', keywords: ['mitochondria', 'mitochondrial', 'atp', 'energy', 'cellular'], color: 'orange' },
-  { name: 'Cardiovascular', keywords: ['cardiovascular', 'heart', 'cardiac', 'cholesterol', 'lipid', 'blood pressure'], color: 'rose' },
-  { name: 'Brain Health', keywords: ['brain', 'cognitive', 'neurological', 'memory', 'mental', 'neurotransmitter'], color: 'indigo' },
-  { name: 'Hormones', keywords: ['hormone', 'hormonal', 'cortisol', 'insulin', 'thyroid', 'testosterone', 'estrogen'], color: 'pink' },
-  { name: 'Vitamins', keywords: ['vitamin', 'b12', 'vitamin d', 'folate', 'b6', 'nutrient'], color: 'cyan' },
-  { name: 'Antioxidants', keywords: ['antioxidant', 'oxidative', 'free radical', 'glutathione', 'coq10'], color: 'emerald' },
+  { name: 'Gut Health', keywords: ['gut', 'microbiome', 'probiotic', 'digestive', 'bacteria', 'intestinal', 'leaky gut'], color: 'green' },
+  { name: 'Hormones', keywords: ['hormone', 'hormonal', 'cortisol', 'insulin', 'thyroid', 'testosterone', 'estrogen', 'dhea'], color: 'pink' },
+  { name: 'Antioxidants', keywords: ['antioxidant', 'oxidative', 'free radical', 'glutathione', 'coq10', 'oxidative stress'], color: 'emerald' },
+
+  // Health Conditions & Diseases
+  { name: 'Diabetes', keywords: ['diabetes', 'diabetic', 'blood sugar', 'glucose', 'hba1c', 'insulin resistance', 'type 2', 'prediabetes'], color: 'red' },
+  { name: 'Autoimmune', keywords: ['autoimmune', 'lupus', 'rheumatoid', 'hashimoto', 'crohn', 'celiac', 'multiple sclerosis', 'ms'], color: 'violet' },
+  { name: 'PCOS', keywords: ['pcos', 'polycystic', 'ovarian', 'androgen', 'fertility', 'menstrual'], color: 'fuchsia' },
+  { name: 'Fatty Liver', keywords: ['fatty liver', 'nafld', 'nash', 'liver', 'hepatic', 'alt', 'ast', 'liver enzymes'], color: 'lime' },
+  { name: 'Inflammation', keywords: ['inflammation', 'inflammatory', 'crp', 'cytokine', 'anti-inflammatory', 'chronic inflammation'], color: 'rose' },
+  { name: 'Cardiovascular', keywords: ['cardiovascular', 'heart', 'cardiac', 'cholesterol', 'lipid', 'blood pressure', 'atherosclerosis', 'ldl', 'hdl'], color: 'red' },
+  { name: 'Neurodegeneration', keywords: ['alzheimer', 'dementia', 'parkinson', 'neurodegeneration', 'cognitive decline', 'brain fog', 'memory loss'], color: 'slate' },
+  { name: 'Mental Health', keywords: ['depression', 'anxiety', 'mood', 'stress', 'mental health', 'serotonin', 'dopamine', 'gaba'], color: 'indigo' },
+
+  // Biohacker Products & Tools
+  { name: 'CGM', keywords: ['cgm', 'continuous glucose', 'glucose monitor', 'dexcom', 'libre', 'levels', 'glucose tracking'], color: 'cyan' },
+  { name: 'Red Light', keywords: ['red light', 'photobiomodulation', 'infrared', 'light therapy', 'joovv', 'led therapy', 'near infrared'], color: 'orange' },
+  { name: 'Cold Exposure', keywords: ['cold plunge', 'cold exposure', 'cryotherapy', 'ice bath', 'cold therapy', 'cold shock', 'wim hof'], color: 'sky' },
+  { name: 'Peptides', keywords: ['peptide', 'bpc-157', 'tb-500', 'thymosin', 'epithalon', 'semaglutide', 'tirzepatide', 'growth hormone'], color: 'violet' },
+  { name: 'Nootropics', keywords: ['nootropic', 'smart drug', 'racetam', 'modafinil', 'lion\'s mane', 'alpha-gpc', 'cognitive enhancer'], color: 'purple' },
+  { name: 'Wearables', keywords: ['wearable', 'oura', 'whoop', 'garmin', 'apple watch', 'hrv', 'sleep tracking', 'fitness tracker'], color: 'blue' },
+  { name: 'Rapamycin', keywords: ['rapamycin', 'mtor', 'sirolimus', 'autophagy', 'longevity drug', 'anti-aging'], color: 'emerald' },
+  { name: 'Methylene Blue', keywords: ['methylene blue', 'mitochondrial enhancer', 'cognitive', 'electron carrier', 'photosensitizer'], color: 'blue' },
+  { name: 'Breathwork', keywords: ['breathwork', 'breathing', 'wim hof', 'pranayama', 'co2 tolerance', 'oxygen', 'hypoxia'], color: 'cyan' },
+  { name: 'Sauna', keywords: ['sauna', 'heat therapy', 'heat shock', 'infrared sauna', 'finnish sauna', 'hyperthermia', 'heat exposure'], color: 'amber' },
 ];
 
 const colorClasses = {
@@ -91,6 +110,11 @@ const colorClasses = {
   pink: { bg: 'bg-pink-100', text: 'text-pink-700', border: 'border-pink-200', activeBg: 'bg-pink-500' },
   cyan: { bg: 'bg-cyan-100', text: 'text-cyan-700', border: 'border-cyan-200', activeBg: 'bg-cyan-500' },
   emerald: { bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-200', activeBg: 'bg-emerald-500' },
+  violet: { bg: 'bg-violet-100', text: 'text-violet-700', border: 'border-violet-200', activeBg: 'bg-violet-500' },
+  fuchsia: { bg: 'bg-fuchsia-100', text: 'text-fuchsia-700', border: 'border-fuchsia-200', activeBg: 'bg-fuchsia-500' },
+  lime: { bg: 'bg-lime-100', text: 'text-lime-700', border: 'border-lime-200', activeBg: 'bg-lime-500' },
+  slate: { bg: 'bg-slate-100', text: 'text-slate-700', border: 'border-slate-200', activeBg: 'bg-slate-500' },
+  sky: { bg: 'bg-sky-100', text: 'text-sky-700', border: 'border-sky-200', activeBg: 'bg-sky-500' },
 };
 
 export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onSearchClick }) {
