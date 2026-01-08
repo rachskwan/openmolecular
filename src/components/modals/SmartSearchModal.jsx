@@ -5,8 +5,8 @@ import { articles } from '../../data/articles';
 import { tracks } from '../../data/modules';
 import { communityThreads } from '../../data/community';
 
-export default function SmartSearchModal({ onClose, onNavigate, onGlossaryClick }) {
-  const [searchQuery, setSearchQuery] = useState('');
+export default function SmartSearchModal({ onClose, onNavigate, onGlossaryClick, initialQuery = '' }) {
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [isSearching, setIsSearching] = useState(false);
 
   const trendingSearches = [

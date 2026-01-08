@@ -255,12 +255,13 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
           <div className="mb-8 overflow-hidden">
             <div className="flex animate-scroll-left">
               {[...carouselTopics, ...carouselTopics].map((topic, idx) => (
-                <span
+                <button
                   key={idx}
-                  className={`flex-shrink-0 px-4 py-1.5 mx-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium ${topic.color} hover:bg-white/10 cursor-pointer transition-colors whitespace-nowrap`}
+                  onClick={() => onSearchClick(topic.text)}
+                  className={`flex-shrink-0 px-4 py-1.5 mx-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium ${topic.color} hover:bg-white/20 hover:border-white/30 cursor-pointer transition-all whitespace-nowrap`}
                 >
                   {topic.text}
-                </span>
+                </button>
               ))}
             </div>
           </div>
@@ -327,12 +328,13 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
           <div className="mt-8 overflow-hidden">
             <div className="flex animate-scroll-right">
               {[...carouselTopics.slice().reverse(), ...carouselTopics.slice().reverse()].map((topic, idx) => (
-                <span
+                <button
                   key={idx}
-                  className={`flex-shrink-0 px-4 py-1.5 mx-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium ${topic.color} hover:bg-white/10 cursor-pointer transition-colors whitespace-nowrap`}
+                  onClick={() => onSearchClick(topic.text)}
+                  className={`flex-shrink-0 px-4 py-1.5 mx-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium ${topic.color} hover:bg-white/20 hover:border-white/30 cursor-pointer transition-all whitespace-nowrap`}
                 >
                   {topic.text}
-                </span>
+                </button>
               ))}
             </div>
           </div>

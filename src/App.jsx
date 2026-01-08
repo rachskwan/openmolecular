@@ -30,6 +30,7 @@ import AuthModal from './components/modals/AuthModal';
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [showSmartSearch, setShowSmartSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [showQuiz, setShowQuiz] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalMode, setAuthModalMode] = useState('login');
@@ -565,7 +566,10 @@ function App() {
       onNavigate: handleNavigate,
       onGlossaryClick: setViewingGlossaryTerm,
       onQuizClick: () => setShowQuiz(true),
-      onSearchClick: () => setShowSmartSearch(true),
+      onSearchClick: (query = '') => {
+        setSearchQuery(query);
+        setShowSmartSearch(true);
+      },
       onUserClick: setViewingUserProfile,
       toggleSaveItem,
       isItemSaved,
@@ -755,9 +759,13 @@ function App() {
       {/* Modals */}
       {showSmartSearch && (
         <SmartSearchModal
-          onClose={() => setShowSmartSearch(false)}
+          onClose={() => {
+            setShowSmartSearch(false);
+            setSearchQuery('');
+          }}
           onNavigate={handleNavigate}
           onGlossaryClick={setViewingGlossaryTerm}
+          initialQuery={searchQuery}
         />
       )}
 
