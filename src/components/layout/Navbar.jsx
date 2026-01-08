@@ -48,10 +48,10 @@ const pages = [
     label: 'Resources',
     icon: BookOpen,
     subtabs: [
-      { id: 'glossary', label: 'Glossary', icon: FileText, section: 'glossary-section' },
+      { id: 'glossary', label: 'Glossary', icon: FileText, page: 'glossary' },
       { id: 'faqs', label: 'FAQs', icon: HelpCircle, section: 'faqs-section' },
       { id: 'newsletter', label: 'Newsletter', icon: MessageSquare, section: 'newsletter-section' },
-      { id: 'about', label: 'About Us', icon: Globe, section: 'about-section' },
+      { id: 'about', label: 'About Us', icon: Globe, page: 'about' },
     ]
   },
 ];
@@ -146,8 +146,11 @@ export default function Navbar({ currentPage, setCurrentPage, onSearchClick }) {
 
   const handleSubtabClick = (pageId, subtab) => {
     setHoveredPage(null);
+    // If subtab has a page property, navigate directly to that page
+    if (subtab.page) {
+      setCurrentPage(subtab.page);
     // If subtab has a tab property (for ExplorePage), navigate with tab param
-    if (subtab.tab) {
+    } else if (subtab.tab) {
       setCurrentPage(pageId, subtab.tab);
     } else {
       setCurrentPage(pageId);

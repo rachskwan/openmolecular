@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { BookOpen, Search, ChevronRight, FileText, HelpCircle, Users, Target, Award, Heart, Microscope, Globe, Mail, CheckCircle, Sparkles } from 'lucide-react';
-import { glossaryData, glossaryCategories } from '../../data/glossary';
+import { BookOpen, ChevronRight, HelpCircle, Globe, Mail, CheckCircle, Sparkles } from 'lucide-react';
+import { glossaryData } from '../../data/glossary';
 
 export default function ResourcesPage({ onNavigate, onGlossaryClick }) {
   const [email, setEmail] = useState('');
@@ -15,7 +15,6 @@ export default function ResourcesPage({ onNavigate, onGlossaryClick }) {
   };
 
   const glossaryTerms = Object.values(glossaryData);
-  const featuredTerms = glossaryTerms.slice(0, 6);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
@@ -86,91 +85,6 @@ export default function ResourcesPage({ onNavigate, onGlossaryClick }) {
             Subscribe <ChevronRight className="w-4 h-4" />
           </span>
         </button>
-      </div>
-
-      {/* Glossary Preview */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-teal-100 rounded-lg">
-              <BookOpen className="w-6 h-6 text-teal-600" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-slate-900">Scientific Glossary</h2>
-              <p className="text-sm text-slate-500">{glossaryTerms.length}+ terms</p>
-            </div>
-          </div>
-          <button
-            onClick={() => onNavigate('glossary')}
-            className="px-4 py-2 bg-teal-600 text-white rounded-lg font-medium hover:bg-teal-700 transition-colors flex items-center gap-2"
-          >
-            View Full Glossary <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* Featured Terms */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {featuredTerms.map(term => (
-            <button
-              key={term.term}
-              onClick={() => onGlossaryClick(term.term)}
-              className="flex items-start gap-3 p-4 rounded-lg bg-slate-50 hover:bg-teal-50 transition-colors text-left group"
-            >
-              <span className="text-2xl">{term.icon}</span>
-              <div className="flex-1 min-w-0">
-                <h4 className="font-semibold text-slate-900 group-hover:text-teal-700">
-                  {term.term}
-                </h4>
-                <p className="text-sm text-slate-600 line-clamp-2 mt-1">
-                  {term.definition}
-                </p>
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* About Preview */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden mb-8">
-        <div className="bg-gradient-to-br from-slate-800 to-slate-900 text-white p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-bold mb-1">About OpenMolecular</h2>
-              <p className="text-slate-300 text-sm">Democratizing metabolomics education for everyone</p>
-            </div>
-            <button
-              onClick={() => onNavigate('about')}
-              className="px-4 py-2 bg-white/20 text-white rounded-lg font-medium hover:bg-white/30 transition-colors flex items-center gap-2"
-            >
-              Read More <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-        <div className="p-6">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Target className="w-6 h-6 text-teal-600" />
-              </div>
-              <h4 className="font-medium text-slate-900 mb-1">Our Mission</h4>
-              <p className="text-sm text-slate-600">Making metabolomics accessible to everyone</p>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Award className="w-6 h-6 text-purple-600" />
-              </div>
-              <h4 className="font-medium text-slate-900 mb-1">Evidence-Based</h4>
-              <p className="text-sm text-slate-600">Content reviewed by scientists and experts</p>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Users className="w-6 h-6 text-amber-600" />
-              </div>
-              <h4 className="font-medium text-slate-900 mb-1">Community</h4>
-              <p className="text-sm text-slate-600">Join thousands learning together</p>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* FAQs Section */}
