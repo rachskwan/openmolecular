@@ -51,6 +51,7 @@ const pages = [
       { id: 'glossary', label: 'Glossary', icon: FileText, page: 'glossary' },
       { id: 'faqs', label: 'FAQs', icon: HelpCircle, section: 'faqs-section' },
       { id: 'newsletter', label: 'Newsletter', icon: MessageSquare, section: 'newsletter-section' },
+      { id: 'submit-research', label: 'Submit Research', icon: FlaskConical, page: 'submit-research' },
       { id: 'about', label: 'About Us', icon: Globe, page: 'about' },
     ]
   },

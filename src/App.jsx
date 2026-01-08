@@ -18,6 +18,7 @@ import NewDiscussionPage from './components/pages/NewDiscussionPage';
 import SettingsPage from './components/pages/SettingsPage';
 import AboutPage from './components/pages/AboutPage';
 import GlossaryPage from './components/pages/GlossaryPage';
+import SubmitResearchPage from './components/pages/SubmitResearchPage';
 import SmartSearchModal from './components/modals/SmartSearchModal';
 import GlossaryTermModal from './components/modals/GlossaryTermModal';
 import QuizModal from './components/modals/QuizModal';
@@ -624,6 +625,12 @@ function App() {
           <GlossaryPage
             onBack={() => handleNavigate('resources')}
             onGlossaryClick={setViewingGlossaryTerm}
+          />
+        );
+      case 'submit-research':
+        return (
+          <SubmitResearchPage
+            onBack={() => handleNavigate('resources')}
           />
         );
       case 'interactive':
