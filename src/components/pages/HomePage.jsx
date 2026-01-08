@@ -228,8 +228,8 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
 
   return (
     <div>
-      {/* Hero Section */}
-      <section id="hero" className="relative bg-gradient-to-br from-slate-800 via-slate-700 to-slate-800 text-white overflow-hidden min-h-[580px]">
+      {/* Hero Section - Condensed */}
+      <section id="hero" className="relative bg-gradient-to-br from-slate-800 via-slate-700 to-slate-800 text-white overflow-hidden">
         {/* Biohacker Data Background - reduced opacity */}
         <div className="absolute inset-0 opacity-30">
           <Suspense fallback={
@@ -250,52 +250,37 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
           </Suspense>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 z-10">
-          {/* Topic Carousel - Top */}
-          <div className="mb-8 overflow-hidden">
-            <div className="flex animate-scroll-left">
-              {[...carouselTopics, ...carouselTopics].map((topic, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => onSearchClick(topic.text)}
-                  className={`flex-shrink-0 px-4 py-1.5 mx-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium ${topic.color} hover:bg-white/20 hover:border-white/30 cursor-pointer transition-all whitespace-nowrap`}
-                >
-                  {topic.text}
-                </button>
-              ))}
-            </div>
-          </div>
-
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14 z-10">
           <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-3xl sm:text-5xl font-bold mb-6">
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4">
               Learn how molecular science{' '}
               <span className="bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent">
                 connects to your health
               </span>
             </h1>
-            <p className="text-lg sm:text-xl text-slate-300 mb-8">
-              Explore the fascinating world of metabolomics, biomarkers, and molecular pathways.
+            <p className="text-base sm:text-lg text-slate-300 mb-6">
+              Explore metabolomics, biomarkers, and molecular pathways.
               Understand what your body is really telling you.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
               <button
                 onClick={onSearchClick}
-                className="flex items-center justify-center gap-2 px-6 py-3 bg-teal-500 hover:bg-teal-600 rounded-lg font-medium transition-colors"
+                className="flex items-center justify-center gap-2 px-5 py-2.5 bg-teal-500 hover:bg-teal-600 rounded-lg font-medium transition-colors text-sm"
               >
-                <Search className="w-5 h-5" />
+                <Search className="w-4 h-4" />
                 Try Smart Search
               </button>
               <button
                 onClick={onQuizClick}
-                className="flex items-center justify-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg font-medium transition-colors"
+                className="flex items-center justify-center gap-2 px-5 py-2.5 bg-white/10 hover:bg-white/20 rounded-lg font-medium transition-colors text-sm"
               >
-                <Play className="w-5 h-5" />
+                <Play className="w-4 h-4" />
                 Take the Quiz
               </button>
             </div>
 
             {/* User Quote Carousel */}
-            <div className="relative h-20 flex items-center justify-center">
+            <div className="relative h-16 flex items-center justify-center">
               <div className="absolute inset-0 flex items-center justify-center">
                 {userQuotes.map((item, idx) => (
                   <div
@@ -306,11 +291,11 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
                         : 'opacity-0 translate-y-4'
                     }`}
                   >
-                    <div className="flex flex-col items-center gap-2">
+                    <div className="flex flex-col items-center gap-1">
                       <div className="flex items-center gap-2 text-slate-400">
-                        <Quote className="w-4 h-4" />
-                        <span className="text-sm italic text-slate-300">"{item.quote}"</span>
-                        <Quote className="w-4 h-4 rotate-180" />
+                        <Quote className="w-3 h-3" />
+                        <span className="text-xs italic text-slate-300">"{item.quote}"</span>
+                        <Quote className="w-3 h-3 rotate-180" />
                       </div>
                       <div className="flex items-center gap-2 text-xs text-slate-500">
                         <span className="text-teal-400">@{item.user}</span>
@@ -323,20 +308,48 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Topic Carousel - Bottom (reversed direction) */}
-          <div className="mt-8 overflow-hidden">
-            <div className="flex animate-scroll-right">
-              {[...carouselTopics.slice().reverse(), ...carouselTopics.slice().reverse()].map((topic, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => onSearchClick(topic.text)}
-                  className={`flex-shrink-0 px-4 py-1.5 mx-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium ${topic.color} hover:bg-white/20 hover:border-white/30 cursor-pointer transition-all whitespace-nowrap`}
-                >
-                  {topic.text}
-                </button>
-              ))}
+      {/* Hot Now - Topic Carousels */}
+      <section className="bg-slate-50 py-6 border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-orange-500" />
+              <h2 className="text-lg font-bold text-slate-900">Hot Now</h2>
             </div>
+            <div className="h-px flex-1 bg-slate-200" />
+          </div>
+        </div>
+
+        {/* Top carousel */}
+        <div className="overflow-hidden mb-3">
+          <div className="flex animate-scroll-left">
+            {[...carouselTopics, ...carouselTopics].map((topic, idx) => (
+              <button
+                key={idx}
+                onClick={() => onSearchClick(topic.text)}
+                className={`flex-shrink-0 px-4 py-1.5 mx-2 rounded-full bg-white border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-100 hover:border-slate-300 cursor-pointer transition-all whitespace-nowrap shadow-sm`}
+              >
+                {topic.text}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom carousel (reversed) */}
+        <div className="overflow-hidden">
+          <div className="flex animate-scroll-right">
+            {[...carouselTopics.slice().reverse(), ...carouselTopics.slice().reverse()].map((topic, idx) => (
+              <button
+                key={idx}
+                onClick={() => onSearchClick(topic.text)}
+                className={`flex-shrink-0 px-4 py-1.5 mx-2 rounded-full bg-white border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-100 hover:border-slate-300 cursor-pointer transition-all whitespace-nowrap shadow-sm`}
+              >
+                {topic.text}
+              </button>
+            ))}
           </div>
         </div>
       </section>
