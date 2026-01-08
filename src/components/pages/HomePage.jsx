@@ -1,8 +1,11 @@
 import { useState } from 'react';
-import { Search, Play, FileText, Zap, TrendingUp, Star, ChevronRight, Beaker, Apple, Award, Gamepad2, X, BookOpen, MessageCircle, FlaskConical, Heart, Utensils, Brain, ShoppingBag } from 'lucide-react';
-import { articles } from '../../data/articles';
+import { Search, Play, FileText, Zap, TrendingUp, Star, ChevronRight, Beaker, Apple, Award, Gamepad2, X, BookOpen, MessageCircle, FlaskConical, Heart, Utensils, Brain, ShoppingBag, BarChart3, Clock, Users, Video } from 'lucide-react';
+import { articles, videos } from '../../data/articles';
 import { glossaryData } from '../../data/glossary';
 import { communityThreads } from '../../data/community';
+import { interactives } from '../../data/interactives';
+import { caseStudies } from '../../data/caseStudies';
+import { productComparisons } from '../../data/comparisons';
 
 // Broad category definitions for section display
 const categories = [
@@ -286,25 +289,48 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
         </div>
       </section>
 
-      {/* Featured Content */}
+      {/* Latest & Trending Feed */}
       <section id="spotlights" className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-slate-900">Spotlight Content</h2>
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900">Latest & Trending</h2>
+            <p className="text-slate-500 text-sm mt-1">Fresh content from across the platform</p>
+          </div>
           <button
             onClick={() => onNavigate('explore')}
             className="text-sm text-teal-600 font-medium hover:text-teal-700 flex items-center gap-1"
           >
-            View All <ChevronRight className="w-4 h-4" />
+            Explore All <ChevronRight className="w-4 h-4" />
           </button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {featuredArticles.map(article => (
+
+        {/* Content Type Tabs */}
+        <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+          <span className="px-3 py-1.5 bg-teal-100 text-teal-700 rounded-full text-xs font-medium">All</span>
+          <span className="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-full text-xs font-medium flex items-center gap-1">
+            <FileText className="w-3 h-3" /> Articles
+          </span>
+          <span className="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-full text-xs font-medium flex items-center gap-1">
+            <Gamepad2 className="w-3 h-3" /> Interactives
+          </span>
+          <span className="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-full text-xs font-medium flex items-center gap-1">
+            <Video className="w-3 h-3" /> Videos
+          </span>
+          <span className="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-full text-xs font-medium flex items-center gap-1">
+            <BarChart3 className="w-3 h-3" /> Comparisons
+          </span>
+        </div>
+
+        {/* Mixed Content Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Featured Article - Large Card */}
+          {featuredArticles.slice(0, 1).map(article => (
             <button
-              key={article.id}
+              key={`article-${article.id}`}
               onClick={() => onNavigate('article', article.id)}
-              className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+              className="md:col-span-2 md:row-span-2 bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
             >
-              <div className="h-40 bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden">
+              <div className="h-48 md:h-64 bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden relative">
                 {article.image ? (
                   <img
                     src={article.image}
@@ -316,6 +342,9 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
                     <FileText className="w-12 h-12 text-slate-400" />
                   </div>
                 )}
+                <div className="absolute top-3 left-3">
+                  <span className="px-2 py-1 bg-teal-500 text-white rounded text-xs font-medium">Featured</span>
+                </div>
               </div>
               <div className="p-5">
                 <div className="flex items-center gap-2 mb-2">
@@ -324,7 +353,8 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
                   </span>
                   <span className="text-xs text-slate-500">{article.duration}</span>
                 </div>
-                <h3 className="font-semibold text-slate-900 mb-2 line-clamp-2">{article.title}</h3>
+                <h3 className="font-semibold text-slate-900 mb-2 text-lg">{article.title}</h3>
+                <p className="text-sm text-slate-600 line-clamp-2 mb-3">{article.introduction}</p>
                 <div className="flex items-center gap-2 text-sm text-slate-500">
                   <span>{article.author}</span>
                   <span>•</span>
@@ -332,12 +362,176 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
                     <Star className="w-4 h-4" /> {article.saves}
                   </span>
                 </div>
-                <div className="mt-3 flex items-center gap-1 text-teal-600 text-sm font-medium">
-                  Read article <ChevronRight className="w-4 h-4" />
+              </div>
+            </button>
+          ))}
+
+          {/* Interactive Card */}
+          {interactives.filter(i => i.featured || i.type === 'Quiz').slice(0, 1).map(interactive => (
+            <button
+              key={`interactive-${interactive.id}`}
+              onClick={() => onNavigate('interactive', interactive.id)}
+              className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+            >
+              <div className={`h-28 bg-gradient-to-br ${interactive.color} flex items-center justify-center`}>
+                <span className="text-4xl">{interactive.icon}</span>
+              </div>
+              <div className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
+                    {interactive.type}
+                  </span>
+                </div>
+                <h3 className="font-semibold text-slate-900 mb-1 text-sm line-clamp-2">{interactive.title}</h3>
+                <div className="flex items-center gap-2 text-xs text-slate-500">
+                  <span className="flex items-center gap-1">
+                    <Users className="w-3 h-3" /> {interactive.plays?.toLocaleString() || '0'}
+                  </span>
                 </div>
               </div>
             </button>
           ))}
+
+          {/* Video Card */}
+          {videos && videos.slice(0, 1).map(video => (
+            <button
+              key={`video-${video.id}`}
+              onClick={() => onNavigate('video', video.id)}
+              className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+            >
+              <div className="h-28 bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center relative">
+                <Play className="w-10 h-10 text-white" />
+                <div className="absolute bottom-2 right-2 px-2 py-0.5 bg-black/60 rounded text-white text-xs">
+                  {video.duration}
+                </div>
+              </div>
+              <div className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="px-2 py-1 bg-rose-100 text-rose-700 rounded text-xs font-medium">
+                    Video
+                  </span>
+                </div>
+                <h3 className="font-semibold text-slate-900 mb-1 text-sm line-clamp-2">{video.title}</h3>
+                <div className="text-xs text-slate-500">{video.instructor}</div>
+              </div>
+            </button>
+          ))}
+
+          {/* More Articles */}
+          {featuredArticles.slice(1, 3).map(article => (
+            <button
+              key={`article-${article.id}`}
+              onClick={() => onNavigate('article', article.id)}
+              className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+            >
+              <div className="h-28 bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden">
+                {article.image ? (
+                  <img
+                    src={article.image}
+                    alt={article.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <FileText className="w-8 h-8 text-slate-400" />
+                  </div>
+                )}
+              </div>
+              <div className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="px-2 py-1 bg-teal-100 text-teal-700 rounded text-xs font-medium">
+                    Article
+                  </span>
+                </div>
+                <h3 className="font-semibold text-slate-900 mb-1 text-sm line-clamp-2">{article.title}</h3>
+                <div className="text-xs text-slate-500">{article.duration}</div>
+              </div>
+            </button>
+          ))}
+
+          {/* Comparison Card */}
+          {productComparisons.slice(0, 1).map(comparison => (
+            <button
+              key={`comparison-${comparison.id}`}
+              onClick={() => onNavigate('comparison', comparison.id)}
+              className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+            >
+              <div className="h-28 bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center">
+                <BarChart3 className="w-10 h-10 text-white" />
+              </div>
+              <div className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
+                    Comparison
+                  </span>
+                </div>
+                <h3 className="font-semibold text-slate-900 mb-1 text-sm line-clamp-2">{comparison.title}</h3>
+                <div className="flex flex-wrap gap-1">
+                  {comparison.products.slice(0, 2).map((product, idx) => (
+                    <span key={idx} className="text-xs text-slate-500">{product}{idx === 0 && ' vs'}</span>
+                  ))}
+                </div>
+              </div>
+            </button>
+          ))}
+
+          {/* Case Study Card */}
+          {caseStudies.filter(cs => cs.featured).slice(0, 1).map(study => (
+            <button
+              key={`casestudy-${study.id}`}
+              onClick={() => onNavigate('casestudy', study.id)}
+              className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+            >
+              <div className="h-28 bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
+                <Beaker className="w-10 h-10 text-white" />
+              </div>
+              <div className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs font-medium">
+                    Case Study
+                  </span>
+                </div>
+                <h3 className="font-semibold text-slate-900 mb-1 text-sm line-clamp-2">{study.title}</h3>
+                <div className="text-xs text-slate-500">{study.client} • {study.industry}</div>
+              </div>
+            </button>
+          ))}
+
+          {/* Another Interactive */}
+          {interactives.filter(i => i.type === 'Interactive Tool').slice(0, 1).map(interactive => (
+            <button
+              key={`interactive-tool-${interactive.id}`}
+              onClick={() => onNavigate('interactive', interactive.id)}
+              className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+            >
+              <div className={`h-28 bg-gradient-to-br ${interactive.color} flex items-center justify-center`}>
+                <span className="text-4xl">{interactive.icon}</span>
+              </div>
+              <div className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="px-2 py-1 bg-emerald-100 text-emerald-700 rounded text-xs font-medium">
+                    Tool
+                  </span>
+                </div>
+                <h3 className="font-semibold text-slate-900 mb-1 text-sm line-clamp-2">{interactive.title}</h3>
+                <div className="flex items-center gap-2 text-xs text-slate-500">
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-3 h-3" /> {interactive.duration}
+                  </span>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {/* Load More */}
+        <div className="text-center mt-8">
+          <button
+            onClick={() => onNavigate('explore')}
+            className="px-6 py-2.5 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-medium text-sm"
+          >
+            Load More Content
+          </button>
         </div>
       </section>
 
