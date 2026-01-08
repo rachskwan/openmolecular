@@ -158,7 +158,12 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
   const { articles, loading: articlesLoading } = useArticles();
 
   const featuredArticles = articles.filter(a => a.featured).slice(0, 3);
-  const moleculeOfDay = glossaryData['NAD+'];
+  const moleculeOfDay = glossaryData['NAD+'] || {
+    term: 'NAD+',
+    fullName: 'Nicotinamide Adenine Dinucleotide',
+    icon: '⚡',
+    definition: 'A coenzyme essential for cellular energy production.'
+  };
 
   // Get content for a category
   const getCategoryContent = (category) => {
