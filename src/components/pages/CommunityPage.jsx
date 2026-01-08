@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MessageCircle, ThumbsUp, TrendingUp, Star, ChevronRight, ChevronLeft, Search, X, Users, Rss } from 'lucide-react';
+import { MessageCircle, ThumbsUp, TrendingUp, Star, ChevronRight, ChevronLeft, Search, X, Users, Rss, Bell, Heart, Trophy, FileText } from 'lucide-react';
 import { communityThreads, communityCategories } from '../../data/community';
 import { getUserByUsername } from '../../data/users';
 
@@ -404,49 +404,65 @@ export default function CommunityPage({ onNavigate, onUserClick, userThreads = [
             </div>
           </div>
 
-          {/* People You Follow */}
+          {/* Recent Activity */}
           <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
             <div className="flex items-center gap-2 mb-4">
-              <Users className="w-5 h-5 text-purple-500" />
-              <h3 className="font-semibold text-slate-900">People You Follow</h3>
-              {following.length > 0 && (
-                <span className="ml-auto px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
-                  {following.length}
-                </span>
-              )}
+              <Bell className="w-5 h-5 text-blue-500" />
+              <h3 className="font-semibold text-slate-900">Recent Activity</h3>
             </div>
-            {following.length === 0 ? (
-              <p className="text-sm text-slate-500 text-center py-4">
-                You're not following anyone yet. Click on a user's profile to follow them!
-              </p>
-            ) : (
-              <div className="space-y-2">
-                {following.slice(0, 5).map(username => {
-                  const user = getUserByUsername(username);
-                  return (
-                    <button
-                      key={username}
-                      onClick={() => onUserClick?.(username)}
-                      className="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-slate-50 transition-colors"
-                    >
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white text-xs font-medium">
-                        {user.avatar}
-                      </div>
-                      <div className="flex-1 text-left min-w-0">
-                        <p className="text-sm font-medium text-slate-900 truncate">{user.fullName}</p>
-                        <p className="text-xs text-slate-500 truncate">@{user.username}</p>
-                      </div>
-                      <ChevronRight className="w-4 h-4 text-slate-400" />
-                    </button>
-                  );
-                })}
-                {following.length > 5 && (
-                  <p className="text-xs text-center text-slate-500 pt-2">
-                    +{following.length - 5} more
-                  </p>
-                )}
-              </div>
-            )}
+            <div className="space-y-2">
+              <button
+                onClick={() => onNavigate('thread', 2)}
+                className="w-full flex items-start gap-3 p-2.5 rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors text-left"
+              >
+                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                  <MessageCircle className="w-4 h-4 text-blue-600" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-slate-900 truncate">New reply to your discussion</p>
+                  <p className="text-xs text-slate-500 truncate">Sarah Chen replied</p>
+                </div>
+              </button>
+
+              <button
+                onClick={() => onNavigate('track', 1)}
+                className="w-full flex items-start gap-3 p-2.5 rounded-lg bg-amber-50 hover:bg-amber-100 transition-colors text-left"
+              >
+                <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                  <Trophy className="w-4 h-4 text-amber-600" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-slate-900 truncate">Achievement Unlocked!</p>
+                  <p className="text-xs text-slate-500 truncate">Track completed</p>
+                </div>
+              </button>
+
+              <button
+                onClick={() => onNavigate('thread', 1)}
+                className="w-full flex items-start gap-3 p-2.5 rounded-lg bg-pink-50 hover:bg-pink-100 transition-colors text-left"
+              >
+                <div className="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center flex-shrink-0">
+                  <Heart className="w-4 h-4 text-pink-600" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-slate-900 truncate">Your post was liked</p>
+                  <p className="text-xs text-slate-500 truncate">Dr. Michael Torres</p>
+                </div>
+              </button>
+
+              <button
+                onClick={() => onNavigate('article', 3)}
+                className="w-full flex items-start gap-3 p-2.5 rounded-lg bg-teal-50 hover:bg-teal-100 transition-colors text-left"
+              >
+                <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0">
+                  <FileText className="w-4 h-4 text-teal-600" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-slate-900 truncate">New article published</p>
+                  <p className="text-xs text-slate-500 truncate">Omega-3 Index Testing</p>
+                </div>
+              </button>
+            </div>
           </div>
 
           {/* Start Discussion CTA */}
