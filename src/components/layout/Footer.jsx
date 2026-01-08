@@ -1,28 +1,27 @@
 export default function Footer({ onNavigate }) {
   const footerLinks = {
     explore: [
-      { label: 'Articles', action: () => onNavigate('explore') },
-      { label: 'Learning Tracks', action: () => onNavigate('explore') },
-      { label: 'Interactives', action: () => onNavigate('explore') },
-      { label: 'Product Comparisons', action: () => onNavigate('explore') },
+      { label: 'Learning Tracks', action: () => onNavigate('explore', 'Tracks') },
+      { label: 'Articles', action: () => onNavigate('explore', 'Articles') },
+      { label: 'Case Studies', action: () => onNavigate('explore', 'Case Studies') },
+      { label: 'Comparisons', action: () => onNavigate('explore', 'Comparisons') },
+      { label: 'Interactives', action: () => onNavigate('explore', 'Interactives') },
     ],
     community: [
-      { label: 'Discussions', action: () => onNavigate('community') },
-      { label: 'Q&A', action: () => onNavigate('community') },
+      { label: 'All Discussions', action: () => onNavigate('community') },
+      { label: 'Questions', action: () => onNavigate('community') },
       { label: 'Success Stories', action: () => onNavigate('community') },
-      { label: 'Expert AMAs', action: () => onNavigate('community') },
+      { label: 'Research Discussion', action: () => onNavigate('community') },
     ],
     resources: [
-      { label: 'Glossary', action: () => onNavigate('resources') },
-      { label: 'Research Library', action: () => onNavigate('explore') },
-      { label: 'Testing Partners', action: () => {} },
-      { label: 'FAQs', action: () => {} },
+      { label: 'Glossary', action: () => onNavigate('glossary') },
+      { label: 'FAQs', action: () => onNavigate('resources') },
+      { label: 'Newsletter', action: () => onNavigate('resources') },
+      { label: 'Certification', action: () => onNavigate('certification') },
     ],
     company: [
-      { label: 'About Us', action: () => {} },
-      { label: 'Our Mission', action: () => {} },
-      { label: 'Scientific Advisory', action: () => {} },
-      { label: 'Contact', action: () => {} },
+      { label: 'About Us', action: () => onNavigate('about') },
+      { label: 'Contact', action: () => onNavigate('about') },
     ],
   };
 
@@ -141,26 +140,26 @@ export default function Footer({ onNavigate }) {
         {/* Bottom Bar */}
         <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-slate-500 text-sm">
-            © 2024 OpenMolecular. All rights reserved.
+            © {new Date().getFullYear()} OpenMolecular. All rights reserved.
           </p>
           <div className="flex gap-6">
             <button
-              onClick={() => onNavigate('resources')}
+              onClick={() => onNavigate('about')}
               className="text-slate-500 hover:text-slate-300 text-sm transition-colors"
             >
-              Privacy Policy
+              About
             </button>
             <button
               onClick={() => onNavigate('resources')}
               className="text-slate-500 hover:text-slate-300 text-sm transition-colors"
             >
-              Terms of Service
+              Resources
             </button>
             <button
-              onClick={() => onNavigate('resources')}
+              onClick={() => onNavigate('certification')}
               className="text-slate-500 hover:text-slate-300 text-sm transition-colors"
             >
-              Cookie Settings
+              Certification
             </button>
           </div>
         </div>
