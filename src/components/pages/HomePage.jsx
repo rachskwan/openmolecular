@@ -321,203 +321,170 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
           </span>
         </div>
 
-        {/* Mixed Content Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Featured Article - Large Card */}
+        {/* Bento Box Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 auto-rows-[140px] gap-4">
+          {/* Featured Article - Large (3x2) */}
           {featuredArticles.slice(0, 1).map(article => (
             <button
               key={`article-${article.id}`}
               onClick={() => onNavigate('article', article.id)}
-              className="md:col-span-2 md:row-span-2 bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+              className="col-span-2 row-span-2 md:col-span-2 lg:col-span-3 bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-lg transition-all text-left group relative"
             >
-              <div className="h-48 md:h-64 bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden">
                 {article.image ? (
                   <img
                     src={article.image}
                     alt={article.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <FileText className="w-12 h-12 text-slate-400" />
+                    <FileText className="w-16 h-16 text-slate-400" />
                   </div>
                 )}
-                <div className="absolute top-3 left-3">
-                  <span className="px-2 py-1 bg-teal-500 text-white rounded text-xs font-medium">Featured</span>
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
               </div>
-              <div className="p-5">
+              <div className="absolute inset-0 p-5 flex flex-col justify-end text-white">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="px-2 py-1 bg-teal-100 text-teal-700 rounded text-xs font-medium">
-                    {article.category}
-                  </span>
-                  <span className="text-xs text-slate-500">{article.duration}</span>
+                  <span className="px-2 py-1 bg-teal-500 text-white rounded text-xs font-medium">Featured</span>
+                  <span className="px-2 py-1 bg-white/20 backdrop-blur-sm rounded text-xs">{article.category}</span>
                 </div>
-                <h3 className="font-semibold text-slate-900 mb-2 text-lg">{article.title}</h3>
-                <p className="text-sm text-slate-600 line-clamp-2 mb-3">{article.introduction}</p>
-                <div className="flex items-center gap-2 text-sm text-slate-500">
+                <h3 className="font-bold text-xl mb-2 drop-shadow-lg">{article.title}</h3>
+                <p className="text-sm text-white/80 line-clamp-2 mb-2">{article.introduction}</p>
+                <div className="flex items-center gap-3 text-sm text-white/70">
                   <span>{article.author}</span>
                   <span>•</span>
-                  <span className="flex items-center gap-1">
-                    <Star className="w-4 h-4" /> {article.saves}
-                  </span>
+                  <span>{article.duration}</span>
                 </div>
               </div>
             </button>
           ))}
 
-          {/* Interactive Card */}
+          {/* Interactive Quiz - Tall (1x2) */}
           {interactives.filter(i => i.featured || i.type === 'Quiz').slice(0, 1).map(interactive => (
             <button
               key={`interactive-${interactive.id}`}
               onClick={() => onNavigate('interactive', interactive.id)}
-              className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+              className="col-span-1 row-span-2 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all text-left p-4 flex flex-col justify-between group"
             >
-              <div className={`h-28 bg-gradient-to-br ${interactive.color} flex items-center justify-center`}>
-                <span className="text-4xl">{interactive.icon}</span>
+              <div>
+                <span className="px-2 py-1 bg-white/20 backdrop-blur-sm text-white rounded text-xs font-medium">
+                  {interactive.type}
+                </span>
               </div>
-              <div className="p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
-                    {interactive.type}
-                  </span>
-                </div>
-                <h3 className="font-semibold text-slate-900 mb-1 text-sm line-clamp-2">{interactive.title}</h3>
-                <div className="flex items-center gap-2 text-xs text-slate-500">
-                  <span className="flex items-center gap-1">
-                    <Users className="w-3 h-3" /> {interactive.plays?.toLocaleString() || '0'}
-                  </span>
+              <div className="text-center py-4">
+                <span className="text-6xl group-hover:scale-110 transition-transform inline-block">{interactive.icon}</span>
+              </div>
+              <div>
+                <h3 className="font-semibold text-white text-sm mb-1">{interactive.title}</h3>
+                <div className="flex items-center gap-1 text-xs text-white/80">
+                  <Users className="w-3 h-3" /> {interactive.plays?.toLocaleString() || '0'} plays
                 </div>
               </div>
             </button>
           ))}
 
-          {/* Video Card */}
+          {/* Case Study - Tall (2x2) */}
+          {caseStudies.filter(cs => cs.featured).slice(0, 1).map(study => (
+            <button
+              key={`casestudy-${study.id}`}
+              onClick={() => onNavigate('casestudy', study.id)}
+              className="col-span-2 row-span-2 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all text-left p-5 flex flex-col justify-between group"
+            >
+              <div className="flex items-center justify-between">
+                <span className="px-2 py-1 bg-white/20 backdrop-blur-sm text-white rounded text-xs font-medium">
+                  Case Study
+                </span>
+                <Beaker className="w-6 h-6 text-white/60" />
+              </div>
+              <div>
+                <h3 className="font-bold text-white text-lg mb-2">{study.title}</h3>
+                <p className="text-sm text-white/70 line-clamp-2 mb-3">{study.summary}</p>
+                <div className="flex items-center gap-2 text-xs text-white/60">
+                  <span className="px-2 py-1 bg-white/10 rounded">{study.client}</span>
+                  <span className="px-2 py-1 bg-white/10 rounded">{study.industry}</span>
+                </div>
+              </div>
+            </button>
+          ))}
+
+          {/* Video Card - Wide (2x1) */}
           {videos && videos.slice(0, 1).map(video => (
             <button
               key={`video-${video.id}`}
               onClick={() => onNavigate('video', video.id)}
-              className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+              className="col-span-2 row-span-1 bg-gradient-to-r from-rose-500 to-pink-600 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all text-left p-4 flex items-center gap-4 group"
             >
-              <div className="h-28 bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center relative">
-                <Play className="w-10 h-10 text-white" />
-                <div className="absolute bottom-2 right-2 px-2 py-0.5 bg-black/60 rounded text-white text-xs">
-                  {video.duration}
-                </div>
+              <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-white/30 transition-colors">
+                <Play className="w-8 h-8 text-white" />
               </div>
-              <div className="p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-2 py-1 bg-rose-100 text-rose-700 rounded text-xs font-medium">
-                    Video
-                  </span>
-                </div>
-                <h3 className="font-semibold text-slate-900 mb-1 text-sm line-clamp-2">{video.title}</h3>
-                <div className="text-xs text-slate-500">{video.instructor}</div>
+              <div className="flex-1 min-w-0">
+                <span className="px-2 py-0.5 bg-white/20 text-white rounded text-xs font-medium">Video • {video.duration}</span>
+                <h3 className="font-semibold text-white mt-1 line-clamp-1">{video.title}</h3>
+                <div className="text-xs text-white/70 mt-1">{video.instructor}</div>
               </div>
             </button>
           ))}
 
-          {/* More Articles */}
-          {featuredArticles.slice(1, 3).map(article => (
-            <button
-              key={`article-${article.id}`}
-              onClick={() => onNavigate('article', article.id)}
-              className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
-            >
-              <div className="h-28 bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden">
-                {article.image ? (
-                  <img
-                    src={article.image}
-                    alt={article.title}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <FileText className="w-8 h-8 text-slate-400" />
-                  </div>
-                )}
-              </div>
-              <div className="p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-2 py-1 bg-teal-100 text-teal-700 rounded text-xs font-medium">
-                    Article
-                  </span>
-                </div>
-                <h3 className="font-semibold text-slate-900 mb-1 text-sm line-clamp-2">{article.title}</h3>
-                <div className="text-xs text-slate-500">{article.duration}</div>
-              </div>
-            </button>
-          ))}
-
-          {/* Comparison Card */}
+          {/* Comparison - Square (2x1) */}
           {productComparisons.slice(0, 1).map(comparison => (
             <button
               key={`comparison-${comparison.id}`}
               onClick={() => onNavigate('comparison', comparison.id)}
-              className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+              className="col-span-2 row-span-1 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all text-left p-4 flex items-center gap-4 group"
             >
-              <div className="h-28 bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center">
-                <BarChart3 className="w-10 h-10 text-white" />
+              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                <BarChart3 className="w-6 h-6 text-white" />
               </div>
-              <div className="p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
-                    Comparison
-                  </span>
-                </div>
-                <h3 className="font-semibold text-slate-900 mb-1 text-sm line-clamp-2">{comparison.title}</h3>
-                <div className="flex flex-wrap gap-1">
+              <div className="flex-1 min-w-0">
+                <span className="px-2 py-0.5 bg-white/20 text-white rounded text-xs font-medium">Comparison</span>
+                <h3 className="font-semibold text-white mt-1 text-sm line-clamp-1">{comparison.title}</h3>
+                <div className="flex gap-2 mt-1">
                   {comparison.products.slice(0, 2).map((product, idx) => (
-                    <span key={idx} className="text-xs text-slate-500">{product}{idx === 0 && ' vs'}</span>
+                    <span key={idx} className="text-xs text-white/70">{product}{idx === 0 && ' vs'}</span>
                   ))}
                 </div>
               </div>
             </button>
           ))}
 
-          {/* Case Study Card */}
-          {caseStudies.filter(cs => cs.featured).slice(0, 1).map(study => (
+          {/* Article 2 - Medium (2x1) */}
+          {featuredArticles.slice(1, 2).map(article => (
             <button
-              key={`casestudy-${study.id}`}
-              onClick={() => onNavigate('casestudy', study.id)}
-              className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+              key={`article-${article.id}`}
+              onClick={() => onNavigate('article', article.id)}
+              className="col-span-2 row-span-1 bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-lg transition-all text-left flex group"
             >
-              <div className="h-28 bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
-                <Beaker className="w-10 h-10 text-white" />
+              <div className="w-1/3 bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden flex-shrink-0">
+                {article.image ? (
+                  <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <FileText className="w-8 h-8 text-slate-400" />
+                  </div>
+                )}
               </div>
-              <div className="p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs font-medium">
-                    Case Study
-                  </span>
-                </div>
-                <h3 className="font-semibold text-slate-900 mb-1 text-sm line-clamp-2">{study.title}</h3>
-                <div className="text-xs text-slate-500">{study.client} • {study.industry}</div>
+              <div className="p-4 flex-1">
+                <span className="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-xs font-medium">Article</span>
+                <h3 className="font-semibold text-slate-900 mt-1 text-sm line-clamp-2">{article.title}</h3>
+                <div className="text-xs text-slate-500 mt-1">{article.duration}</div>
               </div>
             </button>
           ))}
 
-          {/* Another Interactive */}
+          {/* Interactive Tool - Square (2x1) */}
           {interactives.filter(i => i.type === 'Interactive Tool').slice(0, 1).map(interactive => (
             <button
               key={`interactive-tool-${interactive.id}`}
               onClick={() => onNavigate('interactive', interactive.id)}
-              className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow text-left"
+              className="col-span-2 row-span-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all text-left p-4 flex items-center gap-4 group"
             >
-              <div className={`h-28 bg-gradient-to-br ${interactive.color} flex items-center justify-center`}>
-                <span className="text-4xl">{interactive.icon}</span>
-              </div>
-              <div className="p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-2 py-1 bg-emerald-100 text-emerald-700 rounded text-xs font-medium">
-                    Tool
-                  </span>
-                </div>
-                <h3 className="font-semibold text-slate-900 mb-1 text-sm line-clamp-2">{interactive.title}</h3>
-                <div className="flex items-center gap-2 text-xs text-slate-500">
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-3 h-3" /> {interactive.duration}
-                  </span>
+              <div className="text-4xl group-hover:scale-110 transition-transform">{interactive.icon}</div>
+              <div className="flex-1 min-w-0">
+                <span className="px-2 py-0.5 bg-white/20 text-white rounded text-xs font-medium">Tool</span>
+                <h3 className="font-semibold text-white mt-1 text-sm line-clamp-1">{interactive.title}</h3>
+                <div className="flex items-center gap-1 text-xs text-white/70 mt-1">
+                  <Clock className="w-3 h-3" /> {interactive.duration}
                 </div>
               </div>
             </button>
