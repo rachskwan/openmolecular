@@ -1,9 +1,10 @@
 export const glossaryData = {
-  // Molecules & Compounds
+  // Molecules & Compounds - Coenzymes
   'NAD+': {
     term: 'NAD+',
     fullName: 'Nicotinamide Adenine Dinucleotide',
     category: 'Molecules & Compounds',
+    subcategory: 'Coenzymes',
     definition: 'A coenzyme found in all living cells that plays a crucial role in cellular energy production and metabolism. NAD+ is essential for converting nutrients into ATP energy and serves as a cofactor for enzymes involved in DNA repair, gene expression, and cell signaling.',
     keyPoints: [
       'Declines with age, contributing to metabolic dysfunction',
@@ -17,6 +18,7 @@ export const glossaryData = {
     term: 'ATP',
     fullName: 'Adenosine Triphosphate',
     category: 'Molecules & Compounds',
+    subcategory: 'Coenzymes',
     definition: 'The primary energy currency of cells. ATP stores and transfers chemical energy within cells, powering most cellular processes including muscle contraction, nerve impulse propagation, and protein synthesis.',
     keyPoints: [
       'Produced mainly in mitochondria through cellular respiration',
@@ -30,6 +32,7 @@ export const glossaryData = {
     term: 'CoQ10',
     fullName: 'Coenzyme Q10 (Ubiquinone)',
     category: 'Molecules & Compounds',
+    subcategory: 'Coenzymes',
     definition: 'A naturally occurring antioxidant that plays a vital role in the electron transport chain, helping produce ATP in mitochondria. Also protects cells from oxidative damage.',
     keyPoints: [
       'Levels decrease with age and statin medication use',
@@ -44,6 +47,7 @@ export const glossaryData = {
     term: 'Omega-3',
     fullName: 'Omega-3 Fatty Acids',
     category: 'Molecules & Compounds',
+    subcategory: 'Fatty Acids',
     definition: 'Essential polyunsaturated fatty acids that the body cannot produce on its own. The three main types are ALA (from plants), EPA, and DHA (from marine sources). Critical for brain function, heart health, and reducing inflammation.',
     keyPoints: [
       'EPA and DHA are the most bioavailable forms',
@@ -58,6 +62,7 @@ export const glossaryData = {
     term: 'EPA',
     fullName: 'Eicosapentaenoic Acid',
     category: 'Molecules & Compounds',
+    subcategory: 'Fatty Acids',
     definition: 'A 20-carbon omega-3 fatty acid found primarily in fatty fish and fish oil. EPA is particularly important for reducing inflammation and supporting cardiovascular health.',
     keyPoints: [
       'Precursor to anti-inflammatory compounds called resolvins',
@@ -72,6 +77,7 @@ export const glossaryData = {
     term: 'DHA',
     fullName: 'Docosahexaenoic Acid',
     category: 'Molecules & Compounds',
+    subcategory: 'Fatty Acids',
     definition: 'A 22-carbon omega-3 fatty acid that is a primary structural component of the brain, cerebral cortex, skin, and retina. Essential for brain development and cognitive function throughout life.',
     keyPoints: [
       'Makes up about 40% of polyunsaturated fats in the brain',
@@ -86,6 +92,7 @@ export const glossaryData = {
     term: 'ALA',
     fullName: 'Alpha-Linolenic Acid',
     category: 'Molecules & Compounds',
+    subcategory: 'Fatty Acids',
     definition: 'A plant-based omega-3 fatty acid found in seeds, nuts, and vegetable oils. The body can convert ALA to EPA and DHA, but the conversion rate is very low (typically 5-10%).',
     keyPoints: [
       'The only essential omega-3 (must come from diet)',
@@ -100,6 +107,7 @@ export const glossaryData = {
     term: 'B Vitamins',
     fullName: 'B-Complex Vitamins',
     category: 'Molecules & Compounds',
+    subcategory: 'Vitamins & Minerals',
     definition: 'A group of eight water-soluble vitamins (B1, B2, B3, B5, B6, B7, B9, B12) that play essential roles in cell metabolism, energy production, and nervous system function.',
     keyPoints: [
       'Work together synergistically in metabolic pathways',
@@ -114,6 +122,7 @@ export const glossaryData = {
     term: 'Vitamin D',
     fullName: 'Vitamin D (Calciferol)',
     category: 'Molecules & Compounds',
+    subcategory: 'Vitamins & Minerals',
     definition: 'A fat-soluble vitamin that functions as a hormone. Essential for calcium absorption, bone health, immune function, and mood regulation. Produced in skin upon sun exposure.',
     keyPoints: [
       'Optimal blood levels are 40-60 ng/mL',
@@ -128,6 +137,7 @@ export const glossaryData = {
     term: 'Resolvins',
     fullName: 'Resolvins',
     category: 'Molecules & Compounds',
+    subcategory: 'Signaling Molecules',
     definition: 'Specialized pro-resolving mediators (SPMs) derived from EPA and DHA that actively resolve inflammation. Unlike anti-inflammatory drugs that suppress inflammation, resolvins help return tissues to homeostasis.',
     keyPoints: [
       'Actively promote the resolution phase of inflammation',
@@ -141,6 +151,7 @@ export const glossaryData = {
     term: 'NMN',
     fullName: 'Nicotinamide Mononucleotide',
     category: 'Molecules & Compounds',
+    subcategory: 'Coenzymes',
     definition: 'A precursor to NAD+ that the body uses to synthesize this critical coenzyme. NMN supplementation is being studied for its potential to boost NAD+ levels and support healthy aging.',
     keyPoints: [
       'Directly converted to NAD+ in cells',
@@ -154,6 +165,7 @@ export const glossaryData = {
     term: 'SCFA',
     fullName: 'Short-Chain Fatty Acids',
     category: 'Molecules & Compounds',
+    subcategory: 'Fatty Acids',
     definition: 'Metabolites produced when gut bacteria ferment dietary fiber. The main SCFAs—acetate, propionate, and butyrate—support gut health, immunity, and metabolic function.',
     keyPoints: [
       'Butyrate is the primary fuel source for colon cells',
@@ -167,6 +179,7 @@ export const glossaryData = {
     term: 'Polyphenols',
     fullName: 'Polyphenols',
     category: 'Molecules & Compounds',
+    subcategory: 'Phytonutrients',
     definition: 'A large family of plant compounds with antioxidant and anti-inflammatory properties. Includes flavonoids, phenolic acids, and stilbenes (like resveratrol).',
     keyPoints: [
       'Over 8,000 identified polyphenols in nature',
@@ -181,6 +194,7 @@ export const glossaryData = {
     term: 'Ketones',
     fullName: 'Ketone Bodies',
     category: 'Molecules & Compounds',
+    subcategory: 'Metabolites',
     definition: 'Alternative fuel molecules produced by the liver from fatty acids during fasting, carbohydrate restriction, or intense exercise. The brain can use ketones for up to 70% of its energy needs.',
     keyPoints: [
       'Three types: BHB, acetoacetate, and acetone',
@@ -194,6 +208,7 @@ export const glossaryData = {
     term: 'Magnesium',
     fullName: 'Magnesium',
     category: 'Molecules & Compounds',
+    subcategory: 'Vitamins & Minerals',
     definition: 'An essential mineral involved in over 300 enzymatic reactions. Critical for energy production, muscle function, nervous system regulation, and bone health.',
     keyPoints: [
       'Up to 50% of people may be deficient',
@@ -210,6 +225,7 @@ export const glossaryData = {
     term: 'Omega-3 Index',
     fullName: 'Omega-3 Index',
     category: 'Biomarkers',
+    subcategory: 'Cardiovascular',
     definition: 'A blood test that measures the percentage of EPA and DHA in red blood cell membranes. Reflects your omega-3 status over the past 2-3 months and is a validated marker of cardiovascular risk.',
     keyPoints: [
       'Optimal range is 8-12%',
@@ -223,6 +239,7 @@ export const glossaryData = {
     term: 'CRP',
     fullName: 'C-Reactive Protein',
     category: 'Biomarkers',
+    subcategory: 'Inflammatory',
     definition: 'A protein produced by the liver in response to inflammation. High-sensitivity CRP (hs-CRP) is used as a marker of chronic low-grade inflammation and cardiovascular disease risk.',
     keyPoints: [
       'Optimal hs-CRP is below 1.0 mg/L',
@@ -236,6 +253,7 @@ export const glossaryData = {
     term: 'HbA1c',
     fullName: 'Hemoglobin A1c (Glycated Hemoglobin)',
     category: 'Biomarkers',
+    subcategory: 'Metabolic',
     definition: 'A blood test that reflects average blood sugar levels over the past 2-3 months. Measures the percentage of hemoglobin proteins that are coated with sugar (glycated).',
     keyPoints: [
       'Normal: below 5.7%, Prediabetes: 5.7-6.4%, Diabetes: 6.5% or higher',
@@ -249,6 +267,7 @@ export const glossaryData = {
     term: 'Homocysteine',
     fullName: 'Homocysteine',
     category: 'Biomarkers',
+    subcategory: 'Cardiovascular',
     definition: 'An amino acid in the blood that, at elevated levels, is associated with increased cardiovascular disease risk and cognitive decline. Levels are influenced by B vitamins (B6, B12, folate) and genetics.',
     keyPoints: [
       'Optimal levels are below 10 µmol/L',
@@ -262,6 +281,7 @@ export const glossaryData = {
     term: 'Ferritin',
     fullName: 'Ferritin',
     category: 'Biomarkers',
+    subcategory: 'Nutritional',
     definition: 'A blood protein that stores iron. Ferritin levels indicate your body\'s iron stores and can help diagnose iron deficiency or iron overload conditions.',
     keyPoints: [
       'Optimal range varies by sex: men 30-300 ng/mL, women 20-200 ng/mL',
@@ -275,6 +295,7 @@ export const glossaryData = {
     term: 'Cortisol',
     fullName: 'Cortisol',
     category: 'Biomarkers',
+    subcategory: 'Hormonal',
     definition: 'The body\'s primary stress hormone, produced by the adrenal glands. Follows a natural daily rhythm (high in morning, low at night) and regulates metabolism, immune response, and blood pressure.',
     keyPoints: [
       'Morning cortisol should be highest, declining throughout the day',
@@ -290,6 +311,7 @@ export const glossaryData = {
     term: 'Inflammation',
     fullName: 'Inflammation',
     category: 'Biological Processes',
+    subcategory: 'Immune Response',
     definition: 'The body\'s protective immune response to harmful stimuli like pathogens, damaged cells, or irritants. Acute inflammation is beneficial and short-lived; chronic inflammation can contribute to many diseases.',
     keyPoints: [
       'Chronic low-grade inflammation underlies many modern diseases',
@@ -303,6 +325,7 @@ export const glossaryData = {
     term: 'Methylation',
     fullName: 'Methylation',
     category: 'Biological Processes',
+    subcategory: 'Cellular',
     definition: 'A fundamental biochemical process where a methyl group (CH3) is added to DNA, proteins, or other molecules. Critical for gene expression, detoxification, neurotransmitter production, and cellular repair.',
     keyPoints: [
       'Requires B vitamins, especially folate, B12, and B6',
@@ -316,6 +339,7 @@ export const glossaryData = {
     term: 'Cellular Respiration',
     fullName: 'Cellular Respiration',
     category: 'Biological Processes',
+    subcategory: 'Energy Metabolism',
     definition: 'The process by which cells break down glucose and other nutrients to produce ATP energy. Occurs primarily in mitochondria and requires oxygen for maximum efficiency.',
     keyPoints: [
       'Produces 36-38 ATP molecules per glucose molecule',
@@ -329,6 +353,7 @@ export const glossaryData = {
     term: 'Oxidative Stress',
     fullName: 'Oxidative Stress',
     category: 'Biological Processes',
+    subcategory: 'Cellular',
     definition: 'An imbalance between free radicals (reactive oxygen species) and antioxidants in the body. Excess free radicals can damage cells, proteins, and DNA, contributing to aging and disease.',
     keyPoints: [
       'Caused by pollution, poor diet, stress, and normal metabolism',
@@ -342,6 +367,7 @@ export const glossaryData = {
     term: 'Insulin Resistance',
     fullName: 'Insulin Resistance',
     category: 'Biological Processes',
+    subcategory: 'Energy Metabolism',
     definition: 'A condition where cells in muscles, fat, and liver don\'t respond well to insulin and can\'t easily take up glucose from blood. The pancreas makes more insulin to compensate, leading to high insulin levels.',
     keyPoints: [
       'Precedes type 2 diabetes by years or decades',
@@ -357,6 +383,7 @@ export const glossaryData = {
     term: 'Mitochondria',
     fullName: 'Mitochondria',
     category: 'Cellular Components',
+    subcategory: 'Organelles',
     definition: 'Often called the "powerhouses of the cell," mitochondria are organelles that generate most of the cell\'s ATP through oxidative phosphorylation. Also involved in cell signaling, differentiation, and death.',
     keyPoints: [
       'Each cell contains hundreds to thousands of mitochondria',
@@ -370,6 +397,7 @@ export const glossaryData = {
     term: 'Electron Transport Chain',
     fullName: 'Electron Transport Chain (ETC)',
     category: 'Cellular Components',
+    subcategory: 'Membrane Systems',
     definition: 'A series of protein complexes in the inner mitochondrial membrane that transfers electrons from nutrients to oxygen, creating a proton gradient used to produce ATP.',
     keyPoints: [
       'CoQ10 is a critical component of the ETC',
@@ -385,6 +413,7 @@ export const glossaryData = {
     term: 'Metabolomics',
     fullName: 'Metabolomics',
     category: 'Fields of Study',
+    subcategory: 'Omics Sciences',
     definition: 'The comprehensive study of small molecule metabolites within cells, tissues, or organisms. Provides a snapshot of physiological status and can reveal biomarkers for disease and health optimization.',
     keyPoints: [
       'Analyzes thousands of metabolites simultaneously',
@@ -398,6 +427,7 @@ export const glossaryData = {
     term: 'Multi-Omics',
     fullName: 'Multi-Omics',
     category: 'Fields of Study',
+    subcategory: 'Omics Sciences',
     definition: 'An integrative approach combining multiple "omics" disciplines (genomics, proteomics, metabolomics, etc.) to gain a comprehensive understanding of biological systems.',
     keyPoints: [
       'Provides more complete picture than any single omics approach',
@@ -411,6 +441,7 @@ export const glossaryData = {
     term: 'Proteomics',
     fullName: 'Proteomics',
     category: 'Fields of Study',
+    subcategory: 'Omics Sciences',
     definition: 'The large-scale study of proteins, including their structures, functions, and interactions. Proteins are the functional molecules that carry out most cellular processes.',
     keyPoints: [
       'Proteins are the functional output of genes',
@@ -424,6 +455,7 @@ export const glossaryData = {
     term: 'Lipidomics',
     fullName: 'Lipidomics',
     category: 'Fields of Study',
+    subcategory: 'Omics Sciences',
     definition: 'The comprehensive study of cellular lipids (fats) including their pathways and networks. Lipids play crucial roles in cell membrane structure, energy storage, and cell signaling.',
     keyPoints: [
       'Identifies thousands of lipid species in biological samples',
@@ -437,6 +469,7 @@ export const glossaryData = {
     term: 'Mass Spectrometry',
     fullName: 'Mass Spectrometry',
     category: 'Fields of Study',
+    subcategory: 'Analytical Methods',
     definition: 'An analytical technique that measures the mass-to-charge ratio of ions. Used to identify and quantify molecules in biological samples with high precision and sensitivity.',
     keyPoints: [
       'Gold standard for metabolomics and proteomics analysis',
@@ -452,6 +485,7 @@ export const glossaryData = {
     term: 'Gut-Brain Axis',
     fullName: 'Gut-Brain Axis',
     category: 'Health Concepts',
+    subcategory: 'Gut Health',
     definition: 'The bidirectional communication network between the gastrointestinal tract and the central nervous system. Involves neural, hormonal, and immune pathways, with the gut microbiome playing a key role.',
     keyPoints: [
       'The vagus nerve is a primary communication pathway',
@@ -465,6 +499,7 @@ export const glossaryData = {
     term: 'Microbiome',
     fullName: 'Gut Microbiome',
     category: 'Health Concepts',
+    subcategory: 'Gut Health',
     definition: 'The community of trillions of microorganisms (bacteria, viruses, fungi) living in the digestive tract. These microbes influence digestion, immunity, metabolism, and even mental health.',
     keyPoints: [
       'Diversity is a key marker of microbiome health',
@@ -479,6 +514,7 @@ export const glossaryData = {
     term: 'Circadian Rhythm',
     fullName: 'Circadian Rhythm',
     category: 'Health Concepts',
+    subcategory: 'Longevity & Aging',
     definition: 'The body\'s internal 24-hour clock that regulates sleep-wake cycles, hormone release, eating habits, and other important bodily functions. Controlled by the suprachiasmatic nucleus in the brain.',
     keyPoints: [
       'Light exposure is the primary regulator',
@@ -492,6 +528,7 @@ export const glossaryData = {
     term: 'Metabolic Health',
     fullName: 'Metabolic Health',
     category: 'Health Concepts',
+    subcategory: 'Metabolic Function',
     definition: 'A state where the body efficiently processes and uses energy from food. Characterized by optimal blood sugar, blood pressure, cholesterol, waist circumference, and triglycerides without medication.',
     keyPoints: [
       'Only about 12% of American adults are metabolically healthy',
@@ -505,6 +542,7 @@ export const glossaryData = {
     term: 'Antioxidant',
     fullName: 'Antioxidant',
     category: 'Health Concepts',
+    subcategory: 'Longevity & Aging',
     definition: 'Molecules that neutralize free radicals and prevent oxidative damage to cells. Include vitamins (C, E), minerals (selenium, zinc), and phytonutrients (polyphenols, carotenoids).',
     keyPoints: [
       'Work best as part of a varied, whole-food diet',
@@ -519,6 +557,7 @@ export const glossaryData = {
     term: 'Probiotics',
     fullName: 'Probiotics',
     category: 'Health Concepts',
+    subcategory: 'Gut Health',
     definition: 'Live beneficial bacteria and yeasts that support gut health when consumed in adequate amounts. Different strains provide different benefits, from digestive support to immune modulation.',
     keyPoints: [
       'Strain-specific benefits (not all probiotics are equal)',
@@ -533,6 +572,7 @@ export const glossaryData = {
     term: 'Prebiotics',
     fullName: 'Prebiotics',
     category: 'Health Concepts',
+    subcategory: 'Gut Health',
     definition: 'Non-digestible fibers and compounds that feed beneficial gut bacteria. Unlike probiotics (live bacteria), prebiotics are the "food" that helps good bacteria thrive.',
     keyPoints: [
       'Include inulin, FOS, and resistant starch',
@@ -547,6 +587,7 @@ export const glossaryData = {
     term: 'Biomarker',
     fullName: 'Biomarker',
     category: 'Health Concepts',
+    subcategory: 'Testing & Measurement',
     definition: 'A measurable indicator of a biological state or condition. Biomarkers can be molecules in blood, genetic variants, imaging findings, or physiological measurements used to assess health status.',
     keyPoints: [
       'Used for diagnosis, prognosis, and treatment monitoring',
@@ -562,6 +603,7 @@ export const glossaryData = {
     term: 'MTHFR',
     fullName: 'Methylenetetrahydrofolate Reductase',
     category: 'Genetics',
+    subcategory: 'Gene Variants',
     definition: 'A gene that provides instructions for making an enzyme crucial for processing folate and regulating homocysteine levels. Common variants (C677T, A1298C) can reduce enzyme efficiency.',
     keyPoints: [
       'About 40% of people have at least one variant',
@@ -575,6 +617,7 @@ export const glossaryData = {
     term: 'Sirtuins',
     fullName: 'Sirtuins (SIRT1-7)',
     category: 'Genetics',
+    subcategory: 'Longevity Genes',
     definition: 'A family of seven proteins that regulate cellular health by controlling gene expression, DNA repair, metabolism, and aging. Often called "longevity genes" due to their role in lifespan extension.',
     keyPoints: [
       'Activated by NAD+, caloric restriction, and certain compounds',
@@ -588,6 +631,7 @@ export const glossaryData = {
     term: 'Epigenetics',
     fullName: 'Epigenetics',
     category: 'Genetics',
+    subcategory: 'Gene Expression',
     definition: 'The study of changes in gene expression that don\'t involve alterations to the DNA sequence. These changes can be influenced by environment, lifestyle, and can sometimes be passed to offspring.',
     keyPoints: [
       'Diet, stress, and toxins can modify epigenetic marks',
@@ -609,3 +653,46 @@ export const glossaryCategories = [
   'Health Concepts',
   'Genetics'
 ];
+
+// Subcategories for each category
+export const glossarySubcategories = {
+  'Molecules & Compounds': [
+    'Coenzymes',
+    'Fatty Acids',
+    'Vitamins & Minerals',
+    'Signaling Molecules',
+    'Phytonutrients',
+    'Metabolites'
+  ],
+  'Biomarkers': [
+    'Cardiovascular',
+    'Inflammatory',
+    'Metabolic',
+    'Nutritional',
+    'Hormonal'
+  ],
+  'Biological Processes': [
+    'Immune Response',
+    'Cellular',
+    'Energy Metabolism'
+  ],
+  'Cellular Components': [
+    'Organelles',
+    'Membrane Systems'
+  ],
+  'Fields of Study': [
+    'Omics Sciences',
+    'Analytical Methods'
+  ],
+  'Health Concepts': [
+    'Gut Health',
+    'Longevity & Aging',
+    'Metabolic Function',
+    'Testing & Measurement'
+  ],
+  'Genetics': [
+    'Gene Variants',
+    'Longevity Genes',
+    'Gene Expression'
+  ]
+};

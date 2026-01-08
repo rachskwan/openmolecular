@@ -1,21 +1,34 @@
 import { useState } from 'react';
-import { ArrowLeft, BookOpen, Search, ChevronDown } from 'lucide-react';
-import { glossaryData, glossaryCategories } from '../../data/glossary';
+import { ArrowLeft, BookOpen, Search, ChevronDown, ChevronRight } from 'lucide-react';
+import { glossaryData, glossaryCategories, glossarySubcategories } from '../../data/glossary';
 
 export default function GlossaryPage({ onBack, onGlossaryClick }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedSubcategory, setSelectedSubcategory] = useState('All');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
 
   const glossaryTerms = Object.values(glossaryData);
+
+  // Get subcategories for the selected category
+  const availableSubcategories = selectedCategory !== 'All' && glossarySubcategories[selectedCategory]
+    ? ['All', ...glossarySubcategories[selectedCategory]]
+    : [];
 
   const filteredTerms = glossaryTerms.filter(term => {
     const matchesSearch = term.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
       term.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       term.definition.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || term.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const matchesSubcategory = selectedSubcategory === 'All' || term.subcategory === selectedSubcategory;
+    return matchesSearch && matchesCategory && matchesSubcategory;
   });
+
+  // Reset subcategory when category changes
+  const handleCategoryChange = (cat) => {
+    setSelectedCategory(cat);
+    setSelectedSubcategory('All');
+  };
 
   const groupedTerms = filteredTerms.reduce((acc, term) => {
     const firstLetter = term.term[0].toUpperCase();
@@ -58,42 +71,71 @@ export default function GlossaryPage({ onBack, onGlossaryClick }) {
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Search and Filters */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8">
-          <div className="flex flex-col lg:flex-row gap-4">
-            {/* Search */}
-            <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Search terms, definitions..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-lg"
-              />
-            </div>
+          {/* Search - Full width on top */}
+          <div className="relative mb-4">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Search terms, definitions..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-lg"
+            />
+          </div>
 
-            {/* Category Filter */}
-            <div className="flex gap-2 overflow-x-auto pb-2 lg:pb-0">
+          {/* Category Filter */}
+          <div className="mb-3">
+            <p className="text-xs font-medium text-slate-500 mb-2 uppercase tracking-wide">Categories</p>
+            <div className="flex gap-2 overflow-x-auto pb-2">
               {glossaryCategories.map(cat => (
                 <button
                   key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-3 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
+                  onClick={() => handleCategoryChange(cat)}
+                  className={`px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-colors flex items-center gap-1 ${
                     selectedCategory === cat
                       ? 'bg-teal-100 text-teal-700'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}
                 >
                   {cat}
+                  {cat !== 'All' && glossarySubcategories[cat] && (
+                    <ChevronRight className={`w-3.5 h-3.5 transition-transform ${selectedCategory === cat ? 'rotate-90' : ''}`} />
+                  )}
                 </button>
               ))}
             </div>
           </div>
+
+          {/* Subcategory Filter - Only show when a category with subcategories is selected */}
+          {availableSubcategories.length > 0 && (
+            <div className="mb-3 pl-4 border-l-2 border-teal-200">
+              <p className="text-xs font-medium text-slate-500 mb-2 uppercase tracking-wide">
+                {selectedCategory} Types
+              </p>
+              <div className="flex gap-2 overflow-x-auto pb-2">
+                {availableSubcategories.map(subcat => (
+                  <button
+                    key={subcat}
+                    onClick={() => setSelectedSubcategory(subcat)}
+                    className={`px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+                      selectedSubcategory === subcat
+                        ? 'bg-teal-600 text-white'
+                        : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200'
+                    }`}
+                  >
+                    {subcat}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Results count */}
           <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
             <p className="text-sm text-slate-500">
               Showing {filteredTerms.length} of {glossaryTerms.length} terms
               {selectedCategory !== 'All' && ` in ${selectedCategory}`}
+              {selectedSubcategory !== 'All' && ` → ${selectedSubcategory}`}
               {searchTerm && ` matching "${searchTerm}"`}
             </p>
             <div className="flex gap-2">
@@ -121,8 +163,8 @@ export default function GlossaryPage({ onBack, onGlossaryClick }) {
         {filteredTerms.length > 0 ? (
           <div className="space-y-8">
             {Object.keys(groupedTerms).sort().map(letter => (
-              <div key={letter}>
-                <div className="flex items-center gap-4 mb-4">
+              <div key={letter} data-letter={letter} id={`letter-${letter}`}>
+                <div className="flex items-center gap-4 mb-4 scroll-mt-24">
                   <span className="w-10 h-10 bg-teal-600 text-white rounded-xl flex items-center justify-center font-bold text-lg">
                     {letter}
                   </span>
@@ -210,9 +252,12 @@ export default function GlossaryPage({ onBack, onGlossaryClick }) {
             <button
               key={letter}
               onClick={() => {
-                document.querySelector(`[data-letter="${letter}"]`)?.scrollIntoView({ behavior: 'smooth' });
+                const element = document.getElementById(`letter-${letter}`);
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
               }}
-              className="w-8 h-8 rounded-full text-sm font-medium text-slate-600 hover:bg-teal-100 hover:text-teal-700 transition-colors"
+              className="w-8 h-8 rounded-full text-sm font-medium text-slate-600 hover:bg-teal-100 hover:text-teal-700 transition-colors flex items-center justify-center"
             >
               {letter}
             </button>
