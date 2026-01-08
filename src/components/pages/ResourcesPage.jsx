@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BookOpen, ChevronRight, HelpCircle, Globe, Mail, CheckCircle, Sparkles } from 'lucide-react';
+import { BookOpen, ChevronRight, HelpCircle, Globe, Mail, CheckCircle, Sparkles, FlaskConical } from 'lucide-react';
 import { glossaryData } from '../../data/glossary';
 
 export default function ResourcesPage({ onNavigate, onGlossaryClick }) {
@@ -56,18 +56,18 @@ export default function ResourcesPage({ onNavigate, onGlossaryClick }) {
           </span>
         </button>
 
-        {/* FAQs Card */}
+        {/* Submit Research Card */}
         <button
-          onClick={() => document.getElementById('faqs-section')?.scrollIntoView({ behavior: 'smooth' })}
-          className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 text-left hover:shadow-md transition-shadow"
+          onClick={() => onNavigate('submit-research')}
+          className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl p-6 text-white text-left hover:shadow-lg transition-shadow"
         >
-          <HelpCircle className="w-10 h-10 text-blue-600 mb-4" />
-          <h3 className="text-xl font-semibold text-slate-900 mb-2">FAQs</h3>
-          <p className="text-slate-600 mb-4 text-sm">
-            Common questions about metabolomics and biomarkers
+          <FlaskConical className="w-10 h-10 mb-4" />
+          <h3 className="text-xl font-semibold mb-2">Submit Research</h3>
+          <p className="text-amber-100 mb-4 text-sm">
+            Collaborate with us on articles or help create learning modules
           </p>
-          <span className="flex items-center gap-2 text-sm font-medium text-teal-600">
-            View FAQs <ChevronRight className="w-4 h-4" />
+          <span className="flex items-center gap-2 text-sm font-medium">
+            Get Started <ChevronRight className="w-4 h-4" />
           </span>
         </button>
 
