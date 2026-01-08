@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { ArrowLeft, BookOpen, Search, ChevronDown, ChevronRight } from 'lucide-react';
-import { glossaryData, glossaryCategories, glossarySubcategories } from '../../data/glossary';
+import { ArrowLeft, BookOpen, Search, ChevronDown, ChevronRight, Loader2 } from 'lucide-react';
+import { glossaryCategories, glossarySubcategories } from '../../data/glossary';
+import { useGlossary } from '../../hooks/useGlossary';
 
 export default function GlossaryPage({ onBack, onGlossaryClick }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -8,6 +9,7 @@ export default function GlossaryPage({ onBack, onGlossaryClick }) {
   const [selectedSubcategory, setSelectedSubcategory] = useState('All');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
 
+  const { glossaryData, loading } = useGlossary();
   const glossaryTerms = Object.values(glossaryData);
 
   // Get subcategories for the selected category

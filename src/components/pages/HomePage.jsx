@@ -37,7 +37,7 @@ const userQuotes = [
   { quote: "Tracked my Omega-3 index from 4% to 10%", user: "fatty_acid_fan", time: "1d ago" },
   { quote: "The peptide comparisons saved me months of research", user: "peptide_pioneer", time: "2d ago" },
 ];
-import { glossaryData } from '../../data/glossary';
+import { useGlossary } from '../../hooks/useGlossary';
 import { communityThreads } from '../../data/community';
 import { interactives } from '../../data/interactives';
 import { caseStudies } from '../../data/caseStudies';
@@ -156,6 +156,8 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
 
   // Fetch articles from Supabase
   const { articles, loading: articlesLoading } = useArticles();
+  // Fetch glossary from Supabase
+  const { glossaryData } = useGlossary();
 
   const featuredArticles = articles.filter(a => a.featured).slice(0, 3);
   const moleculeOfDay = glossaryData['NAD+'];

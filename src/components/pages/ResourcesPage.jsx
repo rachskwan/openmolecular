@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { BookOpen, ChevronRight, HelpCircle, Globe, Mail, CheckCircle, Sparkles, FlaskConical } from 'lucide-react';
-import { glossaryData } from '../../data/glossary';
+import { useGlossary } from '../../hooks/useGlossary';
 
 export default function ResourcesPage({ onNavigate, onGlossaryClick }) {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+
+  const { glossaryData } = useGlossary();
 
   const handleSubscribe = (e) => {
     e.preventDefault();
