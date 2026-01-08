@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { jsPDF } from 'jspdf';
-import { User, Bookmark, FileText, Beaker, BarChart3, Lightbulb, Award, Clock, ChevronRight, PlayCircle, Download, Share2, CheckCircle, Users, Pencil, X, Save, Camera, Trash2, Zap, Flame, Target, Star, Heart } from 'lucide-react';
+import { User, Bookmark, FileText, Beaker, BarChart3, Award, Clock, ChevronRight, PlayCircle, Download, Share2, CheckCircle, Users, Pencil, X, Save, Camera, Trash2, Zap, Flame, Target, Star, Heart, MessageCircle, FolderOpen } from 'lucide-react';
 import { trackDetails } from '../../data/modules';
 import { getUserByUsername } from '../../data/users';
 
@@ -114,15 +114,14 @@ const generateCertificatePDF = (track, userName) => {
 };
 
 const tabs = [
-  { id: 'articles', label: 'Articles', icon: FileText },
+  { id: 'content', label: 'Saved Content', icon: FolderOpen },
   { id: 'molecules', label: 'Glossary', icon: Beaker },
   { id: 'modules', label: 'Modules', icon: Award },
-  { id: 'comparisons', label: 'Comparisons', icon: BarChart3 },
-  { id: 'advice', label: 'Saved Tips', icon: Lightbulb },
+  { id: 'discussions', label: 'Discussions', icon: MessageCircle },
 ];
 
 export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, learningProgress = {}, getTrackProgress, following = [], onUserClick, userProfile = {}, updateUserProfile }) {
-  const [activeTab, setActiveTab] = useState('articles');
+  const [activeTab, setActiveTab] = useState('content');
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [editName, setEditName] = useState(userProfile.name || '');
   const [editBio, setEditBio] = useState(userProfile.bio || '');
@@ -435,7 +434,15 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
           <div className="flex gap-1 p-2 overflow-x-auto">
             {tabs.map(tab => {
               const Icon = tab.icon;
-              const count = savedItems[tab.id]?.length || 0;
+              // Combine articles and comparisons for 'content' tab, map 'discussions' to 'advice'
+              let count = 0;
+              if (tab.id === 'content') {
+                count = (savedItems.articles?.length || 0) + (savedItems.comparisons?.length || 0);
+              } else if (tab.id === 'discussions') {
+                count = savedItems.advice?.length || 0;
+              } else {
+                count = savedItems[tab.id]?.length || 0;
+              }
               return (
                 <button
                   key={tab.id}
@@ -464,30 +471,41 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
         </div>
 
         <div className="p-6">
-          {savedItems[activeTab]?.length === 0 ? (
-            <div className="text-center py-12">
-              <Bookmark className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-slate-900 mb-2">No saved items yet</h3>
-              <p className="text-slate-600 mb-4">
-                Start exploring and save content you want to revisit later
-              </p>
-              <button
-                onClick={() => onNavigate('explore')}
-                className="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm font-medium hover:bg-teal-700 transition-colors"
-              >
-                Browse Content
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {savedItems[activeTab].map((item, idx) => (
-                <div
-                  key={idx}
-                  className="p-4 rounded-lg border border-slate-200 hover:shadow-md transition-shadow cursor-pointer"
-                  onClick={() => {
-                    if (activeTab === 'molecules') {
-                      onGlossaryClick(item.term);
-                    }
+          {(() => {
+            // Get items for current tab
+            let currentItems = [];
+            if (activeTab === 'content') {
+              currentItems = [...(savedItems.articles || []), ...(savedItems.comparisons || [])];
+            } else if (activeTab === 'discussions') {
+              currentItems = savedItems.advice || [];
+            } else {
+              currentItems = savedItems[activeTab] || [];
+            }
+
+            return currentItems.length === 0 ? (
+              <div className="text-center py-12">
+                <Bookmark className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-slate-900 mb-2">No saved items yet</h3>
+                <p className="text-slate-600 mb-4">
+                  Start exploring and save content you want to revisit later
+                </p>
+                <button
+                  onClick={() => onNavigate('explore')}
+                  className="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm font-medium hover:bg-teal-700 transition-colors"
+                >
+                  Browse Content
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {currentItems.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="p-4 rounded-lg border border-slate-200 hover:shadow-md transition-shadow cursor-pointer"
+                    onClick={() => {
+                      if (activeTab === 'molecules') {
+                        onGlossaryClick(item.term);
+                      }
                   }}
                 >
                   <div className="flex items-start justify-between mb-2">
@@ -503,9 +521,10 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
                     <p className="text-sm text-slate-500 mt-1">{item.fullName}</p>
                   )}
                 </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            );
+          })()}
         </div>
       </div>
 
