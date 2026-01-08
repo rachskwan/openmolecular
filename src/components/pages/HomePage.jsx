@@ -455,40 +455,6 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
           </button>
         </div>
 
-        {/* Content Type Tabs */}
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-          <button
-            onClick={() => onNavigate('explore')}
-            className="px-3 py-1.5 bg-teal-100 text-teal-700 rounded-full text-xs font-medium hover:bg-teal-200 transition-colors"
-          >
-            All
-          </button>
-          <button
-            onClick={() => onNavigate('explore', 'Articles')}
-            className="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-slate-200 transition-colors"
-          >
-            <FileText className="w-3 h-3" /> Articles
-          </button>
-          <button
-            onClick={() => onNavigate('explore', 'Interactives')}
-            className="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-slate-200 transition-colors"
-          >
-            <Gamepad2 className="w-3 h-3" /> Interactives
-          </button>
-          <button
-            onClick={() => onNavigate('explore', 'Case Studies')}
-            className="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-slate-200 transition-colors"
-          >
-            <Beaker className="w-3 h-3" /> Case Studies
-          </button>
-          <button
-            onClick={() => onNavigate('explore', 'Comparisons')}
-            className="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-slate-200 transition-colors"
-          >
-            <BarChart3 className="w-3 h-3" /> Comparisons
-          </button>
-        </div>
-
         {/* Bento Box Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 auto-rows-[140px] gap-4">
           {/* Featured Article - Large (3x2) */}
@@ -533,10 +499,10 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
             <button
               key={`interactive-${interactive.id}`}
               onClick={() => onNavigate('interactive', interactive.id)}
-              className="col-span-1 row-span-2 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all text-left p-4 flex flex-col justify-between group"
+              className="col-span-1 row-span-2 bg-gradient-to-br from-amber-100 via-orange-100 to-amber-200 border border-amber-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:border-amber-300 transition-all text-left p-4 flex flex-col justify-between group"
             >
               <div>
-                <span className="px-2 py-1 bg-white/20 backdrop-blur-sm text-white rounded text-xs font-medium">
+                <span className="px-2 py-1 bg-amber-500/20 text-amber-700 rounded text-xs font-medium">
                   {interactive.type}
                 </span>
               </div>
@@ -544,8 +510,8 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
                 <span className="text-6xl group-hover:scale-110 transition-transform inline-block">{interactive.icon}</span>
               </div>
               <div>
-                <h3 className="font-semibold text-white text-sm mb-1">{interactive.title}</h3>
-                <div className="flex items-center gap-1 text-xs text-white/80">
+                <h3 className="font-semibold text-amber-900 text-sm mb-1">{interactive.title}</h3>
+                <div className="flex items-center gap-1 text-xs text-amber-700">
                   <Users className="w-3 h-3" /> {interactive.plays?.toLocaleString() || '0'} plays
                 </div>
               </div>
@@ -557,20 +523,20 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
             <button
               key={`casestudy-${study.id}`}
               onClick={() => onNavigate('casestudy', study.id)}
-              className="col-span-2 row-span-2 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all text-left p-5 flex flex-col justify-between group"
+              className="col-span-2 row-span-2 bg-gradient-to-br from-violet-100 via-purple-100 to-indigo-100 border border-purple-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:border-purple-300 transition-all text-left p-5 flex flex-col justify-between group"
             >
               <div className="flex items-center justify-between">
-                <span className="px-2 py-1 bg-white/20 backdrop-blur-sm text-white rounded text-xs font-medium">
+                <span className="px-2 py-1 bg-purple-500/20 text-purple-700 rounded text-xs font-medium">
                   Case Study
                 </span>
-                <Beaker className="w-6 h-6 text-white/60" />
+                <Beaker className="w-6 h-6 text-purple-400" />
               </div>
               <div>
-                <h3 className="font-bold text-white text-lg mb-2">{study.title}</h3>
-                <p className="text-sm text-white/70 line-clamp-2 mb-3">{study.summary}</p>
-                <div className="flex items-center gap-2 text-xs text-white/60">
-                  <span className="px-2 py-1 bg-white/10 rounded">{study.client}</span>
-                  <span className="px-2 py-1 bg-white/10 rounded">{study.industry}</span>
+                <h3 className="font-bold text-purple-900 text-lg mb-2">{study.title}</h3>
+                <p className="text-sm text-purple-700 line-clamp-2 mb-3">{study.summary}</p>
+                <div className="flex items-center gap-2 text-xs text-purple-600">
+                  <span className="px-2 py-1 bg-purple-500/10 rounded">{study.client}</span>
+                  <span className="px-2 py-1 bg-purple-500/10 rounded">{study.industry}</span>
                 </div>
               </div>
             </button>
@@ -581,15 +547,15 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
             <button
               key={`video-${video.id}`}
               onClick={() => onNavigate('video', video.id)}
-              className="col-span-2 row-span-1 bg-gradient-to-r from-rose-500 to-pink-600 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all text-left p-4 flex items-center gap-4 group"
+              className="col-span-2 row-span-1 bg-gradient-to-r from-rose-100 via-pink-100 to-rose-100 border border-rose-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:border-rose-300 transition-all text-left p-4 flex items-center gap-4 group"
             >
-              <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-white/30 transition-colors">
-                <Play className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 bg-rose-500/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-rose-500/30 transition-colors">
+                <Play className="w-8 h-8 text-rose-600" />
               </div>
               <div className="flex-1 min-w-0">
-                <span className="px-2 py-0.5 bg-white/20 text-white rounded text-xs font-medium">Video • {video.duration}</span>
-                <h3 className="font-semibold text-white mt-1 line-clamp-1">{video.title}</h3>
-                <div className="text-xs text-white/70 mt-1">{video.instructor}</div>
+                <span className="px-2 py-0.5 bg-rose-500/20 text-rose-700 rounded text-xs font-medium">Video • {video.duration}</span>
+                <h3 className="font-semibold text-rose-900 mt-1 line-clamp-1">{video.title}</h3>
+                <div className="text-xs text-rose-600 mt-1">{video.instructor}</div>
               </div>
             </button>
           ))}
@@ -599,17 +565,17 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
             <button
               key={`comparison-${comparison.id}`}
               onClick={() => onNavigate('comparison', comparison.id)}
-              className="col-span-2 row-span-1 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all text-left p-4 flex items-center gap-4 group"
+              className="col-span-2 row-span-1 bg-gradient-to-r from-sky-100 via-cyan-100 to-sky-100 border border-sky-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:border-sky-300 transition-all text-left p-4 flex items-center gap-4 group"
             >
-              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                <BarChart3 className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-sky-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                <BarChart3 className="w-6 h-6 text-sky-600" />
               </div>
               <div className="flex-1 min-w-0">
-                <span className="px-2 py-0.5 bg-white/20 text-white rounded text-xs font-medium">Comparison</span>
-                <h3 className="font-semibold text-white mt-1 text-sm line-clamp-1">{comparison.title}</h3>
+                <span className="px-2 py-0.5 bg-sky-500/20 text-sky-700 rounded text-xs font-medium">Comparison</span>
+                <h3 className="font-semibold text-sky-900 mt-1 text-sm line-clamp-1">{comparison.title}</h3>
                 <div className="flex gap-2 mt-1">
                   {comparison.products.slice(0, 2).map((product, idx) => (
-                    <span key={idx} className="text-xs text-white/70">{product}{idx === 0 && ' vs'}</span>
+                    <span key={idx} className="text-xs text-sky-600">{product}{idx === 0 && ' vs'}</span>
                   ))}
                 </div>
               </div>
@@ -645,13 +611,13 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
             <button
               key={`interactive-tool-${interactive.id}`}
               onClick={() => onNavigate('interactive', interactive.id)}
-              className="col-span-2 row-span-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all text-left p-4 flex items-center gap-4 group"
+              className="col-span-2 row-span-1 bg-gradient-to-r from-emerald-100 via-teal-100 to-emerald-100 border border-emerald-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:border-emerald-300 transition-all text-left p-4 flex items-center gap-4 group"
             >
               <div className="text-4xl group-hover:scale-110 transition-transform">{interactive.icon}</div>
               <div className="flex-1 min-w-0">
-                <span className="px-2 py-0.5 bg-white/20 text-white rounded text-xs font-medium">Tool</span>
-                <h3 className="font-semibold text-white mt-1 text-sm line-clamp-1">{interactive.title}</h3>
-                <div className="flex items-center gap-1 text-xs text-white/70 mt-1">
+                <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-700 rounded text-xs font-medium">Tool</span>
+                <h3 className="font-semibold text-emerald-900 mt-1 text-sm line-clamp-1">{interactive.title}</h3>
+                <div className="flex items-center gap-1 text-xs text-emerald-600 mt-1">
                   <Clock className="w-3 h-3" /> {interactive.duration}
                 </div>
               </div>
