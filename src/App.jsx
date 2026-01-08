@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { supabase } from './lib/supabase';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import HomePage from './components/pages/HomePage';
@@ -34,16 +35,47 @@ function App() {
   const [authModalMode, setAuthModalMode] = useState('login');
   const [consultationModal, setConsultationModal] = useState({ show: false, type: 'consultation' });
 
-  // Authentication state - persisted to localStorage
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    const saved = localStorage.getItem('authUser');
-    return saved ? JSON.parse(saved).isLoggedIn : false;
-  });
+  // Authentication state
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authUser, setAuthUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
-  const [authUser, setAuthUser] = useState(() => {
-    const saved = localStorage.getItem('authUser');
-    return saved ? JSON.parse(saved) : null;
-  });
+  // Initialize auth state from Supabase session
+  useEffect(() => {
+    // Check current session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setAuthUser({
+          id: session.user.id,
+          name: session.user.user_metadata?.name || session.user.email?.split('@')[0],
+          email: session.user.email,
+          username: session.user.user_metadata?.username || session.user.email?.split('@')[0],
+          isLoggedIn: true,
+        });
+        setIsLoggedIn(true);
+      }
+      setAuthLoading(false);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setAuthUser({
+          id: session.user.id,
+          name: session.user.user_metadata?.name || session.user.email?.split('@')[0],
+          email: session.user.email,
+          username: session.user.user_metadata?.username || session.user.email?.split('@')[0],
+          isLoggedIn: true,
+        });
+        setIsLoggedIn(true);
+      } else {
+        setAuthUser(null);
+        setIsLoggedIn(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
   const [viewingUserProfile, setViewingUserProfile] = useState(null);
   const [viewingGlossaryTerm, setViewingGlossaryTerm] = useState(null);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
@@ -148,13 +180,6 @@ function App() {
     localStorage.setItem('userProfile', JSON.stringify(userProfile));
   }, [userProfile]);
 
-  // Persist auth user to localStorage
-  useEffect(() => {
-    if (authUser) {
-      localStorage.setItem('authUser', JSON.stringify(authUser));
-    }
-  }, [authUser]);
-
   // Handle user authentication
   const handleAuth = (userData) => {
     setAuthUser(userData);
@@ -169,11 +194,11 @@ function App() {
   };
 
   // Handle logout
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (confirm('Are you sure you want to log out?')) {
+      await supabase.auth.signOut();
       setIsLoggedIn(false);
       setAuthUser(null);
-      localStorage.removeItem('authUser');
     }
   };
 

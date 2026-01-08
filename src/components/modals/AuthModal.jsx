@@ -1,11 +1,22 @@
-import { useState } from 'react';
-import { X, Mail, Lock, User, Eye, EyeOff, ArrowRight, Check } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { X, Mail, Lock, User, Eye, EyeOff, ArrowRight, Check, AlertCircle } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
 
 export default function AuthModal({ isOpen, onClose, onAuth, initialMode = 'login' }) {
   const [mode, setMode] = useState(initialMode);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [authError, setAuthError] = useState(null);
+
+  // Reset mode when modal opens with different initialMode
+  useEffect(() => {
+    if (isOpen) {
+      setMode(initialMode);
+      setAuthError(null);
+      setErrors({});
+    }
+  }, [isOpen, initialMode]);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -58,22 +69,64 @@ export default function AuthModal({ isOpen, onClose, onAuth, initialMode = 'logi
     if (!validateForm()) return;
 
     setIsLoading(true);
+    setAuthError(null);
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 800));
+    try {
+      if (mode === 'signup') {
+        // Sign up with Supabase
+        const { data, error } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+          options: {
+            data: {
+              name: formData.name,
+              username: formData.username,
+            }
+          }
+        });
 
-    // For demo purposes, store user data locally
-    const userData = {
-      name: formData.name || formData.email.split('@')[0],
-      email: formData.email,
-      username: formData.username || formData.email.split('@')[0],
-      isLoggedIn: true,
-      createdAt: new Date().toISOString(),
-    };
+        if (error) throw error;
 
-    onAuth(userData);
-    setIsLoading(false);
-    onClose();
+        if (data.user) {
+          const userData = {
+            id: data.user.id,
+            name: formData.name,
+            email: formData.email,
+            username: formData.username,
+            isLoggedIn: true,
+            createdAt: new Date().toISOString(),
+          };
+          onAuth(userData);
+          onClose();
+        }
+      } else {
+        // Sign in with Supabase
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: formData.email,
+          password: formData.password,
+        });
+
+        if (error) throw error;
+
+        if (data.user) {
+          const userData = {
+            id: data.user.id,
+            name: data.user.user_metadata?.name || formData.email.split('@')[0],
+            email: data.user.email,
+            username: data.user.user_metadata?.username || formData.email.split('@')[0],
+            isLoggedIn: true,
+            createdAt: data.user.created_at,
+          };
+          onAuth(userData);
+          onClose();
+        }
+      }
+    } catch (error) {
+      console.error('Auth error:', error);
+      setAuthError(error.message || 'An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (field, value) => {
@@ -86,6 +139,7 @@ export default function AuthModal({ isOpen, onClose, onAuth, initialMode = 'logi
   const switchMode = () => {
     setMode(mode === 'login' ? 'signup' : 'login');
     setErrors({});
+    setAuthError(null);
   };
 
   if (!isOpen) return null;
@@ -127,6 +181,14 @@ export default function AuthModal({ isOpen, onClose, onAuth, initialMode = 'logi
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {/* Auth Error Display */}
+          {authError && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+              <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-red-700">{authError}</p>
+            </div>
+          )}
+
           {mode === 'signup' && (
             <>
               {/* Name Field */}
