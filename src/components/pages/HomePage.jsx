@@ -160,48 +160,66 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
   return (
     <div>
       {/* Hero Section */}
-      <section id="hero" className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900 text-white overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <defs>
-              <pattern id="molecular" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                <circle cx="10" cy="10" r="1" fill="currentColor" />
-                <circle cx="5" cy="5" r="0.5" fill="currentColor" />
-                <line x1="5" y1="5" x2="10" y2="10" stroke="currentColor" strokeWidth="0.3" />
-              </pattern>
-            </defs>
-            <rect width="100" height="100" fill="url(#molecular)" />
-          </svg>
+      <section id="hero" className="relative bg-slate-950 text-white overflow-hidden">
+        {/* Gradient Orbs */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-teal-500/30 rounded-full blur-3xl" />
+          <div className="absolute top-20 -left-20 w-60 h-60 bg-emerald-500/20 rounded-full blur-3xl" />
+          <div className="absolute -bottom-20 left-1/2 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+        {/* Grid Pattern Overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px]" />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 sm:py-28">
           <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-3xl sm:text-5xl font-bold mb-6">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm text-teal-300 mb-8 border border-white/10">
+              <span className="w-2 h-2 bg-teal-400 rounded-full animate-pulse" />
+              Explore metabolomics education
+            </div>
+
+            <h1 className="text-4xl sm:text-6xl font-bold mb-6 tracking-tight">
               Learn how molecular science{' '}
-              <span className="bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-teal-400 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">
                 connects to your health
               </span>
             </h1>
-            <p className="text-lg sm:text-xl text-slate-300 mb-8">
+            <p className="text-lg sm:text-xl text-slate-400 mb-10 max-w-2xl mx-auto">
               Explore the fascinating world of metabolomics, biomarkers, and molecular pathways.
               Understand what your body is really telling you.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={onSearchClick}
-                className="flex items-center justify-center gap-2 px-6 py-3 bg-teal-500 hover:bg-teal-600 rounded-lg font-medium transition-colors"
+                className="flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 rounded-xl font-semibold transition-all shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40"
               >
                 <Search className="w-5 h-5" />
                 Try Smart Search
               </button>
               <button
                 onClick={onQuizClick}
-                className="flex items-center justify-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg font-medium transition-colors"
+                className="flex items-center justify-center gap-2 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-xl font-semibold transition-all backdrop-blur-sm"
               >
                 <Play className="w-5 h-5" />
                 Take the Quiz
               </button>
+            </div>
+
+            {/* Stats */}
+            <div className="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto">
+              <div>
+                <div className="text-2xl sm:text-3xl font-bold text-white">60+</div>
+                <div className="text-sm text-slate-500">Glossary Terms</div>
+              </div>
+              <div>
+                <div className="text-2xl sm:text-3xl font-bold text-white">6</div>
+                <div className="text-sm text-slate-500">Learning Tracks</div>
+              </div>
+              <div>
+                <div className="text-2xl sm:text-3xl font-bold text-white">50+</div>
+                <div className="text-sm text-slate-500">Articles</div>
+              </div>
             </div>
           </div>
         </div>
