@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Clock, BookOpen, Star, Lock, ChevronRight, ChevronLeft, FileText, Beaker, BarChart3, Gamepad2, Users } from 'lucide-react';
 import { tracks } from '../../data/modules';
-import { articles } from '../../data/articles';
+import { useArticles } from '../../hooks/useArticles';
 import { caseStudies } from '../../data/caseStudies';
 import { productComparisons } from '../../data/comparisons';
 import { interactives } from '../../data/interactives';
@@ -26,6 +26,9 @@ export default function ExplorePage({ onNavigate, toggleSaveItem, isItemSaved, i
   const [activeCategory, setActiveCategory] = useState('all');
   const [activeLevel, setActiveLevel] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Fetch articles from Supabase
+  const { articles, loading: articlesLoading } = useArticles();
 
   // Sync tab when initialTab prop changes
   useEffect(() => {

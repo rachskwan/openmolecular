@@ -3,7 +3,8 @@ import { Search, Play, FileText, Zap, TrendingUp, Star, ChevronRight, Beaker, Ap
 
 // Lazy load the biohacker background for better performance
 const BiohackerBackground = lazy(() => import('../hero/BiohackerBackground'));
-import { articles, videos } from '../../data/articles';
+import { useArticles } from '../../hooks/useArticles';
+import { videos } from '../../data/articles';
 
 // Carousel topics - curiosity-sparking biohacker themes
 const carouselTopics = [
@@ -152,6 +153,9 @@ const colorClasses = {
 export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onSearchClick }) {
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [expandedCategory, setExpandedCategory] = useState(null);
+
+  // Fetch articles from Supabase
+  const { articles, loading: articlesLoading } = useArticles();
 
   const featuredArticles = articles.filter(a => a.featured).slice(0, 3);
   const moleculeOfDay = glossaryData['NAD+'];

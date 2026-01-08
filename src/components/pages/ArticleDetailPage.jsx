@@ -1,10 +1,19 @@
-import { ArrowLeft, Clock, User, Calendar, Bookmark, BookmarkCheck, Lock, Share2, ChevronRight, MessageCircle, Send, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Clock, User, Calendar, Bookmark, BookmarkCheck, Lock, Share2, ChevronRight, MessageCircle, Send, ExternalLink, Loader2 } from 'lucide-react';
 import { useState } from 'react';
-import { articles } from '../../data/articles';
+import { useArticle } from '../../hooks/useArticles';
 
 export default function ArticleDetailPage({ articleId, onBack, onNavigate, toggleSaveItem, isItemSaved, onGlossaryClick, onUserClick, getContentComments, addContentComment, getContentThreadId }) {
-  const article = articles.find(a => a.id === articleId);
+  const { article, loading } = useArticle(articleId);
   const [newComment, setNewComment] = useState('');
+
+  if (loading) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-16 text-center">
+        <Loader2 className="w-8 h-8 text-teal-500 animate-spin mx-auto mb-4" />
+        <p className="text-slate-600">Loading article...</p>
+      </div>
+    );
+  }
 
   if (!article) {
     return (
