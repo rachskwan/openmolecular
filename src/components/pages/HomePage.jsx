@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useState, Suspense, lazy } from 'react';
 import { Search, Play, FileText, Zap, TrendingUp, Star, ChevronRight, Beaker, Apple, Award, Gamepad2, X, BookOpen, MessageCircle, FlaskConical, Heart, Utensils, Brain, ShoppingBag, BarChart3, Clock, Users, Video } from 'lucide-react';
+
+// Lazy load the 3D molecule network for better performance
+const MoleculeNetwork = lazy(() => import('../three/MoleculeNetwork'));
 import { articles, videos } from '../../data/articles';
 import { glossaryData } from '../../data/glossary';
 import { communityThreads } from '../../data/community';
@@ -160,22 +163,28 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
   return (
     <div>
       {/* Hero Section */}
-      <section id="hero" className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900 text-white overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <defs>
-              <pattern id="molecular" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                <circle cx="10" cy="10" r="1" fill="currentColor" />
-                <circle cx="5" cy="5" r="0.5" fill="currentColor" />
-                <line x1="5" y1="5" x2="10" y2="10" stroke="currentColor" strokeWidth="0.3" />
-              </pattern>
-            </defs>
-            <rect width="100" height="100" fill="url(#molecular)" />
-          </svg>
+      <section id="hero" className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900 text-white overflow-hidden min-h-[500px]">
+        {/* 3D Interactive Molecule Network Background */}
+        <div className="absolute inset-0 opacity-60">
+          <Suspense fallback={
+            <div className="absolute inset-0 opacity-10">
+              <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <defs>
+                  <pattern id="molecular" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <circle cx="10" cy="10" r="1" fill="currentColor" />
+                    <circle cx="5" cy="5" r="0.5" fill="currentColor" />
+                    <line x1="5" y1="5" x2="10" y2="10" stroke="currentColor" strokeWidth="0.3" />
+                  </pattern>
+                </defs>
+                <rect width="100" height="100" fill="url(#molecular)" />
+              </svg>
+            </div>
+          }>
+            <MoleculeNetwork />
+          </Suspense>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 z-10">
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-3xl sm:text-5xl font-bold mb-6">
               Learn how molecular science{' '}
