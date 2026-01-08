@@ -1,7 +1,117 @@
 import { useState, useRef } from 'react';
+import { jsPDF } from 'jspdf';
 import { User, Bookmark, FileText, Beaker, BarChart3, Lightbulb, Award, Clock, ChevronRight, PlayCircle, Download, Share2, CheckCircle, Users, Pencil, X, Save, Camera, Trash2, Zap, Flame, Target, Star, Heart } from 'lucide-react';
 import { trackDetails } from '../../data/modules';
 import { getUserByUsername } from '../../data/users';
+
+// Function to generate certificate PDF
+const generateCertificatePDF = (track, userName) => {
+  const doc = new jsPDF({
+    orientation: 'landscape',
+    unit: 'mm',
+    format: 'a4'
+  });
+
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const certificateId = `OM-${track.id}-${track.completedAt.getFullYear()}-${String(track.completedAt.getMonth() + 1).padStart(2, '0')}`;
+
+  // Background
+  doc.setFillColor(255, 251, 235); // amber-50
+  doc.rect(0, 0, pageWidth, pageHeight, 'F');
+
+  // Border
+  doc.setDrawColor(251, 191, 36); // amber-400
+  doc.setLineWidth(3);
+  doc.rect(10, 10, pageWidth - 20, pageHeight - 20);
+
+  // Inner border
+  doc.setDrawColor(217, 119, 6); // amber-600
+  doc.setLineWidth(1);
+  doc.rect(15, 15, pageWidth - 30, pageHeight - 30);
+
+  // Corner decorations
+  doc.setFillColor(251, 191, 36);
+  doc.circle(20, 20, 5, 'F');
+  doc.circle(pageWidth - 20, 20, 5, 'F');
+  doc.circle(20, pageHeight - 20, 5, 'F');
+  doc.circle(pageWidth - 20, pageHeight - 20, 5, 'F');
+
+  // Header - OpenMolecular
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(16);
+  doc.setTextColor(20, 184, 166); // teal-500
+  doc.text('OPENMOLECULAR', pageWidth / 2, 35, { align: 'center' });
+
+  // Certificate of Completion
+  doc.setFontSize(32);
+  doc.setTextColor(30, 41, 59); // slate-800
+  doc.text('Certificate of Completion', pageWidth / 2, 55, { align: 'center' });
+
+  // Decorative line
+  doc.setDrawColor(20, 184, 166);
+  doc.setLineWidth(0.5);
+  doc.line(pageWidth / 2 - 60, 62, pageWidth / 2 + 60, 62);
+
+  // This certifies that
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(14);
+  doc.setTextColor(100, 116, 139); // slate-500
+  doc.text('This certifies that', pageWidth / 2, 80, { align: 'center' });
+
+  // Recipient name
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(28);
+  doc.setTextColor(30, 41, 59);
+  doc.text(userName || 'Learner', pageWidth / 2, 95, { align: 'center' });
+
+  // Has successfully completed
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(14);
+  doc.setTextColor(100, 116, 139);
+  doc.text('has successfully completed the learning track', pageWidth / 2, 112, { align: 'center' });
+
+  // Track title
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(22);
+  doc.setTextColor(217, 119, 6); // amber-600
+  doc.text(track.title, pageWidth / 2, 128, { align: 'center' });
+
+  // Lessons completed
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(12);
+  doc.setTextColor(100, 116, 139);
+  doc.text(`Comprising ${track.lessonsCount} comprehensive lessons`, pageWidth / 2, 140, { align: 'center' });
+
+  // Date
+  const formattedDate = track.completedAt.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  });
+  doc.setFontSize(12);
+  doc.text(`Completed on ${formattedDate}`, pageWidth / 2, 155, { align: 'center' });
+
+  // Signature line
+  doc.setDrawColor(148, 163, 184); // slate-400
+  doc.setLineWidth(0.3);
+  doc.line(pageWidth / 2 - 40, 175, pageWidth / 2 + 40, 175);
+  doc.setFontSize(10);
+  doc.setTextColor(148, 163, 184);
+  doc.text('OpenMolecular Education Team', pageWidth / 2, 182, { align: 'center' });
+
+  // Certificate ID
+  doc.setFontSize(9);
+  doc.setTextColor(148, 163, 184);
+  doc.text(`Certificate ID: ${certificateId}`, pageWidth / 2, pageHeight - 20, { align: 'center' });
+
+  // Verification text
+  doc.setFontSize(8);
+  doc.text('Verify at openmolecular.com/verify', pageWidth / 2, pageHeight - 15, { align: 'center' });
+
+  // Save the PDF
+  doc.save(`OpenMolecular-Certificate-${track.title.replace(/\s+/g, '-')}.pdf`);
+};
 
 const tabs = [
   { id: 'articles', label: 'Articles', icon: FileText },
@@ -535,14 +645,11 @@ export default function ProfilePage({ savedItems, onNavigate, onGlossaryClick, l
                       {/* Action Buttons */}
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => {
-                            // Generate a simple certificate view (in real app, would download PDF)
-                            alert(`Certificate for "${track.title}" - In a production app, this would download a PDF certificate.`);
-                          }}
+                          onClick={() => generateCertificatePDF(track, userProfile.name)}
                           className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
                         >
                           <Download className="w-3.5 h-3.5" />
-                          Download
+                          Download PDF
                         </button>
                         <button
                           onClick={() => {
