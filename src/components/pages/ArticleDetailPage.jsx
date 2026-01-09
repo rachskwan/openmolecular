@@ -1,9 +1,10 @@
 import { ArrowLeft, Clock, User, Calendar, Bookmark, BookmarkCheck, Lock, Share2, ChevronRight, MessageCircle, Send, ExternalLink, Loader2 } from 'lucide-react';
 import { useState } from 'react';
-import { useArticle } from '../../hooks/useArticles';
+import { useArticle, useArticles } from '../../hooks/useArticles';
 
 export default function ArticleDetailPage({ articleId, onBack, onNavigate, toggleSaveItem, isItemSaved, onGlossaryClick, onUserClick, getContentComments, addContentComment, getContentThreadId }) {
   const { article, loading } = useArticle(articleId);
+  const { articles } = useArticles();
   const [newComment, setNewComment] = useState('');
 
   if (loading) {
