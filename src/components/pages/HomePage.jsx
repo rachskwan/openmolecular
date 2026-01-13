@@ -320,7 +320,7 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
         </div>
       </section>
 
-      {/* Hot Now - Topic Carousels */}
+      {/* Hot Now - Static Topic Buttons */}
       <section className="bg-slate-50 py-6 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-center gap-3 mb-4">
@@ -330,31 +330,14 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
             </div>
             <div className="h-px flex-1 bg-slate-200" />
           </div>
-        </div>
 
-        {/* Top carousel */}
-        <div className="overflow-hidden mb-3">
-          <div className="flex animate-scroll-left">
-            {[...carouselTopics, ...carouselTopics].map((topic, idx) => (
+          {/* Static topic buttons */}
+          <div className="flex flex-wrap gap-2">
+            {carouselTopics.map((topic, idx) => (
               <button
                 key={idx}
                 onClick={() => onSearchClick(topic.text)}
-                className={`flex-shrink-0 px-4 py-1.5 mx-2 rounded-full bg-white border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-100 hover:border-slate-300 cursor-pointer transition-all whitespace-nowrap shadow-sm`}
-              >
-                {topic.text}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom carousel (reversed) */}
-        <div className="overflow-hidden">
-          <div className="flex animate-scroll-right">
-            {[...carouselTopics.slice().reverse(), ...carouselTopics.slice().reverse()].map((topic, idx) => (
-              <button
-                key={idx}
-                onClick={() => onSearchClick(topic.text)}
-                className={`flex-shrink-0 px-4 py-1.5 mx-2 rounded-full bg-white border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-100 hover:border-slate-300 cursor-pointer transition-all whitespace-nowrap shadow-sm`}
+                className={`px-4 py-2 rounded-full bg-white border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-100 hover:border-slate-300 hover:shadow-sm cursor-pointer transition-all ${topic.color.replace('text-', 'hover:text-')}`}
               >
                 {topic.text}
               </button>
