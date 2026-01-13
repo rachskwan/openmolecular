@@ -1,8 +1,5 @@
-import { useState, useEffect, Suspense, lazy } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Play, FileText, Zap, TrendingUp, Star, ChevronRight, Beaker, Apple, Award, Gamepad2, X, BookOpen, MessageCircle, FlaskConical, Heart, Utensils, Brain, ShoppingBag, BarChart3, Clock, Users, Video, Quote } from 'lucide-react';
-
-// Lazy load the biohacker background for better performance
-const BiohackerBackground = lazy(() => import('../hero/BiohackerBackground'));
 import { useArticles } from '../../hooks/useArticles';
 import { videos } from '../../data/articles';
 
@@ -238,28 +235,8 @@ export default function HomePage({ onNavigate, onGlossaryClick, onQuizClick, onS
   return (
     <div>
       {/* Hero Section - Condensed */}
-      <section id="hero" className="relative bg-gradient-to-br from-slate-800 via-slate-700 to-slate-800 text-white overflow-hidden">
-        {/* Biohacker Data Background - reduced opacity */}
-        <div className="absolute inset-0 opacity-30">
-          <Suspense fallback={
-            <div className="absolute inset-0 opacity-10">
-              <div
-                className="absolute inset-0"
-                style={{
-                  backgroundImage: `
-                    linear-gradient(rgba(20, 184, 166, 0.2) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(20, 184, 166, 0.2) 1px, transparent 1px)
-                  `,
-                  backgroundSize: '40px 40px',
-                }}
-              />
-            </div>
-          }>
-            <BiohackerBackground />
-          </Suspense>
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14 z-10">
+      <section id="hero" className="bg-slate-800 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-3xl sm:text-4xl font-bold mb-4">
               Learn how molecular science{' '}
